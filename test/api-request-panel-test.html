@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <title>api-request-panel test</title>
+    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <link rel="import" href="../api-request-panel.html">
+  </head>
+  <body>
+
+    <test-fixture id="Basic">
+      <template>
+        <api-request-panel></api-request-panel>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="Bower">
+      <template>
+        <api-request-panel bower-location="test/"></api-request-panel>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="BowerRedirect">
+      <template>
+        <api-request-panel bower-location="test/" redirect-uri="https://auth.domain.com/token"></api-request-panel>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="Proxy">
+      <template>
+        <api-request-panel proxy="https://proxy.domain.com/"></api-request-panel>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="ProxyEnc">
+      <template>
+        <api-request-panel proxy="https://proxy.domain.com/" proxy-encode-url></api-request-panel>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="RedirectUri">
+      <template>
+        <api-request-panel redirect-uri="https://auth.domain.com/token"></api-request-panel>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="AddHeaders">
+      <template>
+        <api-request-panel append-headers='[{"name": "x-test", "value": "header-value"}]'></api-request-panel>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('api-request-panel', () => {
+
+        function appendRequestData(element, request) {
+          request = request || {};
+          const editor = element.shadowRoot.querySelector('api-request-editor');
+          editor.httpMethod = request.method || 'get';
+          editor.url = request.url || 'https://domain.com';
+          editor.headers = request.headers || '';
+          editor.payload = request.payload;
+        }
+
+        suite('Initialization', () => {
+
+          test('responseIsXhr is true by default', () => {
+            const element = fixture('Basic');
+            assert.isTrue(element.responseIsXhr);
+          });
+
+          test('hasResponse is undefined', () => {
+            const element = fixture('Basic');
+            assert.isUndefined(element.hasResponse);
+          });
+
+          test('api-request is dispatched', (done) => {
+            const element = fixture('Basic');
+            flush(() => {
+              appendRequestData(element);
+              const editor = element.shadowRoot.querySelector('api-request-editor');
+              element.addEventListener('api-request', () => {
+                done();
+              });
+              editor.execute();
+            });
+          });
+        });
+
+        suite('Redirect URI computation', () => {
+          test('redirectUri has default value', () => {
+            const element = fixture('Basic');
+            assert.isTrue(element.redirectUri.indexOf('bower_components/oauth-authorization/oauth-popup.html') !== -1);
+          });
+
+          test('redirectUri is computed for bower location', () => {
+            const element = fixture('Bower');
+            assert.isTrue(element.redirectUri.indexOf('test/oauth-authorization/oauth-popup.html') !== -1);
+          });
+
+          test('redirectUri is computed to bower when redirectUri and bowerLocation is set', () => {
+            const element = fixture('BowerRedirect');
+            assert.notEqual(element.redirectUri, 'https://auth.domain.com/token');
+          });
+
+          test('redirectUri is not computed when redirectUri is set', () => {
+            const element = fixture('RedirectUri');
+            assert.isTrue(element.redirectUri.indexOf('https://auth.domain.com/token') !== -1);
+          });
+        });
+
+        suite('Proxy settings', () => {
+          test('Changes URL in the api-request event', (done) => {
+            const element = fixture('Proxy');
+            flush(() => {
+              appendRequestData(element);
+              const editor = element.shadowRoot.querySelector('api-request-editor');
+              element.addEventListener('api-request', (e) => {
+                assert.equal(e.detail.url, 'https://proxy.domain.com/https://domain.com');
+                done();
+              });
+              editor.execute();
+            });
+          });
+
+          test('Encodes original URL', (done) => {
+            const element = fixture('ProxyEnc');
+            flush(() => {
+              appendRequestData(element);
+              const editor = element.shadowRoot.querySelector('api-request-editor');
+              element.addEventListener('api-request', (e) => {
+                assert.equal(e.detail.url, 'https://proxy.domain.com/https%3A%2F%2Fdomain.com');
+                done();
+              });
+              editor.execute();
+            });
+          });
+        });
+
+        suite('Headers settings', () => {
+          test('Adds headers to the request', (done) => {
+            const element = fixture('AddHeaders');
+            flush(() => {
+              appendRequestData(element);
+              const editor = element.shadowRoot.querySelector('api-request-editor');
+              element.addEventListener('api-request', (e) => {
+                assert.equal(e.detail.headers, 'x-test: header-value');
+                done();
+              });
+              editor.execute();
+            });
+          });
+
+          test('Replaces headers in the request', (done) => {
+            const element = fixture('AddHeaders');
+            flush(() => {
+              appendRequestData(element, {
+                headers: 'x-test: other-value'
+              });
+              const editor = element.shadowRoot.querySelector('api-request-editor');
+              element.addEventListener('api-request', (e) => {
+                assert.equal(e.detail.headers, 'x-test: header-value');
+                done();
+              });
+              editor.execute();
+            });
+          });
+        });
+
+        suite('Response handing', () => {
+          function dispatchResponse(id) {
+            const e = new CustomEvent('api-response', {
+              bubbles: true,
+              detail: {
+                id: id,
+                request: {
+                  url: 'https://domain.com/',
+                  method: 'GET',
+                  headers: 'accept: text/plain'
+                },
+                response: {
+                  status: 200,
+                  statusText: 'OK',
+                  payload: 'Hello world',
+                  headers: 'content-type: text/plain'
+                },
+                loadingTime: 124.12345678,
+                isError: false,
+                isXhr: false,
+                sentHttpMessage: 'GET / HTTP/1.1\nHost: domain.com\naccept: text/plain\n\n\n',
+                redirects: [{
+                  status: 301,
+                  statusText: 'Not here',
+                  payload: 'Go to https://other.domain.com',
+                  headers: 'content-type: text/plain\nlocation: https://other.domain.com\ncontent-length: 30'
+                }],
+                timing: {
+                  blocked: 12.0547856,
+                  dns: 0.12,
+                  connect: 112.21458762,
+                  send: 4.4748989,
+                  wait: 15.8436988,
+                  receive: 65.125412256,
+                  ssl: 10
+                },
+                redirectsTiming: [{
+                  blocked: 12.0547856,
+                  dns: 0.12,
+                  connect: 112.21458762,
+                  send: 4.4748989,
+                  wait: 15.8436988,
+                  receive: 65.125412256,
+                  ssl: 10
+                }]
+              }
+            });
+            document.dispatchEvent(e);
+          }
+
+          test('api-request is dispatched', (done) => {
+            const element = fixture('Basic');
+            flush(() => {
+              appendRequestData(element);
+              const editor = element.shadowRoot.querySelector('api-request-editor');
+              element.addEventListener('api-request', (e) => {
+                setTimeout(() => {
+                  dispatchResponse(e.detail.id);
+                  assert.isTrue(element.hasResponse, 'hasResponse is computed');
+                  assert.isFalse(element.isErrorResponse, 'iserror is false');
+                  assert.isUndefined(element.responseError, 'error is undefined');
+                  assert.equal(element.loadingTime, 124.12345678, 'loadingTime is set');
+                  assert.typeOf(element.request, 'object', 'request is set');
+                  assert.typeOf(element.response, 'object', 'response is set');
+                  assert.isFalse(element.responseIsXhr, 'responseIsXhr is false');
+                  assert.typeOf(element.redirects, 'array', 'redirects is set');
+                  assert.typeOf(element.redirectsTiming, 'array', 'redirectsTiming is set');
+                  assert.typeOf(element.timing, 'object', 'timing is set');
+                  assert.typeOf(element.sourceMessage, 'string', 'source message is set');
+                  done();
+                }, 1);
+              });
+              editor.execute();
+            });
+          });
+        });
+      });
+    </script>
+
+  </body>
+</html>

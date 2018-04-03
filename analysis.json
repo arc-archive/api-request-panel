@@ -1,0 +1,1836 @@
+{
+  "schema_version": "1.0.0",
+  "elements": [
+    {
+      "description": "`api-request-panel`\nAn complete request editor and response view panels in single element\n\nThis element is to replace `api-console-request` element from `mulesoft/api-console`\nproject repository.\n\nThis is also a base case for any application that renders request and\nresponse views.\n\nIt combines `api-request-editor` and `response-view` elements and\nreacts on `api-request` and `api-response` events.\nIt also adds additional configuration options that exists in API console\n(proxy, additional headers).\n\n## `api-request` and `api-response` events\n\nSee full documentation here: https://github.com/advanced-rest-client/api-components-api/blob/master/docs/api-request-and-response.md\n\n## Dependencies\n\n- This components does not include any polyfills\n- This component nor it's children does not contain trasnsport library.\nAny transport library that handles ARC request event can work with this\ncomponent. See `advanced-rest-client/xhr-simple-request` for implementation\ndetails\n- From authorization panel changes:\n - `auth-settings-changed` custom event is stopped from bubbling. Listen for `authorization-settings-changed` event instead.\n- From auth-method-oauth2 changes:\n - Added `deliveryMethod` and `deliveryName` properties to the `detail.setting` object.\n- From auth-method-oauth1 changes:\n - Crypto library is no longer included into the element. Use `advanced-rest-client/cryptojs-lib` component to include the library if your project doesn't use crypto libraries already.\n\n## Narrow view\n\nGenerally the API components are flexible and mobile friendly. However,\nit is possible to set `narrow` property to render form elements in\na mobile fieldly view. In most cases it means that forms controls are\nrendered in different layout.",
+      "summary": "",
+      "path": "api-request-panel.html",
+      "properties": [
+        {
+          "name": "isPayload",
+          "type": "boolean",
+          "description": "Set to true when the request can carry a payload.\nIt's required for calculating headers errors.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "start": {
+              "line": 56,
+              "column": 8
+            },
+            "end": {
+              "line": 56,
+              "column": 26
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
+        },
+        {
+          "name": "scrollTarget",
+          "type": "HTMLElement",
+          "description": "Main scroll target for the app.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 194,
+              "column": 10
+            },
+            "end": {
+              "line": 194,
+              "column": 35
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "_shouldHaveListener",
+          "type": "boolean",
+          "description": "True if the event listener should be installed.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 79,
+              "column": 4
+            },
+            "end": {
+              "line": 79,
+              "column": 29
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "eventsTarget",
+          "type": "Object",
+          "description": "Events handlers target. By default the element listens on\n`window` object. If set, all events listeners will be attached to this\nobject instead of `window`.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/events-target-behavior/events-target-behavior.html",
+            "start": {
+              "line": 73,
+              "column": 8
+            },
+            "end": {
+              "line": 76,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"_eventsTargetChanged\""
+            }
+          },
+          "inheritedFrom": "ArcBehaviors.EventsTargetBehavior"
+        },
+        {
+          "name": "_oldEventsTarget",
+          "type": "Object",
+          "description": "An event target used to attach listeners.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/events-target-behavior/events-target-behavior.html",
+            "start": {
+              "line": 78,
+              "column": 8
+            },
+            "end": {
+              "line": 78,
+              "column": 32
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "ArcBehaviors.EventsTargetBehavior"
+        },
+        {
+          "name": "aware",
+          "type": "string",
+          "description": "`raml-aware` scope property to use.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 102,
+              "column": 10
+            },
+            "end": {
+              "line": 102,
+              "column": 23
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "selectedAmfId",
+          "type": "string",
+          "description": "AMF HTTP method (operation in AMF vocabulary) ID.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 106,
+              "column": 10
+            },
+            "end": {
+              "line": 106,
+              "column": 31
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "amfModel",
+          "type": "Object",
+          "description": "AMF API model.\nThe element extracts method definition from passed model\nand by using `selectedAmfId`.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 112,
+              "column": 10
+            },
+            "end": {
+              "line": 112,
+              "column": 26
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "noUrlEditor",
+          "type": "boolean",
+          "description": "Hides the URL editor from the view.\nThe editor is still in the DOM and the `urlInvalid` property still will be set.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 117,
+              "column": 10
+            },
+            "end": {
+              "line": 117,
+              "column": 30
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "baseUri",
+          "type": "string",
+          "description": "A base URI for the API. To be set if RAML spec is missing `baseUri`\ndeclaration and this produces invalid URL input. This information\nis passed to the URL editor that prefixes the URL with `baseUri` value\nif passed URL is a relative URL.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 124,
+              "column": 10
+            },
+            "end": {
+              "line": 124,
+              "column": 25
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "redirectUri",
+          "type": "string",
+          "description": "OAuth2 redirect URI.\nThis value **must** be set in order for OAuth 1/2 to work properly.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 129,
+              "column": 10
+            },
+            "end": {
+              "line": 129,
+              "column": 29
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "narrow",
+          "type": "boolean",
+          "description": "If set it will renders the view in the narrow layout.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 133,
+              "column": 10
+            },
+            "end": {
+              "line": 137,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          }
+        },
+        {
+          "name": "request",
+          "type": "Object",
+          "description": "Created by the transport ARFC `request` object",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 141,
+              "column": 10
+            },
+            "end": {
+              "line": 141,
+              "column": 25
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "response",
+          "type": "Object",
+          "description": "Created by the transport ARC `response` object.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 145,
+              "column": 10
+            },
+            "end": {
+              "line": 145,
+              "column": 26
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "hasResponse",
+          "type": "boolean",
+          "description": "Computed value, true, when the response object is set.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 149,
+              "column": 10
+            },
+            "end": {
+              "line": 152,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true
+            }
+          }
+        },
+        {
+          "name": "isErrorResponse",
+          "type": "boolean",
+          "description": "A flag indincating request error.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 156,
+              "column": 10
+            },
+            "end": {
+              "line": 156,
+              "column": 34
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "responseIsXhr",
+          "type": "boolean",
+          "description": "True if the response is made by the Fetch / XHR api.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 160,
+              "column": 10
+            },
+            "end": {
+              "line": 163,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "true"
+        },
+        {
+          "name": "responseError",
+          "type": "Object",
+          "description": "An error object associated with the response when error.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 167,
+              "column": 10
+            },
+            "end": {
+              "line": 167,
+              "column": 31
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "loadingTime",
+          "type": "number",
+          "description": "Response full loading time. This information is received from the\ntransport library.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 172,
+              "column": 10
+            },
+            "end": {
+              "line": 172,
+              "column": 29
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "timing",
+          "type": "Object",
+          "description": "If the transport method is able to collect detailed information about request timings\nthen this value will be set. It's the `timings` property from the HAR 1.2 spec.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 177,
+              "column": 10
+            },
+            "end": {
+              "line": 177,
+              "column": 24
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "redirectsTiming",
+          "type": "Array",
+          "description": "If the transport method is able to collect detailed information about redirects timings\nthen this value will be set. It's a list of `timings` property from the HAR 1.2 spec.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 182,
+              "column": 10
+            },
+            "end": {
+              "line": 182,
+              "column": 32
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "redirects",
+          "type": "Array",
+          "description": "It will be set if the transport method can generate information about redirections.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 186,
+              "column": 10
+            },
+            "end": {
+              "line": 186,
+              "column": 26
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "sourceMessage",
+          "type": "string",
+          "description": "Http message sent to the server.\n\nThis information should be available only in case of advanced HTTP transport.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 192,
+              "column": 10
+            },
+            "end": {
+              "line": 192,
+              "column": 31
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "appendHeaders",
+          "type": "Array",
+          "description": "Forces the console to send headers defined in this string overriding any used defined\nheader.\nThis should be an array of headers with `name` and `value` keys, e.g.:\n```\n[{\n  name: \"x-token\",\n  value: \"value\"\n}]\n```",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 206,
+              "column": 10
+            },
+            "end": {
+              "line": 206,
+              "column": 30
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "proxy",
+          "type": "string",
+          "description": "If set every request made from the console will be proxied by the service provided in this\nvalue.\nIt will prefix entered URL with the proxy value. so the call to\n`http://domain.com/path/?query=some+value` will become\n`https://proxy.com/path/http://domain.com/path/?query=some+value`\n\nIf the proxy require a to pass the URL as a query parameter define value as follows:\n`https://proxy.com/path/?url=`. In this case be sure to set `proxy-encode-url`\nattribute.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 218,
+              "column": 10
+            },
+            "end": {
+              "line": 218,
+              "column": 23
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "proxyEncodeUrl",
+          "type": "boolean",
+          "description": "If `proxy` is set, it will URL encode the request URL before appending it to the proxy URL.\n`http://domain.com/path/?query=some+value` will become\n`https://proxy.com/?url=http%3A%2F%2Fdomain.com%2Fpath%2F%3Fquery%3Dsome%2Bvalue`",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 224,
+              "column": 10
+            },
+            "end": {
+              "line": 224,
+              "column": 33
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "bowerLocation",
+          "type": "string",
+          "description": "Location of the `bower_components` folder.\nIt should be a path from server's root path including bower_components.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 229,
+              "column": 10
+            },
+            "end": {
+              "line": 232,
+              "column": 11
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"_updateRedirectUri\""
+            }
+          }
+        }
+      ],
+      "methods": [
+        {
+          "name": "filterHeaders",
+          "description": "Filter array of headers and return not duplicated array of the same headers.\nDuplicated headers should be appended to already found one using coma separator.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "start": {
+              "line": 69,
+              "column": 4
+            },
+            "end": {
+              "line": 88,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "headers",
+              "type": "Array",
+              "description": "Headers array to filter. All objects in headers array must have \"name\"\n               and \"value\" keys."
+            }
+          ],
+          "return": {
+            "type": "Array",
+            "desc": "An array of filtered headers."
+          },
+          "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
+        },
+        {
+          "name": "headersToString",
+          "description": "Parse headers array to Raw HTTP headers string.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "start": {
+              "line": 96,
+              "column": 4
+            },
+            "end": {
+              "line": 110,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "headersArray",
+              "type": "(Array | String | Headers)",
+              "description": "List of objects with \"name\" and \"value\"\nproperties."
+            }
+          ],
+          "return": {
+            "type": "String",
+            "desc": "A HTTP representation of the headers."
+          },
+          "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
+        },
+        {
+          "name": "headerItemToString",
+          "description": "Transforms a header model item to a string.\nArray values are supported.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "start": {
+              "line": 118,
+              "column": 4
+            },
+            "end": {
+              "line": 132,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "header",
+              "type": "Object",
+              "description": "Object with name and value."
+            }
+          ],
+          "return": {
+            "type": "String",
+            "desc": "Generated headers line"
+          },
+          "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
+        },
+        {
+          "name": "headersToJSON",
+          "description": "Parse HTTP headers input from string to array of objects containing `name` and `value`\nproperties.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "start": {
+              "line": 142,
+              "column": 4
+            },
+            "end": {
+              "line": 148,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "headers",
+              "type": "(String | Headers)",
+              "description": "Raw HTTP headers input or Headers object"
+            }
+          ],
+          "return": {
+            "type": "Array.<Object>",
+            "desc": "The array of objects where properties are `name` as a header\nname and `value` as a header content."
+          },
+          "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
+        },
+        {
+          "name": "_headersStringToJSON",
+          "description": "Parse headers string to array of objects.\nSee `#toJSON` for more info.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "start": {
+              "line": 153,
+              "column": 4
+            },
+            "end": {
+              "line": 185,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "headersString"
+            }
+          ],
+          "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
+        },
+        {
+          "name": "_hedersToJSON",
+          "description": "Parse Headers object to array of objects.\nSee `#toJSON` for more info.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "start": {
+              "line": 190,
+              "column": 4
+            },
+            "end": {
+              "line": 213,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "headers"
+            }
+          ],
+          "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
+        },
+        {
+          "name": "_oldCombine",
+          "description": "Helper method for old system: combine headers list with encoding value.\nNote that this function will update the original array.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "start": {
+              "line": 223,
+              "column": 4
+            },
+            "end": {
+              "line": 237,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "headers",
+              "type": "Array",
+              "description": "An array of headers"
+            },
+            {
+              "name": "encoding",
+              "type": "String",
+              "description": "An encoding string from the old request."
+            }
+          ],
+          "return": {
+            "type": "Boolean",
+            "desc": "True if encoding has been added to the array."
+          },
+          "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
+        },
+        {
+          "name": "getContentType",
+          "description": "Get the Content-Type value from the headers.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "start": {
+              "line": 245,
+              "column": 4
+            },
+            "end": {
+              "line": 266,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "headers",
+              "type": "(Array | String)",
+              "description": "Either HTTP headers string or list of headers."
+            }
+          ],
+          "return": {
+            "type": "(String | null)",
+            "desc": "A content-type header value or null if not found"
+          },
+          "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
+        },
+        {
+          "name": "replaceHeaderValue",
+          "description": "Replace value for given header in the headers list.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "start": {
+              "line": 277,
+              "column": 4
+            },
+            "end": {
+              "line": 311,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "headers",
+              "type": "(Array | String | Object)",
+              "description": "A headers object. Can be string, array of objects or\nHeaders object."
+            },
+            {
+              "name": "name",
+              "type": "String",
+              "description": "Header name to be replaced."
+            },
+            {
+              "name": "value",
+              "type": "String",
+              "description": "Header value to be repleced."
+            }
+          ],
+          "return": {
+            "type": "Array",
+            "desc": "Updated headers."
+          },
+          "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
+        },
+        {
+          "name": "getHeaderError",
+          "description": "Get error message for given header string.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "start": {
+              "line": 317,
+              "column": 4
+            },
+            "end": {
+              "line": 351,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "input",
+              "type": "(Header | Array | String)",
+              "description": "A headers to check."
+            }
+          ],
+          "return": {
+            "type": "?String",
+            "desc": "An error message or null if the headers are valid."
+          },
+          "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
+        },
+        {
+          "name": "_scrollTargetChanged",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 81,
+              "column": 4
+            },
+            "end": {
+              "line": 109,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "scrollTarget"
+            },
+            {
+              "name": "isAttached"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_scrollHandler",
+          "description": "Runs on every scroll event. Consumer of this behavior may override this method.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 116,
+              "column": 4
+            },
+            "end": {
+              "line": 116,
+              "column": 47
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_defaultScrollTarget",
+          "description": "The default scroll target. Consumers of this behavior may want to customize\nthe default scroll target.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 124,
+              "column": 4
+            },
+            "end": {
+              "line": 126,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_doc",
+          "description": "Shortcut for the document element",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 133,
+              "column": 4
+            },
+            "end": {
+              "line": 135,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_scrollTop",
+          "description": "Sets the number of pixels that the content of an element is scrolled upward.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 166,
+              "column": 4
+            },
+            "end": {
+              "line": 172,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "top"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_scrollLeft",
+          "description": "Sets the number of pixels that the content of an element is scrolled to the left.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 179,
+              "column": 4
+            },
+            "end": {
+              "line": 185,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "left"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "scroll",
+          "description": "Scrolls the content to a particular place.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 194,
+              "column": 4
+            },
+            "end": {
+              "line": 201,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "left",
+              "type": "number",
+              "description": "The left position"
+            },
+            {
+              "name": "top",
+              "type": "number",
+              "description": "The top position"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_scrollTargetWidth",
+          "description": "Gets the width of the scroll target.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 208,
+              "column": 4
+            },
+            "end": {
+              "line": 213,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_scrollTargetHeight",
+          "description": "Gets the height of the scroll target.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 220,
+              "column": 4
+            },
+            "end": {
+              "line": 225,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_isValidScrollTarget",
+          "description": "Returns true if the scroll target is a valid HTMLElement.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 232,
+              "column": 4
+            },
+            "end": {
+              "line": 234,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "boolean"
+          },
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_toggleScrollListener",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 236,
+              "column": 4
+            },
+            "end": {
+              "line": 249,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "yes"
+            },
+            {
+              "name": "scrollTarget"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "toggleScrollListener",
+          "description": "Enables or disables the scroll event listener.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 256,
+              "column": 4
+            },
+            "end": {
+              "line": 259,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "yes",
+              "type": "boolean",
+              "description": "True to add the event, False to remove it."
+            }
+          ],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "connectedCallback",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/events-target-behavior/events-target-behavior.html",
+            "start": {
+              "line": 81,
+              "column": 4
+            },
+            "end": {
+              "line": 84,
+              "column": 6
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "ArcBehaviors.EventsTargetBehavior"
+        },
+        {
+          "name": "disconnectedCallback",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/events-target-behavior/events-target-behavior.html",
+            "start": {
+              "line": 86,
+              "column": 5
+            },
+            "end": {
+              "line": 91,
+              "column": 6
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "ArcBehaviors.EventsTargetBehavior"
+        },
+        {
+          "name": "_eventsTargetChanged",
+          "description": "Removes old handlers (if any) and attaches listeners on new event\nevent target.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/events-target-behavior/events-target-behavior.html",
+            "start": {
+              "line": 99,
+              "column": 4
+            },
+            "end": {
+              "line": 105,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "eventsTarget",
+              "type": "?Node",
+              "description": "Event target to set handlers on. If not set it\nwill set handlers on the `window` object."
+            }
+          ],
+          "inheritedFrom": "ArcBehaviors.EventsTargetBehavior"
+        },
+        {
+          "name": "_attachListeners",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 252,
+              "column": 6
+            },
+            "end": {
+              "line": 255,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "node"
+            }
+          ]
+        },
+        {
+          "name": "_detachListeners",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 257,
+              "column": 6
+            },
+            "end": {
+              "line": 260,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "node"
+            }
+          ]
+        },
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 245,
+              "column": 6
+            },
+            "end": {
+              "line": 250,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_updateRedirectUri",
+          "description": "Sets OAuth 2 redirect URL for the authorization panel",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 266,
+              "column": 6
+            },
+            "end": {
+              "line": 276,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "location",
+              "type": "?String",
+              "description": "Bower components location"
+            }
+          ]
+        },
+        {
+          "name": "_computeHasResponse",
+          "description": "Computes if there is a reponse object.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 283,
+              "column": 6
+            },
+            "end": {
+              "line": 285,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "response",
+              "type": "Object",
+              "description": "ARC response objects"
+            }
+          ],
+          "return": {
+            "type": "Boolean"
+          }
+        },
+        {
+          "name": "_apiRequestHandler",
+          "description": "A handler for the API call.\nThis handler will only check if there is authorization required\nand if the user is authorizaed.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 294,
+              "column": 6
+            },
+            "end": {
+              "line": 297,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e",
+              "type": "CustomEvent",
+              "description": "`api-request` event"
+            }
+          ]
+        },
+        {
+          "name": "_appendConsoleHeaders",
+          "description": "Appends headers defined in the `appendHeaders` array.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 303,
+              "column": 6
+            },
+            "end": {
+              "line": 314,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e",
+              "type": "CustomEvent",
+              "description": "The `api-request` event."
+            }
+          ]
+        },
+        {
+          "name": "_appendProxy",
+          "description": "Sets the proxy URL if the `proxy` property is set.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 319,
+              "column": 6
+            },
+            "end": {
+              "line": 327,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "name": "_apiResponseHandler",
+          "description": "Handler for the `api-response` custom event. Sets values on the response\npanel when response is ready.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 334,
+              "column": 6
+            },
+            "end": {
+              "line": 345,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e",
+              "type": "CustomEvent"
+            }
+          ]
+        },
+        {
+          "name": "_propagateResponse",
+          "description": "Propagate `api-response` detail object.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 351,
+              "column": 6
+            },
+            "end": {
+              "line": 363,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "data",
+              "type": "Object",
+              "description": "Event's detail object"
+            }
+          ]
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/index.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 95,
+          "column": 4
+        },
+        "end": {
+          "line": 364,
+          "column": 5
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "name": "ApiElements.ApiRequestPanel",
+      "attributes": [
+        {
+          "name": "is-payload",
+          "description": "Set to true when the request can carry a payload.\nIt's required for calculating headers errors.",
+          "sourceRange": {
+            "file": "bower_components/headers-parser-behavior/headers-parser-behavior.html",
+            "start": {
+              "line": 56,
+              "column": 8
+            },
+            "end": {
+              "line": 56,
+              "column": 26
+            }
+          },
+          "metadata": {},
+          "type": "boolean",
+          "inheritedFrom": "ArcBehaviors.HeadersParserBehavior"
+        },
+        {
+          "name": "scroll-target",
+          "description": "Main scroll target for the app.",
+          "sourceRange": {
+            "start": {
+              "line": 194,
+              "column": 10
+            },
+            "end": {
+              "line": 194,
+              "column": 35
+            }
+          },
+          "metadata": {},
+          "type": "HTMLElement"
+        },
+        {
+          "name": "events-target",
+          "description": "Events handlers target. By default the element listens on\n`window` object. If set, all events listeners will be attached to this\nobject instead of `window`.",
+          "sourceRange": {
+            "file": "bower_components/events-target-behavior/events-target-behavior.html",
+            "start": {
+              "line": 73,
+              "column": 8
+            },
+            "end": {
+              "line": 76,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "Object",
+          "inheritedFrom": "ArcBehaviors.EventsTargetBehavior"
+        },
+        {
+          "name": "aware",
+          "description": "`raml-aware` scope property to use.",
+          "sourceRange": {
+            "start": {
+              "line": 102,
+              "column": 10
+            },
+            "end": {
+              "line": 102,
+              "column": 23
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "selected-amf-id",
+          "description": "AMF HTTP method (operation in AMF vocabulary) ID.",
+          "sourceRange": {
+            "start": {
+              "line": 106,
+              "column": 10
+            },
+            "end": {
+              "line": 106,
+              "column": 31
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "amf-model",
+          "description": "AMF API model.\nThe element extracts method definition from passed model\nand by using `selectedAmfId`.",
+          "sourceRange": {
+            "start": {
+              "line": 112,
+              "column": 10
+            },
+            "end": {
+              "line": 112,
+              "column": 26
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "no-url-editor",
+          "description": "Hides the URL editor from the view.\nThe editor is still in the DOM and the `urlInvalid` property still will be set.",
+          "sourceRange": {
+            "start": {
+              "line": 117,
+              "column": 10
+            },
+            "end": {
+              "line": 117,
+              "column": 30
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "base-uri",
+          "description": "A base URI for the API. To be set if RAML spec is missing `baseUri`\ndeclaration and this produces invalid URL input. This information\nis passed to the URL editor that prefixes the URL with `baseUri` value\nif passed URL is a relative URL.",
+          "sourceRange": {
+            "start": {
+              "line": 124,
+              "column": 10
+            },
+            "end": {
+              "line": 124,
+              "column": 25
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "redirect-uri",
+          "description": "OAuth2 redirect URI.\nThis value **must** be set in order for OAuth 1/2 to work properly.",
+          "sourceRange": {
+            "start": {
+              "line": 129,
+              "column": 10
+            },
+            "end": {
+              "line": 129,
+              "column": 29
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "narrow",
+          "description": "If set it will renders the view in the narrow layout.",
+          "sourceRange": {
+            "start": {
+              "line": 133,
+              "column": 10
+            },
+            "end": {
+              "line": 137,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "request",
+          "description": "Created by the transport ARFC `request` object",
+          "sourceRange": {
+            "start": {
+              "line": 141,
+              "column": 10
+            },
+            "end": {
+              "line": 141,
+              "column": 25
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "response",
+          "description": "Created by the transport ARC `response` object.",
+          "sourceRange": {
+            "start": {
+              "line": 145,
+              "column": 10
+            },
+            "end": {
+              "line": 145,
+              "column": 26
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "has-response",
+          "description": "Computed value, true, when the response object is set.",
+          "sourceRange": {
+            "start": {
+              "line": 149,
+              "column": 10
+            },
+            "end": {
+              "line": 152,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "is-error-response",
+          "description": "A flag indincating request error.",
+          "sourceRange": {
+            "start": {
+              "line": 156,
+              "column": 10
+            },
+            "end": {
+              "line": 156,
+              "column": 34
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "response-is-xhr",
+          "description": "True if the response is made by the Fetch / XHR api.",
+          "sourceRange": {
+            "start": {
+              "line": 160,
+              "column": 10
+            },
+            "end": {
+              "line": 163,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "response-error",
+          "description": "An error object associated with the response when error.",
+          "sourceRange": {
+            "start": {
+              "line": 167,
+              "column": 10
+            },
+            "end": {
+              "line": 167,
+              "column": 31
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "loading-time",
+          "description": "Response full loading time. This information is received from the\ntransport library.",
+          "sourceRange": {
+            "start": {
+              "line": 172,
+              "column": 10
+            },
+            "end": {
+              "line": 172,
+              "column": 29
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "timing",
+          "description": "If the transport method is able to collect detailed information about request timings\nthen this value will be set. It's the `timings` property from the HAR 1.2 spec.",
+          "sourceRange": {
+            "start": {
+              "line": 177,
+              "column": 10
+            },
+            "end": {
+              "line": 177,
+              "column": 24
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "redirects-timing",
+          "description": "If the transport method is able to collect detailed information about redirects timings\nthen this value will be set. It's a list of `timings` property from the HAR 1.2 spec.",
+          "sourceRange": {
+            "start": {
+              "line": 182,
+              "column": 10
+            },
+            "end": {
+              "line": 182,
+              "column": 32
+            }
+          },
+          "metadata": {},
+          "type": "Array"
+        },
+        {
+          "name": "redirects",
+          "description": "It will be set if the transport method can generate information about redirections.",
+          "sourceRange": {
+            "start": {
+              "line": 186,
+              "column": 10
+            },
+            "end": {
+              "line": 186,
+              "column": 26
+            }
+          },
+          "metadata": {},
+          "type": "Array"
+        },
+        {
+          "name": "source-message",
+          "description": "Http message sent to the server.\n\nThis information should be available only in case of advanced HTTP transport.",
+          "sourceRange": {
+            "start": {
+              "line": 192,
+              "column": 10
+            },
+            "end": {
+              "line": 192,
+              "column": 31
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "append-headers",
+          "description": "Forces the console to send headers defined in this string overriding any used defined\nheader.\nThis should be an array of headers with `name` and `value` keys, e.g.:\n```\n[{\n  name: \"x-token\",\n  value: \"value\"\n}]\n```",
+          "sourceRange": {
+            "start": {
+              "line": 206,
+              "column": 10
+            },
+            "end": {
+              "line": 206,
+              "column": 30
+            }
+          },
+          "metadata": {},
+          "type": "Array"
+        },
+        {
+          "name": "proxy",
+          "description": "If set every request made from the console will be proxied by the service provided in this\nvalue.\nIt will prefix entered URL with the proxy value. so the call to\n`http://domain.com/path/?query=some+value` will become\n`https://proxy.com/path/http://domain.com/path/?query=some+value`\n\nIf the proxy require a to pass the URL as a query parameter define value as follows:\n`https://proxy.com/path/?url=`. In this case be sure to set `proxy-encode-url`\nattribute.",
+          "sourceRange": {
+            "start": {
+              "line": 218,
+              "column": 10
+            },
+            "end": {
+              "line": 218,
+              "column": 23
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        },
+        {
+          "name": "proxy-encode-url",
+          "description": "If `proxy` is set, it will URL encode the request URL before appending it to the proxy URL.\n`http://domain.com/path/?query=some+value` will become\n`https://proxy.com/?url=http%3A%2F%2Fdomain.com%2Fpath%2F%3Fquery%3Dsome%2Bvalue`",
+          "sourceRange": {
+            "start": {
+              "line": 224,
+              "column": 10
+            },
+            "end": {
+              "line": 224,
+              "column": 33
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "bower-location",
+          "description": "Location of the `bower_components` folder.\nIt should be a path from server's root path including bower_components.",
+          "sourceRange": {
+            "start": {
+              "line": 229,
+              "column": 10
+            },
+            "end": {
+              "line": 232,
+              "column": 11
+            }
+          },
+          "metadata": {},
+          "type": "string"
+        }
+      ],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "narrow-changed",
+          "description": "Fired when the `narrow` property changes.",
+          "metadata": {}
+        }
+      ],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "api-request-panel",
+      "mixins": [
+        "ArcBehaviors.HeadersParserBehavior",
+        "Polymer.IronScrollTargetBehavior",
+        "ArcBehaviors.EventsTargetBehavior"
+      ]
+    }
+  ]
+}
