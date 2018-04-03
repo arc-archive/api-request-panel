@@ -17,7 +17,7 @@ An complete request editor and response view panels in single element
 -->
 
 ```html
-<api-request-panel response-text="# Hello world" content-type="application/markdown"></api-request-panel>
+<api-request-panel></api-request-panel>
 ```
 
 ### API components
