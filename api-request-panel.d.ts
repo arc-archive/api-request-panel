@@ -60,6 +60,12 @@ declare namespace ApiElements {
    * it is possible to set `narrow` property to render form elements in
    * a mobile fieldly view. In most cases it means that forms controls are
    * rendered in different layout.
+   *
+   * ## api-navigation integration
+   *
+   * The element works with `api-navigation` element. Set `handle-navigation-events`
+   * attribute when using `api-navigation` so the component will automatically
+   * update selection when internal API navigation occurres.
    */
   class ApiRequestPanel extends
     ArcBehaviors.HeadersParserBehavior(
@@ -75,12 +81,21 @@ declare namespace ApiElements {
     /**
      * AMF HTTP method (operation in AMF vocabulary) ID.
      */
-    selectedAmfId: string|null|undefined;
+    selected: string|null|undefined;
 
     /**
-     * AMF API model.
-     * The element extracts method definition from passed model
-     * and by using `selectedAmfId`.
+     * By default application hosting the element must set `selected`
+     * property. When using `api-navigation` element
+     * by setting this property the element listens for navigation events
+     * and updates the state
+     */
+    handleNavigationEvents: boolean|null|undefined;
+
+    /**
+     * A model's `@id` of selected documentation part.
+     * Special case is for `summary` view. It's not part of an API
+     * but most applications has some kind of summary view for the
+     * API.
      */
     amfModel: object|null|undefined;
 
@@ -215,6 +230,28 @@ declare namespace ApiElements {
     _attachListeners(node: any): void;
     _detachListeners(node: any): void;
     ready(): void;
+
+    /**
+     * Registers `api-navigation-selection-changed` event listener handler
+     * on window object.
+     */
+    _registerNavigationEvents(): void;
+
+    /**
+     * Removes event listener from window object for
+     * `api-navigation-selection-changed` event.
+     */
+    _unregisterNavigationEvents(): void;
+
+    /**
+     * Registers / unregisters event listeners depending on `state`
+     */
+    _handleNavChanged(state: Boolean|null): void;
+
+    /**
+     * Handler for `api-navigation-selection-changed` event.
+     */
+    _navigationHandler(e: CustomEvent|null): void;
 
     /**
      * Sets OAuth 2 redirect URL for the authorization panel
