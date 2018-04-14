@@ -19,7 +19,7 @@
     <api-request-editor
       narrow="{{narrow}}"
       redirect-uri="[[redirectUri]]"
-      selected-amf-id="[[selectedAmfId]]"
+      selected="[[selected]]"
       amf-model="[[amfModel]]"
       aware="[[aware]]"
       no-url-editor="[[noUrlEditor]]"
@@ -104,11 +104,12 @@
           /**
            * AMF HTTP method (operation in AMF vocabulary) ID.
            */
-          selectedAmfId: String,
+          selected: String,
           /**
-           * AMF API model.
-           * The element extracts method definition from passed model
-           * and by using `selectedAmfId`.
+           * A model's `@id` of selected documentation part.
+           * Special case is for `summary` view. It's not part of an API
+           * but most applications has some kind of summary view for the
+           * API.
            */
           amfModel: Object,
           /**
