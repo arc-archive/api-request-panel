@@ -85,9 +85,16 @@
      * a mobile fieldly view. In most cases it means that forms controls are
      * rendered in different layout.
      *
+     * ## api-navigation integration
+     *
+     * The element works with `api-navigation` element. Set `handle-navigation-events`
+     * attribute when using `api-navigation` so the component will automatically
+     * update selection when internal API navigation occurres.
+     *
      * @customElement
      * @polymer
      * @demo demo/index.html
+     * @demo demo/navigation.html Automated navigation
      * @appliesMixin ArcBehaviors.HeadersParserBehavior
      * @appliesMixin Polymer.IronScrollTargetBehavior
      * @appliesMixin ArcBehaviors.EventsTargetBehavior
@@ -105,6 +112,16 @@
            * AMF HTTP method (operation in AMF vocabulary) ID.
            */
           selected: String,
+          /**
+           * By default application hosting the element must set `selected`
+           * property. When using `api-navigation` element
+           * by setting this property the element listens for navigation events
+           * and updates the state
+           */
+          handleNavigationEvents: {
+            type: Boolean,
+            observer: '_handleNavChanged'
+          },
           /**
            * A model's `@id` of selected documentation part.
            * Special case is for `summary` view. It's not part of an API
@@ -242,6 +259,7 @@
         super();
         this._apiResponseHandler = this._apiResponseHandler.bind(this);
         this._apiRequestHandler = this._apiRequestHandler.bind(this);
+        this._navigationHandler = this._navigationHandler.bind(this);
       }
 
       ready() {
@@ -259,6 +277,49 @@
       _detachListeners(node) {
         node.removeEventListener('api-response', this._apiResponseHandler);
         node.removeEventListener('api-request', this._apiRequestHandler);
+        if (this.__navEventsRegistered) {
+          this._unregisterNavigationEvents();
+        }
+      }
+      /**
+       * Registers `api-navigation-selection-changed` event listener handler
+       * on window object.
+       */
+      _registerNavigationEvents() {
+        this.__navEventsRegistered = true;
+        window.addEventListener('api-navigation-selection-changed', this._navigationHandler);
+      }
+      /**
+       * Removes event listener from window object for
+       * `api-navigation-selection-changed` event.
+       */
+      _unregisterNavigationEvents() {
+        this.__navEventsRegistered = false;
+        window.removeEventListener('api-navigation-selection-changed', this._navigationHandler);
+      }
+      /**
+       * Registers / unregisters event listeners depending on `state`
+       *
+       * @param {Boolean} state
+       */
+      _handleNavChanged(state) {
+        if (state) {
+          this._registerNavigationEvents();
+        } else {
+          this._unregisterNavigationEvents();
+        }
+      }
+      /**
+       * Handler for `api-navigation-selection-changed` event.
+       *
+       * @param {CustomEvent} e
+       */
+      _navigationHandler(e) {
+        let id = e.detail.selected;
+        if (e.detail.type !== 'method') {
+          id = undefined;
+        }
+        this.selected = id;
       }
       /**
        * Sets OAuth 2 redirect URL for the authorization panel
