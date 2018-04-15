@@ -249,6 +249,18 @@
             type: String,
             observer: '_updateRedirectUri'
           },
+          /**
+           * ID of latest request.
+           * It is received from the `api-request-editor` when `api-request`
+           * event is dispatched. When `api-response` event is handled
+           * the id is compared and if match it dispays the result.
+           *
+           * This system allows to use different request panels on single app
+           * and don't mix the results.
+           *
+           * @type {String|Number}
+           */
+          lastRequestId: String
         };
       }
 
@@ -355,6 +367,7 @@
        * @param {CustomEvent} e `api-request` event
        */
       _apiRequestHandler(e) {
+        this.lastRequestId = e.detail.id;
         this._appendConsoleHeaders(e);
         this._appendProxy(e);
       }
@@ -395,8 +408,7 @@
        * @param {CustomEvent} e
        */
       _apiResponseHandler(e) {
-        const editor = this.shadowRoot.querySelector('api-request-editor');
-        if (editor.requestId !== e.detail.id) {
+        if (this.lastRequestId !== e.detail.id) {
           return;
         }
         this._propagateResponse(e.detail);
