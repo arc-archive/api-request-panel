@@ -9,8 +9,7 @@
   ],
   "devDependencies": {
     "@polymer/gen-typescript-declarations": "^1.1.1",
-    "amf-client-js": "^1.4.0-5",
-    "bower": "^1.8.0"
+    "amf-client-js": "^1.4.0-5"
   },
   "private": false,
   "main": "api-request-panel.html",
