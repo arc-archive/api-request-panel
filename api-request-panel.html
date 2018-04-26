@@ -111,7 +111,10 @@
           /**
            * AMF HTTP method (operation in AMF vocabulary) ID.
            */
-          selected: String,
+          selected: {
+            type: String,
+            observer: '_selectedChanged'
+          },
           /**
            * By default application hosting the element must set `selected`
            * property. When using `api-navigation` element
@@ -435,6 +438,47 @@
         this.redirectsTiming = isXhr ? undefined : data.redirectsTiming;
         this.timing = isXhr ? undefined : data.timing;
         this.sourceMessage = data.sentHttpMessage;
+      }
+      /**
+       * Clears response panel when selected id changed.
+       * @param {String} id
+       */
+      _selectedChanged(id) {
+        if (!id) {
+          return;
+        }
+        this.clearResponse();
+      }
+      /**
+       * Clears response panel.
+       */
+      clearResponse() {
+        this.isErrorResponse = undefined;
+        this.responseError = undefined;
+        if (this.loadingTime) {
+          this.loadingTime = undefined;
+        }
+        if (this.request) {
+          this.request = undefined;
+        }
+        if (this.response) {
+          this.response = undefined;
+        }
+        if (this.responseIsXhr !== undefined) {
+          this.responseIsXhr = undefined;
+        }
+        if (this.redirects) {
+          this.redirects = undefined;
+        }
+        if (this.redirectsTiming) {
+          this.redirectsTiming = undefined;
+        }
+        if (this.timing) {
+          this.timing = undefined;
+        }
+        if (this.sourceMessage) {
+          this.sourceMessage = undefined;
+        }
       }
     }
 
