@@ -285,6 +285,36 @@
             propagate(element);
             assert.typeOf(element.sourceMessage, 'string');
           });
+
+          test('Changing selection clears response', () => {
+            propagate(element);
+            element.selected = 'test';
+            assert.isUndefined(element.isErrorResponse);
+            assert.isUndefined(element.responseError);
+            assert.isUndefined(element.loadingTime);
+            assert.isUndefined(element.request);
+            assert.isUndefined(element.response);
+            assert.isUndefined(element.responseIsXhr);
+            assert.isUndefined(element.redirects);
+            assert.isUndefined(element.redirectsTiming);
+            assert.isUndefined(element.timing);
+            assert.isUndefined(element.sourceMessage);
+          });
+
+          test('Calling clearResponse() clears response', () => {
+            propagate(element);
+            element.clearResponse();
+            assert.isUndefined(element.isErrorResponse);
+            assert.isUndefined(element.responseError);
+            assert.isUndefined(element.loadingTime);
+            assert.isUndefined(element.request);
+            assert.isUndefined(element.response);
+            assert.isUndefined(element.responseIsXhr);
+            assert.isUndefined(element.redirects);
+            assert.isUndefined(element.redirectsTiming);
+            assert.isUndefined(element.timing);
+            assert.isUndefined(element.sourceMessage);
+          });
         });
 
         suite('Automated navigation', () => {

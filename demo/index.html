@@ -94,7 +94,7 @@
     (function(app) {
       app.redirectUri = location.href.replace(/api-request-panel\/demo\/(index\.html)?/, 'oauth-authorization/oauth-popup.html');
       app._load = function() {
-        fetch('./amf-model.json')
+        fetch('./demo-api.json')
         .then((response) => response.json())
         .then((data) => {
           app.amfModel = data;
