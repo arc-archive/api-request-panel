@@ -70,6 +70,15 @@
         <oauth1-authorization></oauth1-authorization>
 
         <header>
+          <paper-dropdown-menu label="Select demo API">
+            <paper-listbox slot="dropdown-content" id="apiList" on-selected-changed="_apiChanged">
+              <paper-item data-file="demo-api.json">Demo API</paper-item>
+              <paper-item data-file="appian-api.json">Appian API</paper-item>
+              <paper-item data-file="array-body.json">Array body</paper-item>
+              <paper-item data-file="loan-microservice.json">OAS: Loan microservice</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+
           <paper-dropdown-menu label="Select demo endpoint">
             <paper-listbox slot="dropdown-content" id="enpointsList" selected="{{selectedEndpointIndex}}" on-selected-changed="_endpointChanged">
               <template is="dom-repeat" items="[[endpoints]]">
@@ -94,13 +103,23 @@
     (function(app) {
       app.redirectUri = location.href.replace(/api-request-panel\/demo\/(index\.html)?/, 'oauth-authorization/oauth-popup.html');
       app._load = function() {
-        fetch('./demo-api.json')
+        document.getElementById('apiList').selected = 0;
+      };
+
+      app._apiChanged = function(e) {
+        const file = e.target.selectedItem.dataset.file;
+        app._loadFile(file);
+      };
+
+      app._loadFile = function(file) {
+        fetch('./' + file)
         .then((response) => response.json())
         .then((data) => {
           app.amfModel = data;
           app._setEndpointsList(data);
         });
       };
+
       app._getAmfValue = function(model) {
         if (!model || !(model instanceof Array) || !model[0]) {
           return;
