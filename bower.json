@@ -41,7 +41,8 @@
     "arc-polyfills": "advanced-rest-client/arc-polyfills#^0.1.11"
   },
   "resolutions": {
-    "headers-parser-behavior": "2.0.0-preview"
+    "headers-parser-behavior": "2.0.0-preview",
+    "api-property-form-item": "2.0.0-preview"
   },
   "repository": {
     "type": "git",
