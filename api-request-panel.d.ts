@@ -125,6 +125,18 @@ declare namespace ApiElements {
     narrow: boolean|null|undefined;
 
     /**
+     * A request object that is generated from request edtor properties.
+     * It contains the following properties:
+     * - url
+     * - method
+     * - headers
+     * - payload
+     * - queryModel
+     * - pathModel
+     */
+    editorRequest: object|null|undefined;
+
+    /**
      * Created by the transport ARFC `request` object
      */
     request: object|null|undefined;
@@ -227,6 +239,17 @@ declare namespace ApiElements {
      * It should be a path from server's root path including bower_components.
      */
     bowerLocation: string|null|undefined;
+
+    /**
+     * ID of latest request.
+     * It is received from the `api-request-editor` when `api-request`
+     * event is dispatched. When `api-response` event is handled
+     * the id is compared and if match it dispays the result.
+     *
+     * This system allows to use different request panels on single app
+     * and don't mix the results.
+     */
+    lastRequestId: String|Number|null;
     _attachListeners(node: any): void;
     _detachListeners(node: any): void;
     ready(): void;
@@ -300,6 +323,22 @@ declare namespace ApiElements {
      * @param data Event's detail object
      */
     _propagateResponse(data: object|null): void;
+
+    /**
+     * Clears response panel when selected id changed.
+     */
+    _selectedChanged(id: String|null): void;
+
+    /**
+     * Clears response panel.
+     */
+    clearResponse(): void;
+
+    /**
+     * Dispatches `api-request-data-changed` custom event when any of the
+     * request data changes.
+     */
+    _editorRequestChanged(record: object|null): void;
   }
 }
 

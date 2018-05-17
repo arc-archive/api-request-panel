@@ -24,6 +24,12 @@
       aware="[[aware]]"
       no-url-editor="[[noUrlEditor]]"
       base-uri="[[baseUri]]"
+      url="{{editorRequest.url}}"
+      http-method="{{editorRequest.method}}"
+      headers="{{editorRequest.headers}}"
+      payload="{{editorRequest.payload}}"
+      query-model="{{editorRequest.queryModel}}"
+      path-model="{{editorRequest.pathModel}}"
       allow-hide-optional
       allow-disable-params
       allow-custom></api-request-editor>
@@ -158,6 +164,23 @@
             reflectToAttribute: true
           },
           /**
+           * A request object that is generated from request edtor properties.
+           * It contains the following properties:
+           * - url
+           * - method
+           * - headers
+           * - payload
+           * - queryModel
+           * - pathModel
+           */
+          editorRequest: {
+            type: Object,
+            notify: true,
+            value: function() {
+              return {};
+            }
+          },
+          /**
            * Created by the transport ARFC `request` object
            */
           request: Object,
@@ -265,6 +288,12 @@
            */
           lastRequestId: String
         };
+      }
+
+      static get observers() {
+        return [
+          '_editorRequestChanged(editorRequest.*)'
+        ];
       }
 
       /**
@@ -480,6 +509,29 @@
           this.sourceMessage = undefined;
         }
       }
+      /**
+       * Dispatches `api-request-data-changed` custom event when any of the
+       * request data changes.
+       * @param {Object} record
+       */
+      _editorRequestChanged(record) {
+        this.dispatchEvent(new CustomEvent('api-request-data-changed', {
+          bubbles: true,
+          composed: true,
+          detail: record.base
+        }));
+      }
+      /**
+       * Dispatched when `editorRequest` change.
+       * Contains all basic request data:
+       * @event api-request-data-changed
+       * @param {String} url
+       * @param {String} method
+       * @param {String} headers
+       * @param {String} payload
+       * @param {Array<Object>} queryModel
+       * @param {Array<Object>} pathModel
+       */
     }
 
     window.customElements.define(ApiRequestPanel.is, ApiRequestPanel);

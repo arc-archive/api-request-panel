@@ -57,6 +57,18 @@
           color: #3E2723;
         };
       }
+
+      output {
+        display: block;
+      }
+
+      output > label {
+        font-weight: 700;
+      }
+
+      output > div {
+        white-space: pre-wrap;
+      }
       </style>
     </custom-style>
   </head>
@@ -95,8 +107,13 @@
           </paper-dropdown-menu>
         </header>
         <section role="main" class="vertical-section-container centered main">
-          <api-request-panel aware="api-demo" selected="[[selectedAmfId]]" redirect-uri="[[redirectUri]]"></api-request-panel>
+          <api-request-panel aware="api-demo" selected="[[selectedAmfId]]" redirect-uri="[[redirectUri]]" on-api-request-data-changed="_requestChanged"></api-request-panel>
         </section>
+
+        <output class="centered">
+          <label>Current request</label>
+          <div>[[requestData]]</div>
+        </output>
       </template>
     </dom-bind>
     <script>
@@ -169,6 +186,13 @@
           const id = app.operations[app.selectedShape].id;
           app.selectedAmfId = id;
         });
+      };
+      app._requestChanged = function(e) {
+        if (!e.detail.value) {
+          app.requestData = '';
+          return;
+        }
+        app.requestData = JSON.stringify(e.detail.value, null, 2);
       };
       window.addEventListener('WebComponentsReady', () => app._load());
     })(document.getElementById('demo'));

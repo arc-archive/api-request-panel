@@ -61,7 +61,6 @@
 
     <script>
       suite('api-request-panel', () => {
-
         function appendRequestData(element, request) {
           request = request || {};
           const editor = element.shadowRoot.querySelector('api-request-editor');
@@ -72,7 +71,6 @@
         }
 
         suite('Initialization', () => {
-
           test('responseIsXhr is true by default', () => {
             const element = fixture('Basic');
             assert.isTrue(element.responseIsXhr);
@@ -87,11 +85,26 @@
             const element = fixture('Basic');
             flush(() => {
               appendRequestData(element);
-              const editor = element.shadowRoot.querySelector('api-request-editor');
               element.addEventListener('api-request', () => {
                 done();
               });
+              const editor = element.shadowRoot.querySelector('api-request-editor');
               editor.execute();
+            });
+          });
+
+          test('api-request-data-changed is dispatched', (done) => {
+            const element = fixture('Basic');
+            flush(() => {
+              appendRequestData(element, {
+                headers: 'x-a: b',
+                payload: 'test'
+              });
+              element.addEventListener('api-request-data-changed', () => {
+                done();
+              });
+              const editor = element.shadowRoot.querySelector('api-request-editor');
+              editor.headers = 'x-test: true';
             });
           });
         });
