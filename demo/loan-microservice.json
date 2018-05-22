@@ -698,6 +698,11 @@
                                 ]
                               }
                             ],
+                            "http://raml.org/vocabularies/document#recursive": [
+                              {
+                                "@value": true
+                              }
+                            ],
                             "http://www.w3.org/ns/shacl#name": [
                               {
                                 "@value": "Branch"
@@ -1607,6 +1612,11 @@
                                                     "@value": "zipCode"
                                                   }
                                                 ]
+                                              }
+                                            ],
+                                            "http://raml.org/vocabularies/document#recursive": [
+                                              {
+                                                "@value": true
                                               }
                                             ],
                                             "http://www.w3.org/ns/shacl#name": [
@@ -3266,6 +3276,11 @@
                                                 ]
                                               }
                                             ],
+                                            "http://raml.org/vocabularies/document#recursive": [
+                                              {
+                                                "@value": true
+                                              }
+                                            ],
                                             "http://www.w3.org/ns/shacl#name": [
                                               {
                                                 "@value": "User"
@@ -4466,6 +4481,11 @@
                                                 ]
                                               }
                                             ],
+                                            "http://raml.org/vocabularies/document#recursive": [
+                                              {
+                                                "@value": true
+                                              }
+                                            ],
                                             "http://www.w3.org/ns/shacl#name": [
                                               {
                                                 "@value": "Vehicle"
@@ -4734,6 +4754,11 @@
                                             "@value": "vehicle"
                                           }
                                         ]
+                                      }
+                                    ],
+                                    "http://raml.org/vocabularies/document#recursive": [
+                                      {
+                                        "@value": true
                                       }
                                     ],
                                     "http://www.w3.org/ns/shacl#name": [
@@ -6861,6 +6886,11 @@
                                         ]
                                       }
                                     ],
+                                    "http://raml.org/vocabularies/document#recursive": [
+                                      {
+                                        "@value": true
+                                      }
+                                    ],
                                     "http://www.w3.org/ns/shacl#name": [
                                       {
                                         "@value": "User"
@@ -7269,6 +7299,11 @@
                                     "@value": "user"
                                   }
                                 ]
+                              }
+                            ],
+                            "http://raml.org/vocabularies/document#recursive": [
+                              {
+                                "@value": true
                               }
                             ],
                             "http://www.w3.org/ns/shacl#name": [
@@ -9232,6 +9267,11 @@
                                         ]
                                       }
                                     ],
+                                    "http://raml.org/vocabularies/document#recursive": [
+                                      {
+                                        "@value": true
+                                      }
+                                    ],
                                     "http://www.w3.org/ns/shacl#name": [
                                       {
                                         "@value": "Branch"
@@ -10889,6 +10929,11 @@
                                         ]
                                       }
                                     ],
+                                    "http://raml.org/vocabularies/document#recursive": [
+                                      {
+                                        "@value": true
+                                      }
+                                    ],
                                     "http://www.w3.org/ns/shacl#name": [
                                       {
                                         "@value": "User"
@@ -12089,6 +12134,11 @@
                                         ]
                                       }
                                     ],
+                                    "http://raml.org/vocabularies/document#recursive": [
+                                      {
+                                        "@value": true
+                                      }
+                                    ],
                                     "http://www.w3.org/ns/shacl#name": [
                                       {
                                         "@value": "Vehicle"
@@ -12357,6 +12407,11 @@
                                     "@value": "vehicle"
                                   }
                                 ]
+                              }
+                            ],
+                            "http://raml.org/vocabularies/document#recursive": [
+                              {
+                                "@value": true
                               }
                             ],
                             "http://www.w3.org/ns/shacl#name": [
@@ -14234,6 +14289,11 @@
                                     ]
                                   }
                                 ],
+                                "http://raml.org/vocabularies/document#recursive": [
+                                  {
+                                    "@value": true
+                                  }
+                                ],
                                 "http://www.w3.org/ns/shacl#name": [
                                   {
                                     "@value": "VehicleDetail"
@@ -15211,6 +15271,11 @@
             ]
           }
         ],
+        "http://raml.org/vocabularies/document#recursive": [
+          {
+            "@value": true
+          }
+        ],
         "http://www.w3.org/ns/shacl#name": [
           {
             "@value": "Vehicle"
@@ -16068,6 +16133,11 @@
                                 "@value": "zipCode"
                               }
                             ]
+                          }
+                        ],
+                        "http://raml.org/vocabularies/document#recursive": [
+                          {
+                            "@value": true
                           }
                         ],
                         "http://www.w3.org/ns/shacl#name": [
@@ -17727,6 +17797,11 @@
                             ]
                           }
                         ],
+                        "http://raml.org/vocabularies/document#recursive": [
+                          {
+                            "@value": true
+                          }
+                        ],
                         "http://www.w3.org/ns/shacl#name": [
                           {
                             "@value": "User"
@@ -18927,6 +19002,11 @@
                             ]
                           }
                         ],
+                        "http://raml.org/vocabularies/document#recursive": [
+                          {
+                            "@value": true
+                          }
+                        ],
                         "http://www.w3.org/ns/shacl#name": [
                           {
                             "@value": "Vehicle"
@@ -19195,6 +19275,11 @@
                         "@value": "vehicle"
                       }
                     ]
+                  }
+                ],
+                "http://raml.org/vocabularies/document#recursive": [
+                  {
+                    "@value": true
                   }
                 ],
                 "http://www.w3.org/ns/shacl#name": [
@@ -21322,6 +21407,11 @@
                     ]
                   }
                 ],
+                "http://raml.org/vocabularies/document#recursive": [
+                  {
+                    "@value": true
+                  }
+                ],
                 "http://www.w3.org/ns/shacl#name": [
                   {
                     "@value": "User"
@@ -21730,6 +21820,11 @@
                 "@value": "user"
               }
             ]
+          }
+        ],
+        "http://raml.org/vocabularies/document#recursive": [
+          {
+            "@value": true
           }
         ],
         "http://www.w3.org/ns/shacl#name": [
@@ -23598,6 +23693,11 @@
                     ]
                   }
                 ],
+                "http://raml.org/vocabularies/document#recursive": [
+                  {
+                    "@value": true
+                  }
+                ],
                 "http://www.w3.org/ns/shacl#name": [
                   {
                     "@value": "Branch"
@@ -25255,6 +25355,11 @@
                     ]
                   }
                 ],
+                "http://raml.org/vocabularies/document#recursive": [
+                  {
+                    "@value": true
+                  }
+                ],
                 "http://www.w3.org/ns/shacl#name": [
                   {
                     "@value": "User"
@@ -26455,6 +26560,11 @@
                     ]
                   }
                 ],
+                "http://raml.org/vocabularies/document#recursive": [
+                  {
+                    "@value": true
+                  }
+                ],
                 "http://www.w3.org/ns/shacl#name": [
                   {
                     "@value": "Vehicle"
@@ -26723,6 +26833,11 @@
                 "@value": "vehicle"
               }
             ]
+          }
+        ],
+        "http://raml.org/vocabularies/document#recursive": [
+          {
+            "@value": true
           }
         ],
         "http://www.w3.org/ns/shacl#name": [
@@ -28050,6 +28165,11 @@
                 "@value": "zipCode"
               }
             ]
+          }
+        ],
+        "http://raml.org/vocabularies/document#recursive": [
+          {
+            "@value": true
           }
         ],
         "http://www.w3.org/ns/shacl#name": [
@@ -29400,6 +29520,11 @@
             ]
           }
         ],
+        "http://raml.org/vocabularies/document#recursive": [
+          {
+            "@value": true
+          }
+        ],
         "http://www.w3.org/ns/shacl#name": [
           {
             "@value": "User"
@@ -30128,6 +30253,11 @@
                 "@value": "vehicleYear"
               }
             ]
+          }
+        ],
+        "http://raml.org/vocabularies/document#recursive": [
+          {
+            "@value": true
           }
         ],
         "http://www.w3.org/ns/shacl#name": [
