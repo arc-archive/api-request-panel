@@ -1,7 +1,7 @@
 {
   "name": "@api-components/api-request-panel",
   "description": "An element to display the response body",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "license": "Apache-2.0",
   "authors": [
     "Pawel Psztyc",
@@ -9,7 +9,7 @@
   ],
   "devDependencies": {
     "@polymer/gen-typescript-declarations": "^1.1.1",
-    "amf-client-js": "^1.4.0-30"
+    "amf-client-js": "^1.5.0"
   },
   "private": false,
   "main": "api-request-panel.html",
