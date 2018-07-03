@@ -30,6 +30,7 @@
       payload="{{editorRequest.payload}}"
       query-model="{{editorRequest.queryModel}}"
       path-model="{{editorRequest.pathModel}}"
+      no-docs="[[noDocs]]"
       allow-hide-optional
       allow-disable-params
       allow-custom></api-request-editor>
@@ -286,7 +287,12 @@
            *
            * @type {String|Number}
            */
-          lastRequestId: String
+          lastRequestId: String,
+          /**
+           * Prohibits rendering of the documentation (the icon and the
+           * description).
+           */
+          noDocs: Boolean
         };
       }
 
