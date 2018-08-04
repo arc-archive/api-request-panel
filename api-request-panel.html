@@ -320,14 +320,14 @@
         }
       }
 
-      _attachListeners(node) {
-        node.addEventListener('api-response', this._apiResponseHandler);
+      _attachListeners() {
+        window.addEventListener('api-response', this._apiResponseHandler);
         this.addEventListener('api-request', this._apiRequestHandler);
       }
 
-      _detachListeners(node) {
-        node.removeEventListener('api-response', this._apiResponseHandler);
-        node.removeEventListener('api-request', this._apiRequestHandler);
+      _detachListeners() {
+        window.removeEventListener('api-response', this._apiResponseHandler);
+        this.removeEventListener('api-request', this._apiRequestHandler);
         if (this.__navEventsRegistered) {
           this._unregisterNavigationEvents();
         }
