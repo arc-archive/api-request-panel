@@ -108,8 +108,11 @@
      * @appliesMixin ArcBehaviors.EventsTargetBehavior
      * @memberof ApiElements
      */
-    class ApiRequestPanel extends Polymer.mixinBehaviors([Polymer.IronScrollTargetBehavior], ArcBehaviors.EventsTargetBehavior(ArcBehaviors.HeadersParserBehavior(Polymer.Element))) {
-      static get is() { return 'api-request-panel'; }
+    class ApiRequestPanel extends Polymer.mixinBehaviors(
+      [Polymer.IronScrollTargetBehavior],
+      ArcBehaviors.EventsTargetBehavior(
+        ArcBehaviors.HeadersParserBehavior(Polymer.Element))) {
+      static get is() {return 'api-request-panel';}
       static get properties() {
         return {
           /**
