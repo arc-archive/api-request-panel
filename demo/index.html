@@ -147,8 +147,7 @@
                   allow-hide-optional="[[allowHideOptional]]"
                   no-url-editor="[[noUrlEditor]]"
                   no-docs="[[noDocs]]"
-                  base-uri="[[computeFinaleBaseUri(selectedOverrideBase, baseUri)]]"
-                  on-api-request-data-changed="_requestChanged"></api-request-panel>
+                  base-uri="[[computeFinaleBaseUri(selectedOverrideBase, baseUri)]]"></api-request-panel>
               </div>
 
               <div class="card">
@@ -207,12 +206,11 @@
       app.selectedAmfId = selected;
     };
 
-    app._requestChanged = function(e) {
-      if (!e.detail.value) {
-        app.requestData = '';
-        return;
+    app.computeFinaleBaseUri = function(selectedOverrideBase, baseUri) {
+      if (selectedOverrideBase) {
+        return selectedOverrideBase;
       }
-      app.requestData = JSON.stringify(e.detail.value, null, 2);
+      return baseUri;
     };
     window.addEventListener('WebComponentsReady', app._load);
     window.addEventListener('api-navigation-selection-changed', app._navChanged);
