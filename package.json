@@ -1,15 +1,15 @@
 {
   "name": "@api-components/api-request-panel",
   "description": "An element to display the response body",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "license": "Apache-2.0",
   "authors": [
     "Pawel Psztyc",
     "The Advanced REST client authors <arc@mulesoft.com>"
   ],
   "devDependencies": {
-    "@polymer/gen-typescript-declarations": "^1.1.1",
-    "amf-client-js": "^1.7.1"
+    "@api-components/api-model-generator": "^0.1.1",
+    "@polymer/gen-typescript-declarations": "^1.5.1"
   },
   "private": false,
   "main": "api-request-panel.html",

@@ -83,11 +83,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 115,
+              "line": 119,
               "column": 10
             },
             "end": {
-              "line": 115,
+              "line": 119,
               "column": 23
             }
           },
@@ -104,11 +104,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 119,
+              "line": 123,
               "column": 10
             },
             "end": {
-              "line": 122,
+              "line": 126,
               "column": 11
             }
           },
@@ -126,11 +126,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 129,
+              "line": 133,
               "column": 10
             },
             "end": {
-              "line": 132,
+              "line": 136,
               "column": 11
             }
           },
@@ -148,11 +148,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 139,
+              "line": 143,
               "column": 10
             },
             "end": {
-              "line": 139,
+              "line": 143,
               "column": 26
             }
           },
@@ -169,11 +169,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 144,
+              "line": 148,
               "column": 10
             },
             "end": {
-              "line": 144,
+              "line": 148,
               "column": 30
             }
           },
@@ -190,11 +190,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 151,
+              "line": 155,
               "column": 10
             },
             "end": {
-              "line": 151,
+              "line": 155,
               "column": 25
             }
           },
@@ -211,11 +211,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 156,
+              "line": 160,
               "column": 10
             },
             "end": {
-              "line": 156,
+              "line": 160,
               "column": 29
             }
           },
@@ -232,11 +232,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 160,
+              "line": 164,
               "column": 10
             },
             "end": {
-              "line": 164,
+              "line": 168,
               "column": 11
             }
           },
@@ -254,11 +254,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 175,
+              "line": 179,
               "column": 10
             },
             "end": {
-              "line": 181,
+              "line": 185,
               "column": 11
             }
           },
@@ -277,11 +277,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 185,
+              "line": 189,
               "column": 10
             },
             "end": {
-              "line": 185,
+              "line": 189,
               "column": 25
             }
           },
@@ -298,11 +298,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 189,
+              "line": 193,
               "column": 10
             },
             "end": {
-              "line": 189,
+              "line": 193,
               "column": 26
             }
           },
@@ -319,11 +319,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 193,
+              "line": 197,
               "column": 10
             },
             "end": {
-              "line": 196,
+              "line": 200,
               "column": 11
             }
           },
@@ -341,11 +341,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 200,
+              "line": 204,
               "column": 10
             },
             "end": {
-              "line": 200,
+              "line": 204,
               "column": 34
             }
           },
@@ -362,11 +362,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 204,
+              "line": 208,
               "column": 10
             },
             "end": {
-              "line": 207,
+              "line": 211,
               "column": 11
             }
           },
@@ -384,11 +384,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 211,
+              "line": 215,
               "column": 10
             },
             "end": {
-              "line": 211,
+              "line": 215,
               "column": 31
             }
           },
@@ -405,11 +405,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 216,
+              "line": 220,
               "column": 10
             },
             "end": {
-              "line": 216,
+              "line": 220,
               "column": 29
             }
           },
@@ -426,11 +426,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 221,
+              "line": 225,
               "column": 10
             },
             "end": {
-              "line": 221,
+              "line": 225,
               "column": 24
             }
           },
@@ -447,11 +447,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 226,
+              "line": 230,
               "column": 10
             },
             "end": {
-              "line": 226,
+              "line": 230,
               "column": 32
             }
           },
@@ -468,11 +468,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 230,
+              "line": 234,
               "column": 10
             },
             "end": {
-              "line": 230,
+              "line": 234,
               "column": 26
             }
           },
@@ -489,11 +489,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 236,
+              "line": 240,
               "column": 10
             },
             "end": {
-              "line": 236,
+              "line": 240,
               "column": 31
             }
           },
@@ -510,11 +510,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 238,
+              "line": 242,
               "column": 10
             },
             "end": {
-              "line": 238,
+              "line": 242,
               "column": 35
             }
           },
@@ -531,11 +531,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 250,
+              "line": 254,
               "column": 10
             },
             "end": {
-              "line": 250,
+              "line": 254,
               "column": 30
             }
           },
@@ -552,11 +552,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 262,
+              "line": 266,
               "column": 10
             },
             "end": {
-              "line": 262,
+              "line": 266,
               "column": 23
             }
           },
@@ -573,11 +573,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 268,
+              "line": 272,
               "column": 10
             },
             "end": {
-              "line": 268,
+              "line": 272,
               "column": 33
             }
           },
@@ -594,11 +594,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 273,
+              "line": 277,
               "column": 10
             },
             "end": {
-              "line": 276,
+              "line": 280,
               "column": 11
             }
           },
@@ -616,17 +616,101 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 288,
+              "line": 292,
               "column": 10
             },
             "end": {
-              "line": 288,
+              "line": 292,
               "column": 31
             }
           },
           "metadata": {
             "polymer": {
               "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "noDocs",
+          "type": "boolean | null | undefined",
+          "description": "Prohibits rendering of the documentation (the icon and the\ndescription).",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 297,
+              "column": 10
+            },
+            "end": {
+              "line": 297,
+              "column": 25
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          }
+        },
+        {
+          "name": "allowHideOptional",
+          "type": "boolean | null | undefined",
+          "description": "If set it computes `hasOptional` property and shows checkbox in the\nform to show / hide optional properties.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 302,
+              "column": 10
+            },
+            "end": {
+              "line": 302,
+              "column": 36
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          }
+        },
+        {
+          "name": "allowDisableParams",
+          "type": "boolean | null | undefined",
+          "description": "If set, enable / disable param checkbox is rendered next to each\nform item.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 307,
+              "column": 10
+            },
+            "end": {
+              "line": 307,
+              "column": 37
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          }
+        },
+        {
+          "name": "allowCustom",
+          "type": "boolean | null | undefined",
+          "description": "When set, renders \"add custom\" item button.\nIf the element is to be used withouth AMF model this should always\nbe enabled. Otherwise users won't be able to add a parameter.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 313,
+              "column": 10
+            },
+            "end": {
+              "line": 313,
+              "column": 30
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
             }
           }
         }
@@ -1003,20 +1087,16 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 315,
+              "line": 340,
               "column": 6
             },
             "end": {
-              "line": 318,
+              "line": 343,
               "column": 7
             }
           },
           "metadata": {},
-          "params": [
-            {
-              "name": "node"
-            }
-          ],
+          "params": [],
           "return": {
             "type": "void"
           }
@@ -1027,20 +1107,16 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 320,
+              "line": 345,
               "column": 6
             },
             "end": {
-              "line": 326,
+              "line": 351,
               "column": 7
             }
           },
           "metadata": {},
-          "params": [
-            {
-              "name": "node"
-            }
-          ],
+          "params": [],
           "return": {
             "type": "void"
           }
@@ -1051,11 +1127,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 308,
+              "line": 333,
               "column": 6
             },
             "end": {
-              "line": 313,
+              "line": 338,
               "column": 7
             }
           },
@@ -1071,11 +1147,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 331,
+              "line": 356,
               "column": 6
             },
             "end": {
-              "line": 334,
+              "line": 359,
               "column": 7
             }
           },
@@ -1091,11 +1167,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 339,
+              "line": 364,
               "column": 6
             },
             "end": {
-              "line": 342,
+              "line": 367,
               "column": 7
             }
           },
@@ -1111,11 +1187,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 348,
+              "line": 373,
               "column": 6
             },
             "end": {
-              "line": 354,
+              "line": 379,
               "column": 7
             }
           },
@@ -1136,11 +1212,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 360,
+              "line": 385,
               "column": 6
             },
             "end": {
-              "line": 366,
+              "line": 391,
               "column": 7
             }
           },
@@ -1161,11 +1237,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 372,
+              "line": 397,
               "column": 6
             },
             "end": {
-              "line": 382,
+              "line": 407,
               "column": 7
             }
           },
@@ -1187,11 +1263,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 389,
+              "line": 414,
               "column": 6
             },
             "end": {
-              "line": 391,
+              "line": 416,
               "column": 7
             }
           },
@@ -1213,11 +1289,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 400,
+              "line": 425,
               "column": 6
             },
             "end": {
-              "line": 404,
+              "line": 429,
               "column": 7
             }
           },
@@ -1239,11 +1315,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 410,
+              "line": 435,
               "column": 6
             },
             "end": {
-              "line": 421,
+              "line": 446,
               "column": 7
             }
           },
@@ -1265,11 +1341,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 426,
+              "line": 451,
               "column": 6
             },
             "end": {
-              "line": 434,
+              "line": 459,
               "column": 7
             }
           },
@@ -1289,11 +1365,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 441,
+              "line": 466,
               "column": 6
             },
             "end": {
-              "line": 451,
+              "line": 476,
               "column": 7
             }
           },
@@ -1314,11 +1390,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 457,
+              "line": 482,
               "column": 6
             },
             "end": {
-              "line": 469,
+              "line": 494,
               "column": 7
             }
           },
@@ -1340,11 +1416,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 474,
+              "line": 499,
               "column": 6
             },
             "end": {
-              "line": 479,
+              "line": 504,
               "column": 7
             }
           },
@@ -1365,11 +1441,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 483,
+              "line": 508,
               "column": 6
             },
             "end": {
-              "line": 510,
+              "line": 535,
               "column": 7
             }
           },
@@ -1385,11 +1461,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 516,
+              "line": 541,
               "column": 6
             },
             "end": {
-              "line": 522,
+              "line": 547,
               "column": 7
             }
           },
@@ -1419,11 +1495,11 @@
       "metadata": {},
       "sourceRange": {
         "start": {
-          "line": 108,
+          "line": 109,
           "column": 4
         },
         "end": {
-          "line": 534,
+          "line": 559,
           "column": 5
         }
       },
@@ -1472,11 +1548,11 @@
           "description": "`raml-aware` scope property to use.",
           "sourceRange": {
             "start": {
-              "line": 115,
+              "line": 119,
               "column": 10
             },
             "end": {
-              "line": 115,
+              "line": 119,
               "column": 23
             }
           },
@@ -1488,11 +1564,11 @@
           "description": "AMF HTTP method (operation in AMF vocabulary) ID.",
           "sourceRange": {
             "start": {
-              "line": 119,
+              "line": 123,
               "column": 10
             },
             "end": {
-              "line": 122,
+              "line": 126,
               "column": 11
             }
           },
@@ -1504,11 +1580,11 @@
           "description": "By default application hosting the element must set `selected`\nproperty. When using `api-navigation` element\nby setting this property the element listens for navigation events\nand updates the state",
           "sourceRange": {
             "start": {
-              "line": 129,
+              "line": 133,
               "column": 10
             },
             "end": {
-              "line": 132,
+              "line": 136,
               "column": 11
             }
           },
@@ -1520,11 +1596,11 @@
           "description": "A model's `@id` of selected documentation part.\nSpecial case is for `summary` view. It's not part of an API\nbut most applications has some kind of summary view for the\nAPI.",
           "sourceRange": {
             "start": {
-              "line": 139,
+              "line": 143,
               "column": 10
             },
             "end": {
-              "line": 139,
+              "line": 143,
               "column": 26
             }
           },
@@ -1536,11 +1612,11 @@
           "description": "Hides the URL editor from the view.\nThe editor is still in the DOM and the `urlInvalid` property still will be set.",
           "sourceRange": {
             "start": {
-              "line": 144,
+              "line": 148,
               "column": 10
             },
             "end": {
-              "line": 144,
+              "line": 148,
               "column": 30
             }
           },
@@ -1552,11 +1628,11 @@
           "description": "A base URI for the API. To be set if RAML spec is missing `baseUri`\ndeclaration and this produces invalid URL input. This information\nis passed to the URL editor that prefixes the URL with `baseUri` value\nif passed URL is a relative URL.",
           "sourceRange": {
             "start": {
-              "line": 151,
+              "line": 155,
               "column": 10
             },
             "end": {
-              "line": 151,
+              "line": 155,
               "column": 25
             }
           },
@@ -1568,11 +1644,11 @@
           "description": "OAuth2 redirect URI.\nThis value **must** be set in order for OAuth 1/2 to work properly.",
           "sourceRange": {
             "start": {
-              "line": 156,
+              "line": 160,
               "column": 10
             },
             "end": {
-              "line": 156,
+              "line": 160,
               "column": 29
             }
           },
@@ -1584,11 +1660,11 @@
           "description": "If set it will renders the view in the narrow layout.",
           "sourceRange": {
             "start": {
-              "line": 160,
+              "line": 164,
               "column": 10
             },
             "end": {
-              "line": 164,
+              "line": 168,
               "column": 11
             }
           },
@@ -1600,11 +1676,11 @@
           "description": "A request object that is generated from request edtor properties.\nIt contains the following properties:\n- url\n- method\n- headers\n- payload\n- queryModel\n- pathModel",
           "sourceRange": {
             "start": {
-              "line": 175,
+              "line": 179,
               "column": 10
             },
             "end": {
-              "line": 181,
+              "line": 185,
               "column": 11
             }
           },
@@ -1616,11 +1692,11 @@
           "description": "Created by the transport ARFC `request` object",
           "sourceRange": {
             "start": {
-              "line": 185,
+              "line": 189,
               "column": 10
             },
             "end": {
-              "line": 185,
+              "line": 189,
               "column": 25
             }
           },
@@ -1632,11 +1708,11 @@
           "description": "Created by the transport ARC `response` object.",
           "sourceRange": {
             "start": {
-              "line": 189,
+              "line": 193,
               "column": 10
             },
             "end": {
-              "line": 189,
+              "line": 193,
               "column": 26
             }
           },
@@ -1648,11 +1724,11 @@
           "description": "Computed value, true, when the response object is set.",
           "sourceRange": {
             "start": {
-              "line": 193,
+              "line": 197,
               "column": 10
             },
             "end": {
-              "line": 196,
+              "line": 200,
               "column": 11
             }
           },
@@ -1664,11 +1740,11 @@
           "description": "A flag indincating request error.",
           "sourceRange": {
             "start": {
-              "line": 200,
+              "line": 204,
               "column": 10
             },
             "end": {
-              "line": 200,
+              "line": 204,
               "column": 34
             }
           },
@@ -1680,11 +1756,11 @@
           "description": "True if the response is made by the Fetch / XHR api.",
           "sourceRange": {
             "start": {
-              "line": 204,
+              "line": 208,
               "column": 10
             },
             "end": {
-              "line": 207,
+              "line": 211,
               "column": 11
             }
           },
@@ -1696,11 +1772,11 @@
           "description": "An error object associated with the response when error.",
           "sourceRange": {
             "start": {
-              "line": 211,
+              "line": 215,
               "column": 10
             },
             "end": {
-              "line": 211,
+              "line": 215,
               "column": 31
             }
           },
@@ -1712,11 +1788,11 @@
           "description": "Response full loading time. This information is received from the\ntransport library.",
           "sourceRange": {
             "start": {
-              "line": 216,
+              "line": 220,
               "column": 10
             },
             "end": {
-              "line": 216,
+              "line": 220,
               "column": 29
             }
           },
@@ -1728,11 +1804,11 @@
           "description": "If the transport method is able to collect detailed information about request timings\nthen this value will be set. It's the `timings` property from the HAR 1.2 spec.",
           "sourceRange": {
             "start": {
-              "line": 221,
+              "line": 225,
               "column": 10
             },
             "end": {
-              "line": 221,
+              "line": 225,
               "column": 24
             }
           },
@@ -1744,11 +1820,11 @@
           "description": "If the transport method is able to collect detailed information about redirects timings\nthen this value will be set. It's a list of `timings` property from the HAR 1.2 spec.",
           "sourceRange": {
             "start": {
-              "line": 226,
+              "line": 230,
               "column": 10
             },
             "end": {
-              "line": 226,
+              "line": 230,
               "column": 32
             }
           },
@@ -1760,11 +1836,11 @@
           "description": "It will be set if the transport method can generate information about redirections.",
           "sourceRange": {
             "start": {
-              "line": 230,
+              "line": 234,
               "column": 10
             },
             "end": {
-              "line": 230,
+              "line": 234,
               "column": 26
             }
           },
@@ -1776,11 +1852,11 @@
           "description": "Http message sent to the server.\n\nThis information should be available only in case of advanced HTTP transport.",
           "sourceRange": {
             "start": {
-              "line": 236,
+              "line": 240,
               "column": 10
             },
             "end": {
-              "line": 236,
+              "line": 240,
               "column": 31
             }
           },
@@ -1792,11 +1868,11 @@
           "description": "Main scroll target for the app.",
           "sourceRange": {
             "start": {
-              "line": 238,
+              "line": 242,
               "column": 10
             },
             "end": {
-              "line": 238,
+              "line": 242,
               "column": 35
             }
           },
@@ -1808,11 +1884,11 @@
           "description": "Forces the console to send headers defined in this string overriding any used defined\nheader.\nThis should be an array of headers with `name` and `value` keys, e.g.:\n```\n[{\n  name: \"x-token\",\n  value: \"value\"\n}]\n```",
           "sourceRange": {
             "start": {
-              "line": 250,
+              "line": 254,
               "column": 10
             },
             "end": {
-              "line": 250,
+              "line": 254,
               "column": 30
             }
           },
@@ -1824,11 +1900,11 @@
           "description": "If set every request made from the console will be proxied by the service provided in this\nvalue.\nIt will prefix entered URL with the proxy value. so the call to\n`http://domain.com/path/?query=some+value` will become\n`https://proxy.com/path/http://domain.com/path/?query=some+value`\n\nIf the proxy require a to pass the URL as a query parameter define value as follows:\n`https://proxy.com/path/?url=`. In this case be sure to set `proxy-encode-url`\nattribute.",
           "sourceRange": {
             "start": {
-              "line": 262,
+              "line": 266,
               "column": 10
             },
             "end": {
-              "line": 262,
+              "line": 266,
               "column": 23
             }
           },
@@ -1840,11 +1916,11 @@
           "description": "If `proxy` is set, it will URL encode the request URL before appending it to the proxy URL.\n`http://domain.com/path/?query=some+value` will become\n`https://proxy.com/?url=http%3A%2F%2Fdomain.com%2Fpath%2F%3Fquery%3Dsome%2Bvalue`",
           "sourceRange": {
             "start": {
-              "line": 268,
+              "line": 272,
               "column": 10
             },
             "end": {
-              "line": 268,
+              "line": 272,
               "column": 33
             }
           },
@@ -1856,11 +1932,11 @@
           "description": "Location of the `bower_components` folder.\nIt should be a path from server's root path including bower_components.",
           "sourceRange": {
             "start": {
-              "line": 273,
+              "line": 277,
               "column": 10
             },
             "end": {
-              "line": 276,
+              "line": 280,
               "column": 11
             }
           },
@@ -1872,16 +1948,80 @@
           "description": "ID of latest request.\nIt is received from the `api-request-editor` when `api-request`\nevent is dispatched. When `api-response` event is handled\nthe id is compared and if match it dispays the result.\n\nThis system allows to use different request panels on single app\nand don't mix the results.",
           "sourceRange": {
             "start": {
-              "line": 288,
+              "line": 292,
               "column": 10
             },
             "end": {
-              "line": 288,
+              "line": 292,
               "column": 31
             }
           },
           "metadata": {},
           "type": "(String | Number)"
+        },
+        {
+          "name": "no-docs",
+          "description": "Prohibits rendering of the documentation (the icon and the\ndescription).",
+          "sourceRange": {
+            "start": {
+              "line": 297,
+              "column": 10
+            },
+            "end": {
+              "line": 297,
+              "column": 25
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "allow-hide-optional",
+          "description": "If set it computes `hasOptional` property and shows checkbox in the\nform to show / hide optional properties.",
+          "sourceRange": {
+            "start": {
+              "line": 302,
+              "column": 10
+            },
+            "end": {
+              "line": 302,
+              "column": 36
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "allow-disable-params",
+          "description": "If set, enable / disable param checkbox is rendered next to each\nform item.",
+          "sourceRange": {
+            "start": {
+              "line": 307,
+              "column": 10
+            },
+            "end": {
+              "line": 307,
+              "column": 37
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "allow-custom",
+          "description": "When set, renders \"add custom\" item button.\nIf the element is to be used withouth AMF model this should always\nbe enabled. Otherwise users won't be able to add a parameter.",
+          "sourceRange": {
+            "start": {
+              "line": 313,
+              "column": 10
+            },
+            "end": {
+              "line": 313,
+              "column": 30
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
         }
       ],
       "events": [
