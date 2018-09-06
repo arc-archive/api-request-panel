@@ -32,9 +32,9 @@
       path-model="{{editorRequest.pathModel}}"
       no-docs="[[noDocs]]"
       events-target="[[eventsTarget]]"
-      allow-hide-optional
-      allow-disable-params
-      allow-custom></api-request-editor>
+      allow-hide-optional="[[allowHideOptional]]"
+      allow-disable-params="[[allowDisableParams]]"
+      allow-custom="[[allowCustom]]"></api-request-editor>
     <template is="dom-if" if="[[hasResponse]]">
       <response-view
         request="[[request]]"
@@ -293,7 +293,23 @@
            * Prohibits rendering of the documentation (the icon and the
            * description).
            */
-          noDocs: Boolean
+          noDocs: Boolean,
+          /**
+           * If set it computes `hasOptional` property and shows checkbox in the
+           * form to show / hide optional properties.
+           */
+          allowHideOptional: Boolean,
+          /**
+           * If set, enable / disable param checkbox is rendered next to each
+           * form item.
+           */
+          allowDisableParams: Boolean,
+          /**
+           * When set, renders "add custom" item button.
+           * If the element is to be used withouth AMF model this should always
+           * be enabled. Otherwise users won't be able to add a parameter.
+           */
+          allowCustom: Boolean
         };
       }
 
