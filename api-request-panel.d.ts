@@ -313,7 +313,7 @@ declare namespace ApiElements {
      *
      * @param response ARC response objects
      */
-    _computeHasResponse(response: object|null): Boolean|null;
+    _computeHasResponse(response: object|null, responseError: Boolean|null): Boolean|null;
 
     /**
      * A handler for the API call.
