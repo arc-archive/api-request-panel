@@ -15,6 +15,10 @@
       display: block;
       @apply --api-request-panel;
     }
+
+    response-view {
+      margin-top: var(--api-request-panel-response-margin-top, 12px);
+    }
     </style>
     <api-request-editor
       narrow="{{narrow}}"
@@ -197,7 +201,7 @@
            */
           hasResponse: {
             type: Boolean,
-            computed: '_computeHasResponse(response)'
+            computed: '_computeHasResponse(response, responseError)'
           },
           /**
            * A flag indincating request error.
@@ -410,12 +414,12 @@
        * Computes if there is a reponse object.
        *
        * @param {Object} response ARC response objects
+       * @param {Boolean} responseError
        * @return {Boolean}
        */
-      _computeHasResponse(response) {
-        return !!response;
+      _computeHasResponse(response, responseError) {
+        return !!response || !!responseError;
       }
-
       /**
        * A handler for the API call.
        * This handler will only check if there is authorization required
