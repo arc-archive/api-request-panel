@@ -362,6 +362,53 @@
           });
         });
       });
+
+      suite('_apiResponseHandler()', () => {
+        let element;
+        const requestId = 'test-id';
+        setup((done) => {
+          element = fixture('Basic');
+          element.lastRequestId = requestId;
+          flush(() => done());
+        });
+
+        const xhrResponse = {
+          request: {
+            url: 'https://domain.com/',
+            method: 'GET',
+            headers: 'accept: text/plain'
+          },
+          response: {
+            status: 200,
+            statusText: 'OK',
+            payload: 'Hello world',
+            headers: 'content-type: text/plain'
+          },
+          loadingTime: 124.12345678,
+          isError: false,
+          isXhr: true
+        };
+
+        test('Does nothing when ID is different', () => {
+          const spy = sinon.spy(element, '_propagateResponse');
+          element._apiResponseHandler({
+            detail: {
+              id: 'otherId'
+            }
+          });
+          assert.isFalse(spy.called);
+        });
+
+        test('Calls _propagateResponse()', () => {
+          const detail = Object.assign({}, {id: requestId}, xhrResponse);
+          const spy = sinon.spy(element, '_propagateResponse');
+          element._apiResponseHandler({
+            detail
+          });
+          assert.isTrue(spy.called);
+          assert.deepEqual(spy.args[0][0], detail);
+        });
+      });
     </script>
   </body>
 </html>
