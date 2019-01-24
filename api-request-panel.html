@@ -57,8 +57,7 @@
   </template>
   <script>
     /**
-     * `api-request-panel`
-     * An complete request editor and response view panels in single element
+     * Request editor and response view panels in a single element.
      *
      * This element is to replace `api-console-request` element from `mulesoft/api-console`
      * project repository.
@@ -66,28 +65,43 @@
      * This is also a base case for any application that renders request and
      * response views.
      *
-     * It combines `api-request-editor` and `response-view` elements and
-     * reacts on `api-request` and `api-response` events.
+     * The element uses AMF model to render view based on API mnodel and current user
+     * selection.
+     *
+     * It uses both `api-request-editor` and `response-view` elements and
+     * listens to `api-request` and `api-response` events.
      * It also adds additional configuration options that exists in API console
      * (proxy, additional headers).
      *
      * ## `api-request` and `api-response` events
      *
-     * See full documentation here: https://github.com/advanced-rest-client/api-components-api/blob/master/docs/api-request-and-response.md
+     * See full documentation here:
+     * https://github.com/advanced-rest-client/api-components-api/blob/master/docs/api-request-and-response.md
      *
-     * ## Dependencies
+     * ## Dependencies and changelog from included elements
      *
-     * - This components does not include any polyfills
-     * - This component nor it's children does not contain trasnsport library.
-     * Any transport library that handles ARC request event can work with this
-     * component. See `advanced-rest-client/xhr-simple-request` for implementation
-     * details
+     * - XHR element is not included in the element. Use
+     * `advanced-rest-client/xhr-simple-request` in your application or handle
+     * `api-request` custom event to make a request.
+     * - The element does not include any polyfills
+     * - `redirectUrl` is now `redirectUri`
+     * - `api-console-request` event is now `api-request` event
+     * - `api-console-response` event is now `api-response` event
+     * - Added more details to `api-request` custom event (comparing to
+     * `api-console-request`)
+     * - The user is able to enable/disable query parameters and headers. Set
+     * `allow-disable-params` attribute to enable this behavior.
+     * - The user is able to add custom query parameters or headers.
+     * Set `allow-custom` attribute to enable this behavior.
      * - From authorization panel changes:
-     *  - `auth-settings-changed` custom event is stopped from bubbling. Listen for `authorization-settings-changed` event instead.
+     *  - `auth-settings-changed` custom event is stopped from bubbling.
+     *  Listen for `authorization-settings-changed` event instead.
      * - From auth-method-oauth2 changes:
-     *  - Added `deliveryMethod` and `deliveryName` properties to the `detail.setting` object.
-     * - From auth-method-oauth1 changes:
-     *  - Crypto library is no longer included into the element. Use `advanced-rest-client/cryptojs-lib` component to include the library if your project doesn't use crypto libraries already.
+     *  - Added `deliveryMethod` and `deliveryName` properties to the
+     *  `detail.setting` object.
+     * - Crypto library is no longer included into the element. Use
+     *  `advanced-rest-client/cryptojs-lib` component to include the library
+     *  if your project doesn't use crypto libraries already.
      *
      * ## Narrow view
      *
@@ -115,7 +129,9 @@
       [Polymer.IronScrollTargetBehavior],
       ArcBehaviors.EventsTargetBehavior(
         ArcBehaviors.HeadersParserBehavior(Polymer.Element))) {
-      static get is() {return 'api-request-panel';}
+      static get is() {
+        return 'api-request-panel';
+      }
       static get properties() {
         return {
           /**
@@ -451,7 +467,7 @@
       }
       /**
        * Sets the proxy URL if the `proxy` property is set.
-       * @param {CustomEvent} event The `api-request` event.
+       * @param {CustomEvent} e The `api-request` event.
        */
       _appendProxy(e) {
         const proxy = this.proxy;
