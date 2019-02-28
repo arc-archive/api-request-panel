@@ -5,19 +5,24 @@
  *   https://github.com/Polymer/tools/tree/master/packages/gen-typescript-declarations
  *
  * To modify these typings, edit the source file(s):
- *   api-request-panel.html
+ *   api-request-panel.js
  */
 
-/// <reference path="../polymer/types/polymer-element.d.ts" />
-/// <reference path="../polymer/types/lib/elements/dom-if.d.ts" />
-/// <reference path="../api-request-editor/api-request-editor.d.ts" />
-/// <reference path="../response-view/response-view.d.ts" />
-/// <reference path="../raml-aware/raml-aware.d.ts" />
-/// <reference path="../arc-icons/arc-icons.d.ts" />
-/// <reference path="../paper-icon-button/paper-icon-button.d.ts" />
-/// <reference path="../iron-scroll-target-behavior/iron-scroll-target-behavior.d.ts" />
-/// <reference path="../headers-parser-behavior/headers-parser-behavior.d.ts" />
-/// <reference path="../events-target-behavior/events-target-behavior.d.ts" />
+
+// tslint:disable:variable-name Describing an API that's defined elsewhere.
+// tslint:disable:no-any describes the API as best we are able today
+
+import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+
+import {IronScrollTargetBehavior} from '@polymer/iron-scroll-target-behavior/iron-scroll-target-behavior.js';
+
+import {HeadersParserMixin} from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
+
+import {EventsTargetMixin} from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
+
+import {html} from '@polymer/polymer/lib/utils/html-tag.js';
+
+import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 
 declare namespace ApiElements {
 
@@ -82,10 +87,9 @@ declare namespace ApiElements {
    * update selection when internal API navigation occurres.
    */
   class ApiRequestPanel extends
-    ArcBehaviors.HeadersParserBehavior(
-    Polymer.IronScrollTargetBehavior(
-    ArcBehaviors.EventsTargetBehavior(
-    Object))) {
+    HeadersParserMixin(
+    EventsTargetMixin(
+    Object)) {
 
     /**
      * `raml-aware` scope property to use.
@@ -249,10 +253,10 @@ declare namespace ApiElements {
     proxyEncodeUrl: boolean|null|undefined;
 
     /**
-     * Location of the `bower_components` folder.
-     * It should be a path from server's root path including bower_components.
+     * Location of the `node_modules` folder.
+     * It should be a path from server's root path including node_modules.
      */
-    bowerLocation: string|null|undefined;
+    authPopupLocation: string|null|undefined;
 
     /**
      * ID of latest request.
@@ -383,6 +387,9 @@ declare namespace ApiElements {
   }
 }
 
-interface HTMLElementTagNameMap {
-  "api-request-panel": ApiElements.ApiRequestPanel;
+declare global {
+
+  interface HTMLElementTagNameMap {
+    "api-request-panel": ApiElements.ApiRequestPanel;
+  }
 }
