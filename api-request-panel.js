@@ -1,15 +1,14 @@
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-import {IronScrollTargetBehavior} from '@polymer/iron-scroll-target-behavior/iron-scroll-target-behavior.js';
-import {HeadersParserMixin} from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
-import {EventsTargetMixin} from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
-import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
-import '@polymer/polymer/lib/elements/dom-if.js';
-import '@api-components/api-request-editor/api-request-editor.js';
-import '@advanced-rest-client/response-view/response-view.js';
-import '@api-components/raml-aware/raml-aware.js';
-import '@advanced-rest-client/arc-icons/arc-icons.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
+import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
+import {IronScrollTargetBehavior} from '../../@polymer/iron-scroll-target-behavior/iron-scroll-target-behavior.js';
+import {HeadersParserMixin} from '../../@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
+import {EventsTargetMixin} from '../../@advanced-rest-client/events-target-mixin/events-target-mixin.js';
+import {html} from '../../@polymer/polymer/lib/utils/html-tag.js';
+import {mixinBehaviors} from '../../@polymer/polymer/lib/legacy/class.js';
+import '../../@api-components/api-request-editor/api-request-editor.js';
+import '../../@advanced-rest-client/response-view/response-view.js';
+import '../../@api-components/raml-aware/raml-aware.js';
+import '../../@advanced-rest-client/arc-icons/arc-icons.js';
+import '../../@polymer/paper-icon-button/paper-icon-button.js';
 /* eslint-disable max-len */
 /**
  * Request editor and response view panels in a single element.
