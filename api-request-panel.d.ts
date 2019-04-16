@@ -12,18 +12,6 @@
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-
-import {IronScrollTargetBehavior} from '@polymer/iron-scroll-target-behavior/iron-scroll-target-behavior.js';
-
-import {HeadersParserMixin} from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
-
-import {EventsTargetMixin} from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
-
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
-
-import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
-
 declare namespace ApiElements {
 
   /**
@@ -293,9 +281,45 @@ declare namespace ApiElements {
      * be enabled. Otherwise users won't be able to add a parameter.
      */
     allowCustom: boolean|null|undefined;
+
+    /**
+     * API server definition from the AMF model.
+     *
+     * This value to be set when partial AMF mnodel for an endpoint is passed
+     * instead of web api to be passed to the `api-url-data-model` element.
+     *
+     * Do not set with full AMF web API model.
+     */
+    server: object|null|undefined;
+
+    /**
+     * Supported protocl versions.
+     *
+     * E.g.
+     *
+     * ```json
+     * ["http", "https"]
+     * ```
+     *
+     * This value to be set when partial AMF mnodel for an endpoint is passed
+     * instead of web api to be passed to the `api-url-data-model` element.
+     *
+     * Do not set with full AMF web API model.
+     */
+    protocols: any[]|null|undefined;
+
+    /**
+     * API version name.
+     *
+     * This value to be set when partial AMF mnodel for an endpoint is passed
+     * instead of web api to be passed to the `api-url-data-model` element.
+     *
+     * Do not set with full AMF web API model.
+     */
+    version: string|null|undefined;
+    ready(): void;
     _attachListeners(): void;
     _detachListeners(): void;
-    ready(): void;
 
     /**
      * Registers `api-navigation-selection-changed` event listener handler
@@ -393,3 +417,5 @@ declare global {
     "api-request-panel": ApiElements.ApiRequestPanel;
   }
 }
+
+export {};
