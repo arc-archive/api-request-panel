@@ -94,14 +94,33 @@ class ApiRequestPanel extends mixinBehaviors(
       margin-top: var(--api-request-panel-response-margin-top, 12px);
     }
     </style>
-    <api-request-editor narrow="{{narrow}}" redirect-uri="[[redirectUri]]" selected="[[selected]]" amf-model="[[amfModel]]" no-url-editor="[[noUrlEditor]]" base-uri="[[baseUri]]" url="{{editorRequest.url}}" http-method="{{editorRequest.method}}" headers="{{editorRequest.headers}}" payload="{{editorRequest.payload}}" query-model="{{editorRequest.queryModel}}" path-model="{{editorRequest.pathModel}}" no-docs="[[noDocs]]" events-target="[[eventsTarget]]" allow-hide-optional="[[allowHideOptional]]" allow-disable-params="[[allowDisableParams]]" allow-custom="[[allowCustom]]"></api-request-editor>
+    <api-request-editor
+      narrow="{{narrow}}"
+      redirect-uri="[[redirectUri]]"
+      selected="[[selected]]"
+      amf-model="[[amfModel]]"
+      no-url-editor="[[noUrlEditor]]"
+      base-uri="[[baseUri]]"
+      url="{{editorRequest.url}}"
+      http-method="{{editorRequest.method}}"
+      headers="{{editorRequest.headers}}"
+      payload="{{editorRequest.payload}}"
+      query-model="{{editorRequest.queryModel}}"
+      path-model="{{editorRequest.pathModel}}"
+      no-docs="[[noDocs]]"
+      events-target="[[eventsTarget]]"
+      allow-hide-optional="[[allowHideOptional]]"
+      allow-disable-params="[[allowDisableParams]]"
+      allow-custom="[[allowCustom]]"
+      server="[[server]]"
+      protocols="[[protocols]]"
+      version="[[version]]"></api-request-editor>
     <template is="dom-if" if="[[hasResponse]]">
       <response-view request="[[request]]" response="[[response]]" response-error="[[responseError]]" is-error="[[isErrorResponse]]" is-xhr="[[responseIsXhr]]" loading-time="{{loadingTime}}" redirects="[[redirects]]" redirect-timings="[[redirectsTiming]]" response-timings="[[timing]]" sent-http-message="[[sourceMessage]]"></response-view>
     </template>
     <template is="dom-if" if="[[aware]]">
       <raml-aware raml="{{amfModel}}" scope="[[aware]]"></raml-aware>
-    </template>
-`;
+    </template>`;
   }
 
   static get is() {
@@ -306,7 +325,40 @@ class ApiRequestPanel extends mixinBehaviors(
        * If the element is to be used withouth AMF model this should always
        * be enabled. Otherwise users won't be able to add a parameter.
        */
-      allowCustom: Boolean
+      allowCustom: Boolean,
+      /**
+       * API server definition from the AMF model.
+       *
+       * This value to be set when partial AMF mnodel for an endpoint is passed
+       * instead of web api to be passed to the `api-url-data-model` element.
+       *
+       * Do not set with full AMF web API model.
+       */
+      server: {type: Object},
+      /**
+       * Supported protocl versions.
+       *
+       * E.g.
+       *
+       * ```json
+       * ["http", "https"]
+       * ```
+       *
+       * This value to be set when partial AMF mnodel for an endpoint is passed
+       * instead of web api to be passed to the `api-url-data-model` element.
+       *
+       * Do not set with full AMF web API model.
+       */
+      protocols: {type: Array},
+      /**
+       * API version name.
+       *
+       * This value to be set when partial AMF mnodel for an endpoint is passed
+       * instead of web api to be passed to the `api-url-data-model` element.
+       *
+       * Do not set with full AMF web API model.
+       */
+      version: {type: String},
     };
   }
 
