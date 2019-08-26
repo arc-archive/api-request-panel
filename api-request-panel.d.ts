@@ -12,6 +12,12 @@
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
+import {html, css, LitElement} from 'lit-element';
+
+import {HeadersParserMixin} from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
+
+import {EventsTargetMixin} from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
+
 declare namespace ApiElements {
 
   /**
@@ -78,11 +84,7 @@ declare namespace ApiElements {
     HeadersParserMixin(
     EventsTargetMixin(
     Object)) {
-
-    /**
-     * `raml-aware` scope property to use.
-     */
-    aware: string|null|undefined;
+    readonly _hasResponse: any;
 
     /**
      * AMF HTTP method (operation in AMF vocabulary) ID.
@@ -98,12 +100,23 @@ declare namespace ApiElements {
     handleNavigationEvents: boolean|null|undefined;
 
     /**
+     * Location of the `node_modules` folder.
+     * It should be a path from server's root path including node_modules.
+     */
+    authPopupLocation: string|null|undefined;
+
+    /**
+     * `raml-aware` scope property to use.
+     */
+    aware: string|null|undefined;
+
+    /**
      * A model's `@id` of selected documentation part.
      * Special case is for `summary` view. It's not part of an API
      * but most applications has some kind of summary view for the
      * API.
      */
-    amfModel: object|null|undefined;
+    amf: object|null|undefined;
 
     /**
      * Hides the URL editor from the view.
@@ -131,16 +144,24 @@ declare namespace ApiElements {
     narrow: boolean|null|undefined;
 
     /**
-     * A request object that is generated from request edtor properties.
-     * It contains the following properties:
-     * - url
-     * - method
-     * - headers
-     * - payload
-     * - queryModel
-     * - pathModel
+     * Enables Anypoint legacy styling
      */
-    editorRequest: object|null|undefined;
+    legacy: boolean|null|undefined;
+
+    /**
+     * Enables Material Design outlined style
+     */
+    outlined: boolean|null|undefined;
+
+    /**
+     * When set the editor is in read only mode.
+     */
+    readOnly: boolean|null|undefined;
+
+    /**
+     * When set all controls are disabled in the form
+     */
+    disabled: boolean|null|undefined;
 
     /**
      * Created by the transport ARFC `request` object
@@ -151,11 +172,6 @@ declare namespace ApiElements {
      * Created by the transport ARC `response` object.
      */
     response: object|null|undefined;
-
-    /**
-     * Computed value, true, when the response object is set.
-     */
-    readonly hasResponse: boolean|null|undefined;
 
     /**
      * A flag indincating request error.
@@ -203,11 +219,6 @@ declare namespace ApiElements {
     sourceMessage: string|null|undefined;
 
     /**
-     * Main scroll target for the app.
-     */
-    scrollTarget: HTMLElement|null|undefined;
-
-    /**
      * Forces the console to send headers defined in this string overriding any used defined
      * header.
      * This should be an array of headers with `name` and `value` keys, e.g.:
@@ -239,12 +250,6 @@ declare namespace ApiElements {
      * `https://proxy.com/?url=http%3A%2F%2Fdomain.com%2Fpath%2F%3Fquery%3Dsome%2Bvalue`
      */
     proxyEncodeUrl: boolean|null|undefined;
-
-    /**
-     * Location of the `node_modules` folder.
-     * It should be a path from server's root path including node_modules.
-     */
-    authPopupLocation: string|null|undefined;
 
     /**
      * ID of latest request.
@@ -317,7 +322,8 @@ declare namespace ApiElements {
      * Do not set with full AMF web API model.
      */
     version: string|null|undefined;
-    ready(): void;
+    render(): any;
+    connectedCallback(): void;
     _attachListeners(): void;
     _detachListeners(): void;
 
@@ -349,13 +355,6 @@ declare namespace ApiElements {
      * @param location Bower components location
      */
     _updateRedirectUri(location: String|null): void;
-
-    /**
-     * Computes if there is a reponse object.
-     *
-     * @param response ARC response objects
-     */
-    _computeHasResponse(response: object|null, responseError: Boolean|null): Boolean|null;
 
     /**
      * A handler for the API call.
@@ -402,12 +401,7 @@ declare namespace ApiElements {
      * Clears response panel.
      */
     clearResponse(): void;
-
-    /**
-     * Dispatches `api-request-data-changed` custom event when any of the
-     * request data changes.
-     */
-    _editorRequestChanged(record: object|null): void;
+    _apiChanged(e: any): void;
   }
 }
 
@@ -417,5 +411,3 @@ declare global {
     "api-request-panel": ApiElements.ApiRequestPanel;
   }
 }
-
-export {};

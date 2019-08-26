@@ -10,31 +10,6 @@ An complete request editor and response view panels in a single element.
 
 **See breaking changes and list of required dependencies at the bottom of this document**
 
-
-```html
-<api-request-panel></api-request-panel>
-```
-
-### Working with AMF partial model
-
-Only endpoint model with selection set to a method node that is already in the model make sense.
-Because the model don't have server, protocols, and version definition it has to be computed and set manually.
-
-```javascript
-const elm = document.querySelector('api-request-panel');
-const summaryModel = await downloadPartialApiModelSummary();
-const endpointModel = await downloadPartialApiModelEndpoint();
-elm.amfModel = endpointModel; // This must be set before any computation, it contains `@context` property.
-elm.selected = '#123'; // Selected node ID, must be method ID that is in endpoint definition.
-elm.server = elm._computeServer(summaryModel); // This is element's inherited method
-elm.version = conputeApiVersion(summaryModel); // Compute version from `server` model.
-elm.protocols = ['http', 'https']; // This is encoded in AMF model.
-```
-
-### API components
-
-This components is a part of [API components ecosystem](https://elements.advancedrestclient.com/)
-
 ## Usage
 
 ### Installation
@@ -57,78 +32,152 @@ npm install --save @api-components/api-request-panel
 </html>
 ```
 
-### In a Polymer 3 element
+### In a LitElement
 
 ```js
-import {PolymerElement, html} from '@polymer/polymer';
-import '@api-components/api-request-panel/api-request-panel.js';
+import { LitElement, html } from 'lit-element';
+import '@api-components/api-request-editor/api-request-editor.js';
 
 class SampleElement extends PolymerElement {
-  static get template() {
+  render() {
     return html`
-    <api-request-panel></api-request-panel>
+    <api-request-panel
+      @api-request="${this._apiRequestHandler}"></api-request-panel>
     `;
   }
 
-  _authChanged(e) {
-    console.log(e.detail);
+  _apiRequestHandler(e) {
+    console.log('current request to run', e.detail);
   }
 }
 customElements.define('sample-element', SampleElement);
 ```
 
-### Installation
+### Working with AMF model
+
+The component is to be used with [AMF](https://a.ml) model. Assign API model value to `amf` property to initialize the element.
+When the user made a selection (in navigation) set `selected` property to the `@id` value of a HTTP method model. API model data are populated automatically.
+
+When using with combination with `@api-components/api-navigation` then use `handleNavigationEvents` option.
+The panel listens then for navigation events dispatched by the navigation and updates the state automatically.
+
+```html
+<api-navigation></api-navigation>
+<api-request-panel handlenavigationevents></api-request-panel>
+<script>
+{
+  const model = await generateApiModel();
+  document.querySelector('api-navigation').amf = model;
+  document.querySelector('api-request-panel').amf = model;
+}
+</script>
+```
+
+### Working with AMF partial model
+
+Only endpoint model with selection set to a method node that is already in the model make sense.
+Because the model don't have server, protocols, and version definition it has to be computed and set manually.
+
+```javascript
+const elm = document.querySelector('api-request-panel');
+const summaryModel = await downloadPartialApiModelSummary();
+const endpointModel = await downloadPartialApiModelEndpoint();
+elm.amfModel = endpointModel; // This must be set before any computation, it contains `@context` property.
+elm.selected = '#123'; // Selected node ID, must be method ID that is in endpoint definition.
+elm.server = elm._computeServer(summaryModel); // This is element's inherited method
+elm.version = conputeApiVersion(summaryModel); // Compute version from `server` model.
+elm.protocols = ['http', 'https']; // This is encoded in AMF model.
+```
+
+### api-request event
+
+Dispatched when the user requests to send current request.
+
+Properties set on the detail object:
+
+-   url `String` The request URL. Can be empty string.
+-   method `String`  HTTP method name. Can be empty.
+-   headers `String` HTTP headers string. Can be empty.
+-   payload `String|File|FormData` Message body. Can be undefined.
+-   auth `Object` Optional, authorization settings from the auth panel.
+-   authType `String` Name of the authorization methods. One of `advanced-rest-client/auth-methods`.
+-   id `String` Generated UUID for the request. Each call of the `execute()` function regenerates the `id`.
+
+
+When the response is ready dispatch `api-response` custom event. It is handled by this element and the response data is populated to the response view.
+
+The response is ARC response data model:
+-   status (`Number`) - Response status code
+-   statusText (`String`) - Response status text. Can be empty string.
+-   payload (`String|Document|ArrayBuffer|Blob|undefined`) - Response body
+-   headers (`String|undefined`) - Response headers
+
+Response object is created by `advanced-rest-client/xhr-simple-request`.
+However, any transport library can generate similar object.
+
+#### Advanced transport properties
+
+When using own transport libraries or server side transport you may have access to more information about the request and response like redirects and timings. The response status view can render additional UI for this
+data. To enable this feature, set `isXhr` to false and any of the following properties:
+
+-   sentHttpMessage `String` - Raw HTTP message sent to server
+-   redirects `Array<Object>` - A list of redirect information. Each object has the following properties:
+-   status (`Number`) - Response status code
+-   statusText (`String`) - Response status text. Can be empty string.
+-   headers (`String|undefined`) - Response headers
+-   payload (`String|Document|ArrayBuffer|Blob|undefined`) - Response body
+-   redirectTimings `Array<Object>` - List of HAR 1.2 timing objects for each redirected request. The order must corresponds with order in `redirects` array.
+-   timings `Object` - HAR 1.2 timings object
+
+## Development
 
 ```sh
-git clone https://github.com/advanced-rest-client/api-request-panel
-cd api-url-editor
+git clone https://github.com/api-components/api-request-panel
+cd api-request-panel
 npm install
-npm install -g polymer-cli
 ```
 
 ### Running the demo locally
 
 ```sh
-polymer serve --npm
-open http://127.0.0.1:<port>/demo/
+npm start
 ```
 
 ### Running the tests
 ```sh
-polymer test --npm
+npm test
 ```
-
 
 ## Breaking Changes in v3
 
-The `bower-location` attribute becomes `auth-popup-location`. It is a path to `node_modules` directory. It can be both relative or absolute location. For example `/static/console/node_modules` will produce OAuth Redirect URI `/static/console/node_modules/@advanced-rest-client/oauth-authorization/oauth-popup.html`.
+### editorRequest is removed
 
-Due to completely different dependencies import algorithm the CodeMirror and it's dependencies has to
-be included to the web application manually, outside the component.
+The element do not track request generated by the editor any more and do not set `editorRequest` property. It also do not dispatch `api-request-data-changed` custom event.
+All request data are passed to the application with `api-request` event.
 
-Web Compoennts are ES6 modules and libraries like CodeMirror are not adjusted to
-new spec. Therefore importing the library inside the component won't make it work
-(no reference is created).
+### popup location
 
-All the dependencies described below are installed with the package.
+The `bower-location` attribute becomes `auth-popup-location`.
+It is a path to `node_modules` directory. It can be both relative or absolute location. For example `/static/console/node_modules` will produce OAuth Redirect URI `/static/console/node_modules/@advanced-rest-client/oauth-authorization/oauth-popup.html`.
 
-**Code Mirror support**
+However, you are encourage to use your own redirect popup. It can be anything but it must post message to the opened window with URL parameters. See `@advanced-rest-client/oauth-authorization/oauth-popup.html` for more details.
 
-CodeMirror + JSON linter (body editor) + headers hints and syntax (headers editor) + basic syntax (body editor).
+### Code Mirror dependencies
+
+Code mirror is not ES6 ready. Their build contains AMD exports which is incompatible with native modules. Therefore the dependencies cannot be imported with the element but outside of it.
+The component requires the following scripts to be ready before it's initialized (especially body and headers editors):
 
 ```html
-<script src="../../../jsonlint/lib/jsonlint.js"></script>
-<script src="../../../codemirror/lib/codemirror.js"></script>
-<script src="../../../codemirror/addon/mode/loadmode.js"></script>
-<script src="../../../codemirror/mode/meta.js"></script>
-<script src="../../../codemirror/mode/javascript/javascript.js"></script>
-<script src="../../../codemirror/mode/xml/xml.js"></script>
-<script src="../../../codemirror/mode/htmlmixed/htmlmixed.js"></script>
-<script src="../../../codemirror/addon/lint/lint.js"></script>
-<script src="../../../codemirror/addon/lint/json-lint.js"></script>
-<script src="../../../@advanced-rest-client/code-mirror-hint/headers-addon.js"></script>
-<script src="../../../@advanced-rest-client/code-mirror-hint/show-hint.js"></script>
-<script src="../../../@advanced-rest-client/code-mirror-hint/hint-http-headers.js"></script>
+<script src="node_modules/jsonlint/lib/jsonlint.js"></script>
+<script src="node_modules/codemirror/lib/codemirror.js"></script>
+<script src="node_modules/codemirror/addon/mode/loadmode.js"></script>
+<script src="node_modules/codemirror/mode/meta.js"></script>
+<!-- Some basic syntax highlighting -->
+<script src="node_modules/codemirror/mode/javascript/javascript.js"></script>
+<script src="node_modules/codemirror/mode/xml/xml.js"></script>
+<script src="node_modules/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+<script src="node_modules/codemirror/addon/lint/lint.js"></script>
+<script src="node_modules/codemirror/addon/lint/json-lint.js"></script>
 ```
 
 CodeMirror's modes location. May be skipped if all possible modes are already included into the app.
@@ -136,17 +185,19 @@ CodeMirror's modes location. May be skipped if all possible modes are already in
 ```html
 <script>
 /* global CodeMirror */
-CodeMirror.modeURL = '../../../codemirror/mode/%N/%N.js';
+CodeMirror.modeURL = 'node_modules/codemirror/mode/%N/%N.js';
 </script>
 ```
 
-**Dependencies for OAuth1 and Digest authorization methods.**
+### Dependencies for OAuth1 and Digest authorization methods
+
+For the same reasons as for CodeMirror this dependencies are required for OAuth1 and Digest authorization panels to work.
 
 ```html
-<script src="../../../cryptojslib/components/core.js"></script>
-<script src="../../../cryptojslib/rollups/sha1.js"></script>
-<script src="../../../cryptojslib/components/enc-base64-min.js"></script>
-<script src="../../../cryptojslib/rollups/md5.js"></script>
-<script src="../../../cryptojslib/rollups/hmac-sha1.js"></script>
-<script src="../../../jsrsasign/lib/jsrsasign-rsa-min.js"></script>
+<script src="node_modules/cryptojslib/components/core.js"></script>
+<script src="node_modules/cryptojslib/rollups/sha1.js"></script>
+<script src="node_modules/cryptojslib/components/enc-base64-min.js"></script>
+<script src="node_modules/cryptojslib/rollups/md5.js"></script>
+<script src="node_modules/cryptojslib/rollups/hmac-sha1.js"></script>
+<script src="node_modules/jsrsasign/lib/jsrsasign-rsa-min.js"></script>
 ```

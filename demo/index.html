@@ -1,246 +1,133 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-    <title>api-request-panel demo</title>
 
-    <script src="../../../@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <script src="../../../web-animations-js/web-animations-next.min.js"></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  <title>api-request-panel</title>
 
-    <script type="module" src="../../../@polymer/polymer/lib/elements/dom-bind.js"></script>
-    <script type="module" src="../../../@advanced-rest-client/xhr-simple-request/xhr-simple-request.js"></script>
-    <script type="module" src="../../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
-    <script type="module" src="../../../@polymer/iron-demo-helpers/demo-snippet.js"></script>
-    <script type="module" src="../../../@polymer/paper-dropdown-menu/paper-dropdown-menu.js"></script>
-    <script type="module" src="../../../@polymer/paper-item/paper-item.js"></script>
-    <script type="module" src="../../../@polymer/paper-listbox/paper-listbox.js"></script>
-    <script type="module" src="../../../@api-components/raml-aware/raml-aware.js"></script>
-    <script type="module" src="../../../@advanced-rest-client/oauth-authorization/oauth2-authorization.js"></script>
-    <script type="module" src="../../../@advanced-rest-client/oauth-authorization/oauth1-authorization.js"></script>
-    <script type="module" src="../../../@api-components/api-navigation/api-navigation.js"></script>
-    <script type="module" src="../../../@api-components/api-console-default-theme/api-console-default-theme.js"></script>
-    <script type="module" src="../api-request-panel.js"></script>
-    <!--
-    Previously this was included into the compoennt.
-    Since compoennts are ES6 modules this libraries cannot be loaded into
-    the component as they do not export anything and won't set global variable.
-    -->
-    <script src="../../../jsonlint/lib/jsonlint.js"></script>
-    <script src="../../../codemirror/lib/codemirror.js"></script>
-    <script src="../../../codemirror/addon/mode/loadmode.js"></script>
-    <script src="../../../codemirror/mode/meta.js"></script>
-    <script src="../../../codemirror/mode/javascript/javascript.js"></script>
-    <script src="../../../codemirror/mode/xml/xml.js"></script>
-    <script src="../../../codemirror/mode/htmlmixed/htmlmixed.js"></script>
-    <script src="../../../codemirror/addon/lint/lint.js"></script>
-    <script src="../../../codemirror/addon/lint/json-lint.js"></script>
-    <script src="../../../@advanced-rest-client/code-mirror-hint/headers-addon.js"></script>
-    <script src="../../../@advanced-rest-client/code-mirror-hint/show-hint.js"></script>
-    <script src="../../../@advanced-rest-client/code-mirror-hint/hint-http-headers.js"></script>
-    <!--
-    From the inside of a web component it is hard to determine where
-    scripts are actually located. This should be set if the page won't load all possible
-    scripts at run time. The component will download the "mode" from this location.
-    -->
-    <script>
-    /* global CodeMirror */
-    CodeMirror.modeURL = '../../../codemirror/mode/%N/%N.js';
-    </script>
-    <!-- Finally dependencies for authorization panel.  -->
-    <script src="../../../cryptojslib/components/core.js"></script>
-    <script src="../../../cryptojslib/rollups/sha1.js"></script>
-    <script src="../../../cryptojslib/components/enc-base64-min.js"></script>
-    <script src="../../../cryptojslib/rollups/md5.js"></script>
-    <script src="../../../cryptojslib/rollups/hmac-sha1.js"></script>
-    <script src="../../../jsrsasign/lib/jsrsasign-rsa-min.js"></script>
+  <link media="all" rel="stylesheet" href="../node_modules/codemirror/addon/lint/lint.css" />
 
-    <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
-      html,
-      body {
-        background-color: #e5e5e5;
-        margin: 0;
-        padding: 0;
-      }
-
-      main {
-        @apply --layout-horizontal;
-        margin-right: 20px;
-      }
-
-      nav {
-        width: 256px;
-      }
-
-      header {
-        padding: 12px 24px;
-        background-color: #C5E1A5;
-        @apply --layout-horizontal;
-        @apply --layout-center;
-        --iron-icon-fill-color: #3E2723;
-        --paper-input-container-focus-color: #33691E;
-        --paper-input-container-label: {
-          color: #3E2723;
-        };
-      }
-
-      .spacer {
-        @apply --layout-flex;
-      }
-
-      .content {
-        @apply --layout-flex;
-        max-width: 700px;
-      }
-
-      .card {
-        @apply --shadow-elevation-4dp;
-        padding: 20px;
-        margin: 20px;
-        box-sizing: border-box;
-        background-color: #fff;
-      }
-
-      paper-checkbox {
-        margin-bottom: 12px;
-      }
-
-      [invalid] {
-        border: 1px red dashed;
-      }
-
-      output {
-        display: block;
-      }
-
-      output > label {
-        font-weight: 700;
-      }
-
-      output > div {
-        white-space: pre-wrap;
-      }
-      </style>
-    </custom-style>
-  </head>
-  <body>
-    <dom-bind id="demo">
-      <template is="dom-bind">
-
-        <xhr-simple-request></xhr-simple-request>
-        <raml-aware raml="{{amfModel}}" scope="api-demo"></raml-aware>
-        <oauth2-authorization></oauth2-authorization>
-        <oauth1-authorization></oauth1-authorization>
-
-        <header>
-          <paper-dropdown-menu label="Select demo API">
-            <paper-listbox slot="dropdown-content" id="apisList" on-selected-changed="_apiChanged">
-              <paper-item data-src="demo-api.json">ARC demo api</paper-item>
-              <paper-item data-src="demo-api-compact.json">ARC demo api - compact model</paper-item>
-              <paper-item data-src="appian-api.json">Appian API</paper-item>
-              <paper-item data-src="appian-api-compact.json">Appian API - compact model</paper-item>
-              <paper-item data-src="array-body.json">Array body</paper-item>
-              <paper-item data-src="array-body-compact.json">Array body - compact model</paper-item>
-              <paper-item data-src="loan-microservice.json">OAS: Loan microservice</paper-item>
-              <paper-item data-src="loan-microservice-compact.json">OAS: Loan microservice - compact model</paper-item>
-            </paper-listbox>
-          </paper-dropdown-menu>
-
-          <div class="spacer"></div>
-
-          <paper-dropdown-menu label="Override API's base uri">
-            <paper-listbox slot="dropdown-content" id="basesList" selected="{{selectedOverrideBase}}" attr-for-selected="data-url">
-              <paper-item data-url="">Restore API's base URI</paper-item>
-              <paper-item data-url="https://domain.com/base">https://domain.com/base</paper-item>
-              <paper-item data-url="https://www.google.com?q=">https://www.google.com?q=</paper-item>
-            </paper-listbox>
-          </paper-dropdown-menu>
-        </header>
+  <script src="../node_modules/web-animations-js/web-animations-next.min.js"></script>
+  <script src="../node_modules/cryptojslib/components/core.js"></script>
+  <script src="../node_modules/cryptojslib/rollups/sha1.js"></script>
+  <script src="../node_modules/cryptojslib/components/enc-base64-min.js"></script>
+  <script src="../node_modules/cryptojslib/rollups/md5.js"></script>
+  <script src="../node_modules/cryptojslib/rollups/hmac-sha1.js"></script>
+  <script src="../node_modules/jsrsasign/lib/jsrsasign-rsa-min.js"></script>
+  <!--
+  Previously this was included into the compoennt.
+  Since compoennts are ES6 modules this libraries cannot be loaded into
+  the component as they do not export anything and won't set global variable.
+  -->
+  <script src="../node_modules/jsonlint/lib/jsonlint.js"></script>
+  <script src="../node_modules/codemirror/lib/codemirror.js"></script>
+  <script src="../node_modules/codemirror/addon/mode/loadmode.js"></script>
+  <script src="../node_modules/codemirror/mode/meta.js"></script>
+  <script src="../node_modules/codemirror/mode/javascript/javascript.js"></script>
+  <script src="../node_modules/codemirror/mode/xml/xml.js"></script>
+  <script src="../node_modules/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+  <script src="../node_modules/codemirror/addon/lint/lint.js"></script>
+  <script src="../node_modules/codemirror/addon/lint/json-lint.js"></script>
+  <!--
+  From the inside of a web component it is hard to determine where
+  scripts are actually located. This should be set if the page won't load all possible
+  scripts at run time. The component will download the "mode" from this location.
+  -->
+  <script>
+  /* global CodeMirror */
+  CodeMirror.modeURL = '../node_modules/codemirror/mode/%N/%N.js';
+  </script>
 
 
-        <main role="main">
-          <nav>
-            <api-navigation amf-model="[[amfModel]]" endpoints-opened=""></api-navigation>
-          </nav>
+  <style>
+  .main.centered {
+    max-width: 1440px !important;
+  }
 
-          <template is="dom-if" if="[[!hasData]]">
-            <section class="intro">
-              <p class="usage-info">Select a HTTP method in the navigation</p>
-            </section>
-          </template>
+  output {
+    background-color: #FFF3E0;
+    white-space: pre-wrap;
+    margin-top: 40px;
+  }
 
-          <template is="dom-if" if="[[hasData]]">
-            <section class="content">
-              <div class="card">
-                <api-request-panel aware="api-demo" selected="[[selectedAmfId]]" redirect-uri="[[redirectUri]]" narrow="[[narrow]]" allow-custom="[[allowCustom]]" allow-disable-params="[[allowDisableParams]]" allow-hide-optional="[[allowHideOptional]]" no-url-editor="[[noUrlEditor]]" no-docs="[[noDocs]]" base-uri="[[computeFinaleBaseUri(selectedOverrideBase, baseUri)]]"></api-request-panel>
-              </div>
+  .response-output {
+    max-height: 300px;
+    overflow: auto;
+    display: block;
+    width: 700px;
+  }
 
-              <div class="card">
-                <h2>Configuration options</h2>
-                <paper-checkbox checked="{{narrow}}">Render narrow view</paper-checkbox>
-                <paper-checkbox checked="{{allowCustom}}">Allow custom properties</paper-checkbox>
-                <paper-checkbox checked="{{allowHideOptional}}">Allow auto hide optional headers</paper-checkbox>
-                <paper-checkbox checked="{{allowDisableParams}}">Allow disabling parameters</paper-checkbox>
-                <paper-checkbox checked="{{noUrlEditor}}">Remove URL editor</paper-checkbox>
-                <paper-checkbox checked="{{noDocs}}">Remove inline documentatrion</paper-checkbox>
-                <paper-input label="Override base uri" value="{{baseUri}}"></paper-input>
-              </div>
+  body.styled {
+    --anypoiont-dropdown-shaddow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+    --anypoiont-autocomplete-dropdown-shaddow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+    --arc-font-subhead-font-size: 16px;
+    --arc-font-subhead-font-weight: 400;
+    --arc-font-subhead-line-height: 24px;
+    --code-mirror-height: auto;
+  }
 
-            </section>
-          </template>
-        </main>
-      </template>
-    </dom-bind>
-    <script>
-    (function(app) {
-    app.allowCustom = true;
-    app.allowHideOptional = true;
-    app.allowDisableParams = true;
+  body.styled.dark output {
+    background-color: #3a3a3a;
+  }
 
-    app._load = function() {
-      app.redirectUri = location.origin + '/components/@advanced-rest-client/oauth-authorization/oauth-popup.html';
-      document.getElementById('apisList').selected = 0;
-    };
+  body.styled.dark {
+    --secondary-text-color: #616161;
+    --primary-background-color: #424242;
 
-    app._loadFile = function(file) {
-      app.selectedAmfId = undefined;
-      app.amfModel = undefined;
-      fetch('./' + file)
-      .then((response) => response.json())
-      .then((data) => {
-        app.amfModel = data;
-      });
-    };
+    --anypoint-input-legacy-label-color: #F5F5F5;
+    --arc-interactive-demo-options-color: #F5F5F5;
+    --anypoint-checkbox-label-color:  #F5F5F5;
+    --anypoint-input-background-color: #494949;
+    --anypoint-input-label-color: #fff;
+    --anypoint-input-input-color: #fff;
+    --anypoint-input-border-bottom-color: #fff;
+    --anypoint-input-focused-border-bottom-color: #fff;
+    --anypoint-input-label-background-color: rgb(66, 66, 66);
+    --anypoint-input-legacy-focus-background-color: #3a3b3c;
+    --anypoint-input-legacy-focus-border-color: #178bea;
+    --anypoint-input-info-message-color: #fff;
 
-    app._apiChanged = function(e) {
-      const file = e.target.selectedItem.dataset.src;
-      app._loadFile(file);
-    };
+    --inline-documentation-background-color: #3a3a3a;
 
-    app._navChanged = function(e) {
-      const type = e.detail.type;
-      if (type === 'method') {
-        app.setData(e.detail.selected);
-        app.hasData = true;
-      } else {
-        app.hasData = false;
-      }
-    };
+    --anypoint-dropdown-menu-background-color: #494949;
+    --anypoint-dropdown-menu-label-background-color: var(--primary-background-color);
+    --anypoint-listbox-background-color: #494949;
+    --anypoint-dropdown-menu-focus-background-color: #9E9E9E;
+    --anypoint-dropdown-menu-label-color: #fff;
+    --anypoint-dropdown-menu-info-message-color: #fff;
+    --anypoint-item-hover-background-color: #9E9E9E;
+    --anypoiont-autocomplete-background-color: #494949;
+    --anypoint-icon-button-emphasis-low-color: #fff;
 
-    app.setData = function(selected) {
-      app.selectedAmfId = selected;
-    };
+    --from-row-action-icon-color: #fff;
+    --icon-button-color: #fff;
+    --api-form-action-icon-color: #fff;
+    --api-form-action-button-color: #fff;
+    --anypoint-icon-button-emphasis-low-color: #fff;
+    --anypoiont-autocomplete-background-color: #494949;
 
-    app.computeFinaleBaseUri = function(selectedOverrideBase, baseUri) {
-      if (selectedOverrideBase) {
-        return selectedOverrideBase;
-      }
-      return baseUri;
-    };
-    window.addEventListener('WebComponentsReady', app._load);
-    window.addEventListener('api-navigation-selection-changed', app._navChanged);
-    })(document.getElementById('demo'));
-    </script>
-  </body>
+    --auth-method-oauth2-redirect-info-color: #fff;
+    --from-row-action-icon-color: #fff;
+    --inline-documentation-color: #fff;
+
+    --code-mirror-background-color: #37474F;
+    --code-mirror-string-color: #C3E88D;
+    --code-mirror-punctuation-color: #EEFFFF;
+    --code-mirror-atom-color: #F07178;
+    --code-mirror-number-color: #F78C6A;
+    --code-mirror-cursor-color: #009688;
+    --code-mirror-gutters-background-color: #37474F;
+  }
+
+  api-request-panel {
+    width: 600px;
+  }
+  </style>
+</head>
+
+<body class="styled">
+  <div id="demo"></div>
+  <script type="module" src="index.js"></script>
+
 </html>
