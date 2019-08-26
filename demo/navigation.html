@@ -4,21 +4,32 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
     <title>api-request-panel demo</title>
-    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
-    <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
-    <link rel="import" href="../../xhr-simple-request/xhr-simple-request.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-    <link rel="import" href="../../paper-dropdown-menu/paper-dropdown-menu.html">
-    <link rel="import" href="../../paper-item/paper-item.html">
-    <link rel="import" href="../../paper-listbox/paper-listbox.html">
-    <link rel="import" href="../../raml-aware/raml-aware.html">
-    <link rel="import" href="../../neon-animation/web-animations.html">
-    <link rel="import" href="../../oauth-authorization/oauth2-authorization.html">
-    <link rel="import" href="../../oauth-authorization/oauth1-authorization.html">
-    <link rel="import" href="../../api-navigation/api-navigation.html">
-    <link rel="import" href="../api-request-panel.html">
-    <custom-style>
+    <script src="../../../@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script type="module" src="../../../@polymer/polymer/lib/elements/dom-bind.js"></script>
+    <script type="module" src="../../../xhr-simple-request/xhr-simple-request.js"></script>
+    <script type="module" src="../../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
+    <script type="module" src="../../../@polymer/iron-demo-helpers/demo-snippet.js"></script>
+    <script type="module" src="../../../@polymer/paper-dropdown-menu/paper-dropdown-menu.js"></script>
+    <script type="module" src="../../../@polymer/paper-item/paper-item.js"></script>
+    <script type="module" src="../../../@polymer/paper-listbox/paper-listbox.js"></script>
+    <script type="module" src="../../../raml-aware/raml-aware.js"></script>
+    <script type="module" src="../../../@polymer/neon-animation/web-animations.js"></script>
+    <script type="module" src="../../../oauth-authorization/oauth2-authorization.js"></script>
+    <script type="module" src="../../../oauth-authorization/oauth1-authorization.js"></script>
+    <script type="module" src="../../../api-navigation/api-navigation.js"></script>
+    <script type="module" src="../api-request-panel.js"></script>
+    <!-- FIXME(polymer-modulizer):
+        These imperative modules that innerHTML your HTML are
+        a hacky way to be sure that any mixins in included style
+        modules are ready before any elements that reference them are
+        instantiated, otherwise the CSS @apply mixin polyfill won't be
+        able to expand the underlying CSS custom properties.
+        See: https://github.com/Polymer/polymer-modulizer/issues/154
+        -->
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
       :root {
         --code-type-text-value-color: #0d47a1;
@@ -77,10 +88,16 @@
         };
       }
       </style>
-    </custom-style>
+    </custom-style>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
   </head>
   <body>
-    <dom-bind id="demo">
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<dom-bind id="demo">
       <template is="dom-bind">
         <xhr-simple-request></xhr-simple-request>
         <oauth2-authorization></oauth2-authorization>
@@ -98,30 +115,46 @@
         </header>
         <section role="main" class="vertical-section-container centered main">
           <raml-aware raml="{{amfModel}}" scope="model"></raml-aware>
-          <api-navigation aware="model" summary endpoints-opened></api-navigation>
-          <api-request-panel aware="model" handle-navigation-events redirect-uri="[[redirectUri]]"></api-request-panel>
+          <api-navigation aware="model" summary="" endpoints-opened=""></api-navigation>
+          <api-request-panel aware="model" handle-navigation-events="" redirect-uri="[[redirectUri]]"></api-request-panel>
         </section>
       </template>
-    </dom-bind>
-    <script>
-    (function(app) {
-      app.redirectUri = location.href.replace(/api-request-panel\/demo\/(index\.html)?/, 'oauth-authorization/oauth-popup.html');
-      app._apiChanged = function(e) {
-        const file = e.target.selectedItem.dataset.src;
-        app._loadFile(file);
-      };
-      app._load = function() {
-        document.getElementById('enpointsList').selected = 0;
-      };
-      app._loadFile = function(file) {
-        fetch('./' + file)
-        .then((response) => response.json())
-        .then((data) => {
-          app.amfModel = data;
-        });
-      };
-      window.addEventListener('WebComponentsReady', () => app._load());
-    })(document.getElementById('demo'));
-  </script>
+    </dom-bind>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
+    <script type="module">
+import '../../../@polymer/polymer/lib/elements/dom-bind.js';
+import '../../../xhr-simple-request/xhr-simple-request.js';
+import '../../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+import '../../../@polymer/iron-demo-helpers/demo-snippet.js';
+import '../../../@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
+import '../../../@polymer/paper-item/paper-item.js';
+import '../../../@polymer/paper-listbox/paper-listbox.js';
+import '../../../raml-aware/raml-aware.js';
+import '../../../@polymer/neon-animation/web-animations.js';
+import '../../../oauth-authorization/oauth2-authorization.js';
+import '../../../oauth-authorization/oauth1-authorization.js';
+import '../../../api-navigation/api-navigation.js';
+import '../api-request-panel.js';
+(function(app) {
+  app.redirectUri = location.href.replace(/api-request-panel\/demo\/(index\.html)?/, 'oauth-authorization/oauth-popup.html');
+  app._apiChanged = function(e) {
+    const file = e.target.selectedItem.dataset.src;
+    app._loadFile(file);
+  };
+  app._load = function() {
+    document.getElementById('enpointsList').selected = 0;
+  };
+  app._loadFile = function(file) {
+    fetch('./' + file)
+    .then((response) => response.json())
+    .then((data) => {
+      app.amfModel = data;
+    });
+  };
+  window.addEventListener('WebComponentsReady', () => app._load());
+})(document.getElementById('demo'));
+</script>
   </body>
 </html>

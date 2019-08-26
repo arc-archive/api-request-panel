@@ -4,10 +4,36 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
     <title>api-request-panel test</title>
-    <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
-    <script src="../../web-component-tester/browser.js"></script>
-    <link rel="import" href="../../arc-polyfills/arc-polyfills.html">
-    <link rel="import" href="../api-request-panel.html">
+
+    <script src="../../../@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../../../@polymer/test-fixture/test-fixture.js"></script>
+    <script src="../../../mocha/mocha.js"></script>
+    <script src="../../../chai/chai.js"></script>
+    <script src="../../../wct-mocha/wct-mocha.js"></script>
+    <script src="../../../sinon/pkg/sinon.js"></script>
+
+    <script src="../../../jsonlint/lib/jsonlint.js"></script>
+    <script src="../../../codemirror/lib/codemirror.js"></script>
+    <script src="../../../codemirror/addon/mode/loadmode.js"></script>
+    <script src="../../../codemirror/mode/meta.js"></script>
+    <script src="../../../codemirror/mode/javascript/javascript.js"></script>
+    <script src="../../../codemirror/mode/xml/xml.js"></script>
+    <script src="../../../codemirror/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="../../../codemirror/addon/lint/lint.js"></script>
+    <script src="../../../codemirror/addon/lint/json-lint.js"></script>
+    <script src="../../../@advanced-rest-client/code-mirror-hint/headers-addon.js"></script>
+    <script src="../../../@advanced-rest-client/code-mirror-hint/show-hint.js"></script>
+    <script src="../../../@advanced-rest-client/code-mirror-hint/hint-http-headers.js"></script>
+    <script>
+    /* global CodeMirror */
+    CodeMirror.modeURL = '../../../codemirror/mode/%N/%N.js';
+    </script>
+    <script src="../../../cryptojslib/components/core.js"></script>
+    <script src="../../../cryptojslib/rollups/sha1.js"></script>
+    <script src="../../../cryptojslib/components/enc-base64-min.js"></script>
+    <script src="../../../cryptojslib/rollups/md5.js"></script>
+    <script src="../../../cryptojslib/rollups/hmac-sha1.js"></script>
+    <script src="../../../jsrsasign/lib/jsrsasign-rsa-min.js"></script>
   </head>
   <body>
 
@@ -17,15 +43,15 @@
       </template>
     </test-fixture>
 
-    <test-fixture id="Bower">
+    <test-fixture id="AuthPopup">
       <template>
-        <api-request-panel bower-location="test/"></api-request-panel>
+        <api-request-panel auth-popup-location="test/"></api-request-panel>
       </template>
     </test-fixture>
 
-    <test-fixture id="BowerRedirect">
+    <test-fixture id="AuthPopupRedirect">
       <template>
-        <api-request-panel bower-location="test/" redirect-uri="https://auth.domain.com/token"></api-request-panel>
+        <api-request-panel auth-popup-location="test/" redirect-uri="https://auth.domain.com/token"></api-request-panel>
       </template>
     </test-fixture>
 
@@ -59,7 +85,8 @@
       </template>
     </test-fixture>
 
-    <script>
+    <script type="module">
+      import '../api-request-panel.js';
       suite('api-request-panel', () => {
         function appendRequestData(element, request) {
           request = request || {};
@@ -113,17 +140,17 @@
           test('redirectUri has default value', () => {
             const element = fixture('Basic');
             assert.isTrue(element.redirectUri
-              .indexOf('bower_components/oauth-authorization/oauth-popup.html') !== -1);
+              .indexOf('@advanced-rest-client/oauth-authorization/oauth-popup.html') !== -1);
           });
 
-          test('redirectUri is computed for bower location', () => {
-            const element = fixture('Bower');
+          test('redirectUri is computed for auth-popup location', () => {
+            const element = fixture('AuthPopup');
             assert.isTrue(element.redirectUri
-              .indexOf('test/oauth-authorization/oauth-popup.html') !== -1);
+              .indexOf('test/@advanced-rest-client/oauth-authorization/oauth-popup.html') !== -1);
           });
 
-          test('redirectUri is computed to bower when redirectUri and bowerLocation is set', () => {
-            const element = fixture('BowerRedirect');
+          test('redirectUri is computed to node when redirectUri and auth-popup is set', () => {
+            const element = fixture('AuthPopupRedirect');
             assert.notEqual(element.redirectUri, 'https://auth.domain.com/token');
           });
 

@@ -5,19 +5,18 @@
  *   https://github.com/Polymer/tools/tree/master/packages/gen-typescript-declarations
  *
  * To modify these typings, edit the source file(s):
- *   api-request-panel.html
+ *   api-request-panel.js
  */
 
-/// <reference path="../polymer/types/polymer-element.d.ts" />
-/// <reference path="../polymer/types/lib/elements/dom-if.d.ts" />
-/// <reference path="../api-request-editor/api-request-editor.d.ts" />
-/// <reference path="../response-view/response-view.d.ts" />
-/// <reference path="../raml-aware/raml-aware.d.ts" />
-/// <reference path="../arc-icons/arc-icons.d.ts" />
-/// <reference path="../paper-icon-button/paper-icon-button.d.ts" />
-/// <reference path="../iron-scroll-target-behavior/iron-scroll-target-behavior.d.ts" />
-/// <reference path="../headers-parser-behavior/headers-parser-behavior.d.ts" />
-/// <reference path="../events-target-behavior/events-target-behavior.d.ts" />
+
+// tslint:disable:variable-name Describing an API that's defined elsewhere.
+// tslint:disable:no-any describes the API as best we are able today
+
+import {html, css, LitElement} from 'lit-element';
+
+import {HeadersParserMixin} from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
+
+import {EventsTargetMixin} from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
 
 declare namespace ApiElements {
 
@@ -82,15 +81,10 @@ declare namespace ApiElements {
    * update selection when internal API navigation occurres.
    */
   class ApiRequestPanel extends
-    ArcBehaviors.HeadersParserBehavior(
-    Polymer.IronScrollTargetBehavior(
-    ArcBehaviors.EventsTargetBehavior(
-    Object))) {
-
-    /**
-     * `raml-aware` scope property to use.
-     */
-    aware: string|null|undefined;
+    HeadersParserMixin(
+    EventsTargetMixin(
+    Object)) {
+    readonly _hasResponse: any;
 
     /**
      * AMF HTTP method (operation in AMF vocabulary) ID.
@@ -106,12 +100,23 @@ declare namespace ApiElements {
     handleNavigationEvents: boolean|null|undefined;
 
     /**
+     * Location of the `node_modules` folder.
+     * It should be a path from server's root path including node_modules.
+     */
+    authPopupLocation: string|null|undefined;
+
+    /**
+     * `raml-aware` scope property to use.
+     */
+    aware: string|null|undefined;
+
+    /**
      * A model's `@id` of selected documentation part.
      * Special case is for `summary` view. It's not part of an API
      * but most applications has some kind of summary view for the
      * API.
      */
-    amfModel: object|null|undefined;
+    amf: object|null|undefined;
 
     /**
      * Hides the URL editor from the view.
@@ -139,16 +144,24 @@ declare namespace ApiElements {
     narrow: boolean|null|undefined;
 
     /**
-     * A request object that is generated from request edtor properties.
-     * It contains the following properties:
-     * - url
-     * - method
-     * - headers
-     * - payload
-     * - queryModel
-     * - pathModel
+     * Enables Anypoint legacy styling
      */
-    editorRequest: object|null|undefined;
+    legacy: boolean|null|undefined;
+
+    /**
+     * Enables Material Design outlined style
+     */
+    outlined: boolean|null|undefined;
+
+    /**
+     * When set the editor is in read only mode.
+     */
+    readOnly: boolean|null|undefined;
+
+    /**
+     * When set all controls are disabled in the form
+     */
+    disabled: boolean|null|undefined;
 
     /**
      * Created by the transport ARFC `request` object
@@ -159,11 +172,6 @@ declare namespace ApiElements {
      * Created by the transport ARC `response` object.
      */
     response: object|null|undefined;
-
-    /**
-     * Computed value, true, when the response object is set.
-     */
-    readonly hasResponse: boolean|null|undefined;
 
     /**
      * A flag indincating request error.
@@ -211,11 +219,6 @@ declare namespace ApiElements {
     sourceMessage: string|null|undefined;
 
     /**
-     * Main scroll target for the app.
-     */
-    scrollTarget: HTMLElement|null|undefined;
-
-    /**
      * Forces the console to send headers defined in this string overriding any used defined
      * header.
      * This should be an array of headers with `name` and `value` keys, e.g.:
@@ -247,12 +250,6 @@ declare namespace ApiElements {
      * `https://proxy.com/?url=http%3A%2F%2Fdomain.com%2Fpath%2F%3Fquery%3Dsome%2Bvalue`
      */
     proxyEncodeUrl: boolean|null|undefined;
-
-    /**
-     * Location of the `bower_components` folder.
-     * It should be a path from server's root path including bower_components.
-     */
-    bowerLocation: string|null|undefined;
 
     /**
      * ID of latest request.
@@ -289,9 +286,46 @@ declare namespace ApiElements {
      * be enabled. Otherwise users won't be able to add a parameter.
      */
     allowCustom: boolean|null|undefined;
+
+    /**
+     * API server definition from the AMF model.
+     *
+     * This value to be set when partial AMF mnodel for an endpoint is passed
+     * instead of web api to be passed to the `api-url-data-model` element.
+     *
+     * Do not set with full AMF web API model.
+     */
+    server: object|null|undefined;
+
+    /**
+     * Supported protocl versions.
+     *
+     * E.g.
+     *
+     * ```json
+     * ["http", "https"]
+     * ```
+     *
+     * This value to be set when partial AMF mnodel for an endpoint is passed
+     * instead of web api to be passed to the `api-url-data-model` element.
+     *
+     * Do not set with full AMF web API model.
+     */
+    protocols: any[]|null|undefined;
+
+    /**
+     * API version name.
+     *
+     * This value to be set when partial AMF mnodel for an endpoint is passed
+     * instead of web api to be passed to the `api-url-data-model` element.
+     *
+     * Do not set with full AMF web API model.
+     */
+    version: string|null|undefined;
+    render(): any;
+    connectedCallback(): void;
     _attachListeners(): void;
     _detachListeners(): void;
-    ready(): void;
 
     /**
      * Registers `api-navigation-selection-changed` event listener handler
@@ -321,13 +355,6 @@ declare namespace ApiElements {
      * @param location Bower components location
      */
     _updateRedirectUri(location: String|null): void;
-
-    /**
-     * Computes if there is a reponse object.
-     *
-     * @param response ARC response objects
-     */
-    _computeHasResponse(response: object|null, responseError: Boolean|null): Boolean|null;
 
     /**
      * A handler for the API call.
@@ -374,15 +401,13 @@ declare namespace ApiElements {
      * Clears response panel.
      */
     clearResponse(): void;
-
-    /**
-     * Dispatches `api-request-data-changed` custom event when any of the
-     * request data changes.
-     */
-    _editorRequestChanged(record: object|null): void;
+    _apiChanged(e: any): void;
   }
 }
 
-interface HTMLElementTagNameMap {
-  "api-request-panel": ApiElements.ApiRequestPanel;
+declare global {
+
+  interface HTMLElementTagNameMap {
+    "api-request-panel": ApiElements.ApiRequestPanel;
+  }
 }
