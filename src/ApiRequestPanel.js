@@ -118,7 +118,7 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
       version,
       readOnly,
       disabled,
-      legacy,
+      compatibility,
       outlined,
 
       _hasResponse
@@ -135,20 +135,20 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
       .redirectUri="${redirectUri}"
       .selected="${selected}"
       .amf="${amf}"
-      .noUrlEditor="${noUrlEditor}"
+      ?noUrlEditor="${noUrlEditor}"
       .baseUri="${baseUri}"
-      .noDocs="${noDocs}"
+      ?noDocs="${noDocs}"
       .eventsTarget="${eventsTarget}"
-      .allowHideOptional="${allowHideOptional}"
-      .allowDisableParams="${allowDisableParams}"
-      .allowCustom="${allowCustom}"
+      ?allowHideOptional="${allowHideOptional}"
+      ?allowDisableParams="${allowDisableParams}"
+      ?allowCustom="${allowCustom}"
       .server="${server}"
       .protocols="${protocols}"
       .version="${version}"
-      .readOnly="${readOnly}"
-      .disabled="${disabled}"
-      .outlined="${outlined}"
-      .legacy="${legacy}"></api-request-editor>
+      ?readOnly="${readOnly}"
+      ?disabled="${disabled}"
+      ?outlined="${outlined}"
+      ?compatibility="${compatibility}"></api-request-editor>
     ${_hasResponse ? html`<response-view
       .request="${this.request}"
       .response="${this.response}"
@@ -160,7 +160,7 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
       .redirectTimings="${this.redirectsTiming}"
       .responseTimings="${this.timing}"
       .sentHttpMessage="${this.sourceMessage}"
-      .legacy="${legacy}"></response-view>` : ''}
+      .compatibility="${compatibility}"></response-view>` : ''}
     `;
   }
 
@@ -210,9 +210,9 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
        */
       narrow: { type: Boolean, reflect: true },
       /**
-       * Enables Anypoint legacy styling
+       * Enables compatibility with Anypoint styling
        */
-      legacy: { type: Boolean, reflect: true },
+      compatibility: { type: Boolean, reflect: true },
       /**
        * Enables Material Design outlined style
        */
