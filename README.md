@@ -10,6 +10,11 @@ An complete request editor and response view panels in a single element.
 
 **See breaking changes and list of required dependencies at the bottom of this document**
 
+## Version compatibility
+
+This version only works with AMF model version 2 (AMF parser >= 4.0.0).
+For compatibility with previous model version use `3.x.x` version of the component.
+
 ## Usage
 
 ### Installation
