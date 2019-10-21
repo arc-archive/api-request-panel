@@ -11,7 +11,7 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 */
-import { html, css, LitElement } from 'lit-element';
+import { html, LitElement } from 'lit-element';
 import { HeadersParserMixin } from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
 import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
 import '@api-components/api-request-editor/api-request-editor.js';
