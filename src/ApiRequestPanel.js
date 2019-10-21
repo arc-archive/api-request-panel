@@ -86,15 +86,6 @@ import '@api-components/raml-aware/raml-aware.js';
  * @memberof ApiElements
  */
 export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitElement)) {
-  static get styles() {
-    return css`
-    :host { display: block; }
-    response-view {
-      margin-top: var(--api-request-panel-response-margin-top, 48px);
-    }
-    `;
-  }
-
   get _hasResponse() {
     return !!this.response || !!this.responseError;
   }
@@ -125,7 +116,12 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     } = this;
 
 
-    return html`
+    return html`<style>
+    :host { display: block; }
+    response-view {
+      margin-top: var(--api-request-panel-response-margin-top, 48px);
+    }
+</style>
     ${aware ? html`<raml-aware
       .scope="${aware}"
       @api-changed="${this._apiChanged}"></raml-aware>` : ''}
