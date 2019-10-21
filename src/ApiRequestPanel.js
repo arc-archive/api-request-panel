@@ -86,7 +86,7 @@ import '@api-components/raml-aware/raml-aware.js';
  * @memberof ApiElements
  */
 export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitElement)) {
-  static get styles() {
+  get styles() {
     return css`
     :host { display: block; }
     response-view {
@@ -125,7 +125,7 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     } = this;
 
 
-    return html`
+    return html`<style>${this.styles}</style>
     ${aware ? html`<raml-aware
       .scope="${aware}"
       @api-changed="${this._apiChanged}"></raml-aware>` : ''}
