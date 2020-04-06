@@ -36,6 +36,11 @@ describe('<api-request-panel>', function() {
     return (await fixture(`<api-request-panel handlenavigationevents></api-request-panel>`));
   }
 
+  async function customBaseUriSlotFixture() {
+    return (await fixture(`<api-request-panel><anypoint-item slot="custom-base-uri"
+                        value="http://customServer.com">http://customServer.com</anypoint-item></api-request-panel>`));
+  }
+
   function appendRequestData(element, request) {
     request = request || {};
     const editor = element.shadowRoot.querySelector('api-request-editor');
@@ -345,6 +350,35 @@ describe('<api-request-panel>', function() {
       });
       assert.isTrue(spy.called);
       assert.deepEqual(spy.args[0][0], detail);
+    });
+  });
+
+  describe('Custom baseUri slot', () => {
+    describe('with basicFixture', () => {
+      let element;
+      beforeEach(async () => {
+        element = await basicFixture();
+      });
+
+      it('should render empty extra servers slot', () => {
+        assert.exists(element.shadowRoot.querySelector('slot[name="custom-base-uri"]'));
+        assert.lengthOf(element.shadowRoot.querySelector('slot[name="custom-base-uri"]').assignedNodes(), 0)
+      });
+    });
+
+    describe('with customBaseUriSlot fixture', () => {
+      let element;
+      beforeEach(async () => {
+        element = await customBaseUriSlotFixture();
+      });
+
+      it('should render extra servers slot', () => {
+        assert.exists(element.shadowRoot.querySelector('slot[name="custom-base-uri"]'));
+      });
+
+      it('should have assigned node to slot', () => {
+        assert.lengthOf(element.shadowRoot.querySelector('slot[name="custom-base-uri"]').assignedNodes(), 1);
+      });
     });
   });
 });
