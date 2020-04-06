@@ -15,6 +15,7 @@ import { html, css, LitElement } from 'lit-element';
 import { HeadersParserMixin } from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
 import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
 import '@api-components/api-request-editor/api-request-editor.js';
+import '@api-components/api-server-selector/api-server-selector.js';
 import '@advanced-rest-client/response-view/response-view.js';
 import '@api-components/raml-aware/raml-aware.js';
 /* eslint-disable max-len */
@@ -107,7 +108,7 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
       selected,
       amf,
       noUrlEditor,
-      baseUri,
+      selectedServer,
       noDocs,
       eventsTarget,
       allowHideOptional,
@@ -130,13 +131,14 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
       .scope="${aware}"
       @api-changed="${this._apiChanged}"></raml-aware>` : ''}
 
+    ${this._renderServerSelector()}
     <api-request-editor
       ?narrow="${narrow}"
       .redirectUri="${redirectUri}"
       .selected="${selected}"
       .amf="${amf}"
       ?noUrlEditor="${noUrlEditor}"
-      .baseUri="${baseUri}"
+      .baseUri="${selectedServer}"
       ?noDocs="${noDocs}"
       .eventsTarget="${eventsTarget}"
       ?allowHideOptional="${allowHideOptional}"
@@ -162,6 +164,14 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
       .sentHttpMessage="${this.sourceMessage}"
       .compatibility="${compatibility}"></response-view>` : ''}
     `;
+  }
+
+  _renderServerSelector() {
+    const { amf, baseUri } = this;
+    if (baseUri) {
+      return '';
+    }
+    return html`<api-server-selector .amf=${amf}></api-server-selector>`;
   }
 
   static get properties() {
@@ -371,7 +381,8 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
        *
        * Do not set with full AMF web API model.
        */
-      version: { type: String }
+      version: { type: String },
+      _selectedServer: { type: String },
     };
   }
 
@@ -417,6 +428,19 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     this._authPopupLocation = value;
     this._updateRedirectUri(value);
   }
+
+  get selectedServer() {
+    return this.baseUri || this._selectedServer || '';
+  }
+
+  set selectedServer(value) {
+    const old = this._selectedServer;
+    if (old === value) {
+      return;
+    }
+    this._selectedServer = value;
+  }
+
   /**
    * @constructor
    */
@@ -441,11 +465,13 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
   _attachListeners() {
     window.addEventListener('api-response', this._apiResponseHandler);
     this.addEventListener('api-request', this._apiRequestHandler);
+    this.addEventListener('api-server-changed', this._serverChangeHandler);
   }
 
   _detachListeners() {
     window.removeEventListener('api-response', this._apiResponseHandler);
     this.removeEventListener('api-request', this._apiRequestHandler);
+    this.removeEventListener('api-server-changed', this._serverChangeHandler);
     if (this.__navEventsRegistered) {
       this._unregisterNavigationEvents();
     }
@@ -514,6 +540,9 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     this.lastRequestId = e.detail.id;
     this._appendConsoleHeaders(e);
     this._appendProxy(e);
+  }
+  _serverChangeHandler(e) {
+    this.selectedServer = e.detail.value;
   }
   /**
    * Appends headers defined in the `appendHeaders` array.
