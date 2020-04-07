@@ -150,7 +150,9 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
       ?readOnly="${readOnly}"
       ?disabled="${disabled}"
       ?outlined="${outlined}"
-      ?compatibility="${compatibility}"></api-request-editor>
+      ?compatibility="${compatibility}">
+      <slot name="custom-base-uri" slot="custom-base-uri"></slot>
+    </api-request-editor>
     ${_hasResponse ? html`<response-view
       .request="${this.request}"
       .response="${this.response}"
