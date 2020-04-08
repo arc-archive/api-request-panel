@@ -108,7 +108,7 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
       selected,
       amf,
       noUrlEditor,
-      selectedServer,
+      baseUri,
       noDocs,
       eventsTarget,
       allowHideOptional,
@@ -138,7 +138,7 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
       .selected="${selected}"
       .amf="${amf}"
       ?noUrlEditor="${noUrlEditor}"
-      .baseUri="${selectedServer}"
+      .baseUri="${baseUri}"
       ?noDocs="${noDocs}"
       .eventsTarget="${eventsTarget}"
       ?allowHideOptional="${allowHideOptional}"
@@ -169,11 +169,14 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
   }
 
   _renderServerSelector() {
-    const { amf, baseUri } = this;
-    if (baseUri) {
-      return '';
-    }
-    return html`<api-server-selector .amf=${amf}></api-server-selector>`;
+    const { amf, hideServerSelector, selectedServerType, selectedServerValue } = this;
+    return html`<api-server-selector
+      .hidden=${hideServerSelector}
+      .amf=${amf}
+      selectedValue="${selectedServerValue}"
+      selectedType="${selectedServerType}"
+    >
+    </api-server-selector>`;
   }
 
   static get properties() {
@@ -384,7 +387,9 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
        * Do not set with full AMF web API model.
        */
       version: { type: String },
-      _selectedServer: { type: String },
+      selectedServerValue: { type: String },
+      selectedServerType: { type: String },
+      hideServerSelector: { type: Boolean },
     };
   }
 
@@ -429,18 +434,6 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     }
     this._authPopupLocation = value;
     this._updateRedirectUri(value);
-  }
-
-  get selectedServer() {
-    return this.baseUri || this._selectedServer || '';
-  }
-
-  set selectedServer(value) {
-    const old = this._selectedServer;
-    if (old === value) {
-      return;
-    }
-    this._selectedServer = value;
   }
 
   /**
@@ -544,7 +537,9 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     this._appendProxy(e);
   }
   _serverChangeHandler(e) {
-    this.selectedServer = e.detail.value;
+    const { selectedValue, selectedType } = e.detail;
+    this.selectedServerValue = selectedValue;
+    this.selectedServerType = selectedType;
   }
   /**
    * Appends headers defined in the `appendHeaders` array.

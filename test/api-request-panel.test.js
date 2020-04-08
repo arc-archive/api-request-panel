@@ -2,7 +2,7 @@ import { fixture, assert } from '@open-wc/testing';
 import * as sinon from 'sinon/pkg/sinon-esm.js';
 import '../api-request-panel.js';
 
-describe('<api-request-panel>', function() {
+describe('<api-request-panel>', function () {
   async function basicFixture() {
     return (await fixture(`<api-request-panel></api-request-panel>`));
   }
@@ -34,10 +34,6 @@ describe('<api-request-panel>', function() {
 
   async function navigationFixture() {
     return (await fixture(`<api-request-panel handlenavigationevents></api-request-panel>`));
-  }
-
-  async function baseUriFixture() {
-    return (await fixture(`<api-request-panel baseUri="https://www.example.org"></api-request-panel>`));
   }
 
   async function customBaseUriSlotFixture() {
@@ -84,11 +80,6 @@ describe('<api-request-panel>', function() {
       const element = await basicFixture();
       assert.exists(element.shadowRoot.querySelector('api-server-selector'));
     });
-
-    it('should not render server selector with baseUri', async () => {
-      const element = await baseUriFixture();
-      assert.notExists(element.shadowRoot.querySelector('api-server-selector'));
-    });
   });
 
   describe('Server selection', () => {
@@ -97,12 +88,18 @@ describe('<api-request-panel>', function() {
     describe('Custom URI selection', () => {
       beforeEach(async () => {
         element = await basicFixture();
-        // This is equivilent to Custom URI being selected, and  'https://www.google.com' being input
-        element.dispatchEvent(new CustomEvent('api-server-changed', { detail: { value: 'https://www.google.com' } }));
+        // This is equivilent to Custom URI being selected, and 'https://www.google.com' being input
+        const event = {
+          detail: {
+            selectedValue: 'https://www.google.com',
+            selectedType: 'custom',
+          },
+        };
+        element.dispatchEvent(new CustomEvent('api-server-changed', event));
       });
 
-      it('should update selectedServer on api-server-changed event', () => {
-        assert.equal(element.selectedServer, 'https://www.google.com');
+      it('should update selectedServerValue on api-server-changed event', () => {
+        assert.equal(element.selectedServerValue, 'https://www.google.com');
       });
 
       it('should still show selector when a custom URI is input', () => {
@@ -111,23 +108,8 @@ describe('<api-request-panel>', function() {
 
       it('should not change the baseUri property', () => {
         assert.isUndefined(element.baseUri);
-      })
-    })
-
-    describe('With baseUri', () => {
-      beforeEach(async () => {
-        element = await baseUriFixture();
       });
-
-      it('selectedServer should return baseUri if available', () => {
-        assert.equal(element.selectedServer, 'https://www.example.org');
-      });
-
-      it('baseUri overrides selectedServer set', () => {
-        element.selectedServer = 'https://www.google.com';
-        assert.equal(element.selectedServer, 'https://www.example.org');
-      });
-    })
+    });
   });
 
   describe('Redirect URI computation', () => {
