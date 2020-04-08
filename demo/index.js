@@ -1,9 +1,6 @@
-import { html, render } from 'lit-html';
-import { LitElement } from 'lit-element';
-import { ApiDemoPageBase } from '@advanced-rest-client/arc-demo-helper/ApiDemoPage.js';
-import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
+import { html } from 'lit-html';
+import { ApiDemoPage } from '@advanced-rest-client/arc-demo-helper';
 import '@anypoint-web-components/anypoint-checkbox/anypoint-checkbox.js';
-import '@advanced-rest-client/arc-demo-helper/arc-demo-helper.js';
 import '@advanced-rest-client/arc-demo-helper/arc-interactive-demo.js';
 import '@api-components/api-navigation/api-navigation.js';
 import '@advanced-rest-client/oauth-authorization/oauth2-authorization.js';
@@ -11,17 +8,12 @@ import '@advanced-rest-client/oauth-authorization/oauth1-authorization.js';
 import '@advanced-rest-client/xhr-simple-request/xhr-simple-request.js';
 import '../api-request-panel.js';
 
-class DemoElement extends AmfHelperMixin(LitElement) {}
-window.customElements.define('demo-element', DemoElement);
-
-class ComponentDemo extends ApiDemoPageBase {
+class ComponentDemo extends ApiDemoPage {
   constructor() {
     super();
-    this._componentName = 'api-request-panel';
 
     this.initObservableProperties([
       'outlined',
-      'compatibility',
       'readOnly',
       'disabled',
       'narrow',
@@ -32,13 +24,12 @@ class ComponentDemo extends ApiDemoPageBase {
       'noDocs',
       'noUrlEditor'
     ]);
+    this.componentName = 'api-request-panel';
     this.allowCustom = false;
     this.allowHideOptional = true;
     this.allowDisableParams = true;
 
     this.demoStates = ['Filled', 'Outlined', 'Anypoint'];
-    this._demoStateHandler = this._demoStateHandler.bind(this);
-    this._toggleMainOption = this._toggleMainOption.bind(this);
     this.redirectUri = location.origin +
       '/node_modules/@advanced-rest-client/oauth-authorization/oauth-popup.html';
   }
@@ -47,24 +38,13 @@ class ComponentDemo extends ApiDemoPageBase {
     const state = e.detail.value;
     this.outlined = state === 1;
     this.compatibility = state === 2;
-  }
-
-  _toggleMainOption(e) {
-    const { name, checked } = e.target;
-    this[name] = checked;
+    this._updateCompatibility();
   }
 
   _authSettingsChanged(e) {
     const value = e.detail;
     this.authSettings = value;
     this.authSettingsValue = value ? JSON.stringify(value, null, 2) : '';
-  }
-
-  get helper() {
-    if (!this.__helper) {
-      this.__helper = document.getElementById('helper');
-    }
-    return this.__helper;
   }
 
   _navChanged(e) {
@@ -80,18 +60,17 @@ class ComponentDemo extends ApiDemoPageBase {
 
   _apiListTemplate() {
     return [
-      ['httpbin', 'httpbin.org'],
       ['google-drive-api', 'Google Drive'],
+      ['httpbin', 'httpbin.org'],
       ['demo-api', 'Demo API'],
       ['appian-api', 'Applian API'],
       ['loan-microservice', 'Loan microservice (OAS)'],
       ['array-body', 'Request body with an array (reported issue)'],
       ['SE-12042', 'Default values issue (SE-12042)'],
       ['SE-12224', 'Scope is not an array issues (SE-12224)'],
-      ['APIC-168', 'Custom scheme support (APIC-168)']
+      ['APIC-168', 'Custom scheme support (APIC-168)'],
     ].map(([file, label]) => html`
-      <paper-item data-src="${file}-compact.json">${label} - compact model</paper-item>
-      <paper-item data-src="${file}.json">${label}</paper-item>
+      <anypoint-item data-src="${file}-compact.json">${label} - compact model</anypoint-item>
       `);
   }
 
@@ -117,100 +96,92 @@ class ComponentDemo extends ApiDemoPageBase {
     <section class="documentation-section">
       <h3>Interactive demo</h3>
       <p>
-        This demo lets you preview the OAuth2 authorization method element with various
+        This demo lets you preview the API request panel element with various
         configuration options.
       </p>
-
-      <section class="horizontal-section-container centered main">
-        ${this._apiNavigationTemplate()}
-        <div class="demo-container">
-
-          <arc-interactive-demo
-            .states="${demoStates}"
-            @state-chanegd="${this._demoStateHandler}"
-            ?dark="${darkThemeActive}"
-          >
-
-            <div slot="content">
-              <api-request-panel
-                .amf="${amf}"
-                .selected="${selectedAmfId}"
-                ?allowCustom="${allowCustom}"
-                ?allowHideOptional="${allowHideOptional}"
-                ?allowDisableParams="${allowDisableParams}"
-                ?narrow="${narrow}"
-                ?outlined="${outlined}"
-                ?compatibility="${compatibility}"
-                ?readOnly="${readOnly}"
-                ?disabled="${disabled}"
-                ?noDocs="${noDocs}"
-                ?noUrlEditor="${noUrlEditor}"
-                .redirectUri="${redirectUri}"></api-request-panel>
-            </div>
-            <label slot="options" id="mainOptionsLabel">Options</label>
-            <anypoint-checkbox
-              aria-describedby="mainOptionsLabel"
-              slot="options"
-              name="readOnly"
-              @change="${this._toggleMainOption}"
-              >Read only</anypoint-checkbox
-            >
-            <anypoint-checkbox
-              aria-describedby="mainOptionsLabel"
-              slot="options"
-              name="disabled"
-              @change="${this._toggleMainOption}"
-              >Disabled</anypoint-checkbox
-            >
-            <anypoint-checkbox
-              aria-describedby="mainOptionsLabel"
-              slot="options"
-              name="allowCustom"
-              .checked="${allowCustom}"
-              @change="${this._toggleMainOption}"
-              >Allow custom</anypoint-checkbox
-            >
-            <anypoint-checkbox
-              aria-describedby="mainOptionsLabel"
-              slot="options"
-              name="allowHideOptional"
-              .checked="${allowHideOptional}"
-              @change="${this._toggleMainOption}"
-              >Allow hide optional</anypoint-checkbox
-            >
-            <anypoint-checkbox
-              aria-describedby="mainOptionsLabel"
-              slot="options"
-              name="allowDisableParams"
-              .checked="${allowDisableParams}"
-              @change="${this._toggleMainOption}"
-              >Allow disable params</anypoint-checkbox
-            >
-            <anypoint-checkbox
-              aria-describedby="mainOptionsLabel"
-              slot="options"
-              name="narrow"
-              @change="${this._toggleMainOption}"
-              >Narrow view</anypoint-checkbox
-            >
-            <anypoint-checkbox
-              aria-describedby="mainOptionsLabel"
-              slot="options"
-              name="noDocs"
-              @change="${this._toggleMainOption}"
-              >No docs</anypoint-checkbox
-            >
-            <anypoint-checkbox
-              aria-describedby="mainOptionsLabel"
-              slot="options"
-              name="noUrlEditor"
-              @change="${this._toggleMainOption}"
-              >No url editor</anypoint-checkbox
-            >
-          </arc-interactive-demo>
+      <arc-interactive-demo
+        .states="${demoStates}"
+        @state-chanegd="${this._demoStateHandler}"
+        ?dark="${darkThemeActive}"
+      >
+        <div slot="content">
+          <api-request-panel
+            .amf="${amf}"
+            .selected="${selectedAmfId}"
+            ?allowCustom="${allowCustom}"
+            ?allowHideOptional="${allowHideOptional}"
+            ?allowDisableParams="${allowDisableParams}"
+            ?narrow="${narrow}"
+            ?outlined="${outlined}"
+            ?compatibility="${compatibility}"
+            ?readOnly="${readOnly}"
+            ?disabled="${disabled}"
+            ?noDocs="${noDocs}"
+            ?noUrlEditor="${noUrlEditor}"
+            .redirectUri="${redirectUri}"></api-request-panel>
         </div>
-      </section>
-    </section>`;
+        <label slot="options" id="mainOptionsLabel">Options</label>
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="readOnly"
+          @change="${this._toggleMainOption}"
+          >Read only</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="disabled"
+          @change="${this._toggleMainOption}"
+          >Disabled</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="allowCustom"
+          .checked="${allowCustom}"
+          @change="${this._toggleMainOption}"
+          >Allow custom</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="allowHideOptional"
+          .checked="${allowHideOptional}"
+          @change="${this._toggleMainOption}"
+          >Allow hide optional</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="allowDisableParams"
+          .checked="${allowDisableParams}"
+          @change="${this._toggleMainOption}"
+          >Allow disable params</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="narrow"
+          @change="${this._toggleMainOption}"
+          >Narrow view</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="noDocs"
+          @change="${this._toggleMainOption}"
+          >No docs</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="noUrlEditor"
+          @change="${this._toggleMainOption}"
+          >No url editor</anypoint-checkbox
+        >
+      </arc-interactive-demo>
+      </section>`;
   }
 
   _introductionTemplate() {
@@ -231,7 +202,7 @@ class ComponentDemo extends ApiDemoPageBase {
     return html `
       <section class="documentation-section">
         <h2>Usage</h2>
-        <p>API request editor comes with 3 predefied styles:</p>
+        <p>API request panel comes with 3 predefied styles:</p>
         <ul>
           <li><b>Filled</b> (default)</li>
           <li><b>Outlined</b> - Material desing outlined inputs, use <code>outlined</code> property</li>
@@ -326,25 +297,17 @@ class ComponentDemo extends ApiDemoPageBase {
       </section>`;
   }
 
-  _render() {
-    const { amf } = this;
-    render(html`
-      ${this.headerTemplate()}
-
-      <demo-element id="helper" .amf="${amf}"></demo-element>
+  contentTemplate() {
+    return html`
       <oauth2-authorization></oauth2-authorization>
       <oauth1-authorization></oauth1-authorization>
       <xhr-simple-request></xhr-simple-request>
-
-      <div role="main">
-        <h2 class="centered main">API request panel</h2>
-        ${this._demoTemplate()}
-        ${this._introductionTemplate()}
-        ${this._usageTemplate()}
-      </div>
-      `, document.querySelector('#demo'));
+      <h2 class="centered main">API request panel</h2>
+      ${this._demoTemplate()}
+      ${this._introductionTemplate()}
+      ${this._usageTemplate()}
+    `;
   }
 }
 const instance = new ComponentDemo();
-instance.render();
 window.demo = instance;
