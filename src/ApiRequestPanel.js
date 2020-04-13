@@ -189,13 +189,6 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
        */
       handleNavigationEvents: { type: Boolean },
       /**
-       * A model's `@id` of selected documentation part.
-       * Special case is for `summary` view. It's not part of an API
-       * but most applications has some kind of summary view for the
-       * API.
-       */
-      amf: { type: Object },
-      /**
        * Hides the URL editor from the view.
        * The editor is still in the DOM and the `urlInvalid` property still will be set.
        */
@@ -661,10 +654,6 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     if (this.sourceMessage) {
       this.sourceMessage = undefined;
     }
-  }
-
-  _apiChanged(e) {
-    this.amf = e.detail.value;
   }
 
   _updateServer() {
