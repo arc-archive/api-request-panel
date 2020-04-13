@@ -18,7 +18,6 @@ import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixi
 import '@api-components/api-request-editor/api-request-editor.js';
 import '@api-components/api-server-selector/api-server-selector.js';
 import '@advanced-rest-client/response-view/response-view.js';
-import '@api-components/raml-aware/raml-aware.js';
 /* eslint-disable max-len */
 /**
  * Request editor and response view panels in a single element.
@@ -103,7 +102,6 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
 
   render() {
     const {
-      aware,
       narrow,
       redirectUri,
       selected,
@@ -128,9 +126,6 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
 
 
     return html`<style>${this.styles}</style>
-    ${aware ? html`<raml-aware
-      .scope="${aware}"
-      @api-changed="${this._apiChanged}"></raml-aware>` : ''}
 
     ${this._renderServerSelector()}
     <api-request-editor
@@ -182,10 +177,6 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
 
   static get properties() {
     return {
-      /**
-       * `raml-aware` scope property to use.
-       */
-      aware: { type: String },
       /**
        * AMF HTTP method (operation in AMF vocabulary) ID.
        */
@@ -388,8 +379,20 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
        * Do not set with full AMF web API model.
        */
       version: { type: String },
+      /**
+       * Holds the value of the currently selected server 
+       * Data type: URI
+       */
       selectedServerValue: { type: String },
+      /**
+       * Holds the type of the currently selected server
+       * Values: `server` | `slot` | `custom`
+       */
       selectedServerType: { type: String },
+      /**
+       * Optional property to set
+       * If true, the server selector is not rendered
+       */
       hideServerSelector: { type: Boolean },
     };
   }
@@ -448,20 +451,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     }
     this._selectedServerValue = value;
     this._updateServer();
-  }
-
-  set amf(model) {
-    const old = this._amf;
-    if (old === model) {
-      return;
-    }
-
-    this._amf = model;
-    this.updateServers();
-  }
-
-  get amf() {
-    return this._amf;
+    this.requestUpdate('selectedServerValue', old);
   }
 
   /**
@@ -720,5 +710,9 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     this.methodId = methodId;
     this.endpointId = endpointId;
     this.servers = this._getServers({ endpointId, methodId });
+  }
+
+  __amfChanged() {
+    this.updateServers();
   }
 }
