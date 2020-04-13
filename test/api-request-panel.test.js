@@ -1,5 +1,6 @@
-import { fixture, assert } from '@open-wc/testing';
+import { fixture, assert, nextFrame } from '@open-wc/testing';
 import * as sinon from 'sinon/pkg/sinon-esm.js';
+import { AmfLoader } from './amf-loader.js';
 import '../api-request-panel.js';
 
 describe('<api-request-panel>', function () {
@@ -82,32 +83,56 @@ describe('<api-request-panel>', function () {
     });
   });
 
-  describe('Server selection', () => {
-    let element;
+  [
+    ['Compact model', true],
+    ['Regular model', false]
+  ].forEach(item => {
+    describe('Server selection', () => {
+      let element;
+      let amf;
 
-    describe('Custom URI selection', () => {
-      beforeEach(async () => {
-        element = await basicFixture();
-        // This is equivilent to Custom URI being selected, and 'https://www.google.com' being input
-        const event = {
-          detail: {
-            selectedValue: 'https://www.google.com',
-            selectedType: 'custom',
-          },
-        };
-        element.dispatchEvent(new CustomEvent('api-server-changed', event));
-      });
+      describe('Custom URI selection', () => {
+        beforeEach(async () => {
+          element = await basicFixture();
+          amf = await AmfLoader.load(item[1]);
+          element.amf = amf;
+          // This is equivilent to Custom URI being selected, and 'https://www.google.com' being input
+          const event = {
+            detail: {
+              selectedValue: 'https://www.google.com',
+              selectedType: 'custom',
+            },
+          };
+          element.dispatchEvent(new CustomEvent('api-server-changed', event));
+        });
 
-      it('should update selectedServerValue on api-server-changed event', () => {
-        assert.equal(element.selectedServerValue, 'https://www.google.com');
-      });
+        it('should load servers', () => {
+          assert.lengthOf(element.servers, 1);
+        });
 
-      it('should still show selector when a custom URI is input', () => {
-        assert.exists(element.shadowRoot.querySelector('api-server-selector'));
-      });
+        it('should update selectedServerValue on api-server-changed event', () => {
+          assert.equal(element.selectedServerValue, 'https://www.google.com');
+        });
 
-      it('should not change the baseUri property', () => {
-        assert.isUndefined(element.baseUri);
+        it('should still show selector when a custom URI is input', () => {
+          assert.exists(element.shadowRoot.querySelector('api-server-selector'));
+        });
+
+        it('should not change the baseUri property', () => {
+          assert.isUndefined(element.baseUri);
+        });
+
+        it('should update computed server', async () => {
+          const event = {
+            detail: {
+              selectedValue: 'http://{instance}.domain.com/',
+              selectedType: 'server',
+            },
+          };
+          element.dispatchEvent(new CustomEvent('api-server-changed', event));
+          await nextFrame();
+          assert.isDefined(element.server);
+        });
       });
     });
   });

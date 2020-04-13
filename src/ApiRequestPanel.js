@@ -14,6 +14,7 @@ the License.
 import { html, css, LitElement } from 'lit-element';
 import { HeadersParserMixin } from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
 import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
+import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
 import '@api-components/api-request-editor/api-request-editor.js';
 import '@api-components/api-server-selector/api-server-selector.js';
 import '@advanced-rest-client/response-view/response-view.js';
@@ -86,7 +87,7 @@ import '@api-components/raml-aware/raml-aware.js';
  * @appliesMixin EventsTargetMixin
  * @memberof ApiElements
  */
-export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitElement)) {
+export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersParserMixin(LitElement))) {
   get styles() {
     return css`
     :host { display: block; }
@@ -436,6 +437,33 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     this._updateRedirectUri(value);
   }
 
+  get selectedServerValue() {
+    return this._selectedServerValue;
+  }
+
+  set selectedServerValue(value) {
+    const old = this._selectedServerValue;
+    if (old === value) {
+      return;
+    }
+    this._selectedServerValue = value;
+    this._updateServer();
+  }
+
+  set amf(model) {
+    const old = this._amf;
+    if (old === model) {
+      return;
+    }
+
+    this._amf = model;
+    this.updateServers();
+  }
+
+  get amf() {
+    return this._amf;
+  }
+
   /**
    * @constructor
    */
@@ -444,6 +472,7 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     this._apiResponseHandler = this._apiResponseHandler.bind(this);
     this._apiRequestHandler = this._apiRequestHandler.bind(this);
     this._navigationHandler = this._navigationHandler.bind(this);
+    this._handleNavigationChange = this._handleNavigationChange.bind(this);
 
     this.responseIsXhr = true;
   }
@@ -461,12 +490,14 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     window.addEventListener('api-response', this._apiResponseHandler);
     this.addEventListener('api-request', this._apiRequestHandler);
     this.addEventListener('api-server-changed', this._serverChangeHandler);
+    this.addEventListener('api-navigation-selection-changed', this._handleNavigationChange);
   }
 
   _detachListeners() {
     window.removeEventListener('api-response', this._apiResponseHandler);
     this.removeEventListener('api-request', this._apiRequestHandler);
     this.removeEventListener('api-server-changed', this._serverChangeHandler);
+    this.removeEventListener('api-navigation-selection-changed', this._handleNavigationChange);
     if (this.__navEventsRegistered) {
       this._unregisterNavigationEvents();
     }
@@ -538,8 +569,8 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
   }
   _serverChangeHandler(e) {
     const { selectedValue, selectedType } = e.detail;
-    this.selectedServerValue = selectedValue;
     this.selectedServerType = selectedType;
+    this.selectedServerValue = selectedValue;
   }
   /**
    * Appends headers defined in the `appendHeaders` array.
@@ -644,5 +675,50 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
 
   _apiChanged(e) {
     this.amf = e.detail.value;
+  }
+
+  _updateServer() {
+    const { selectedServerValue, selectedServerType } = this;
+    if (selectedServerType !== 'server') {
+      this.server = undefined;
+    } else {
+      this.server = this._computeServerFromValue(selectedServerValue);
+    }
+  }
+
+  _computeServerFromValue(value) {
+    return this._findServerByValue(value);
+  }
+
+  _findServerByValue(value) {
+    const { servers = [] } = this;
+    return servers.find(server => this._getServerUri(server) === value);
+  }
+
+  _handleNavigationChange(e) {
+    const { selected, type, endpointId } = e.detail;
+    const serverDefinitionAllowedTypes = ['endpoint', 'method'];
+    if (serverDefinitionAllowedTypes.indexOf(type) === -1) {
+      return;
+    }
+    this.updateServers({ id: selected, type, endpointId });
+  }
+
+  _getServerUri(server) {
+    const key = this._getAmfKey(this.ns.aml.vocabularies.core.urlTemplate);
+    return this._getValue(server, key);
+  }
+
+  updateServers({ id, type, endpointId } = {}) {
+    let methodId;
+    if (type === 'method') {
+      methodId = id;
+    }
+    if (type === 'endpoint') {
+      endpointId = id;
+    }
+    this.methodId = methodId;
+    this.endpointId = endpointId;
+    this.servers = this._getServers({ endpointId, methodId });
   }
 }
