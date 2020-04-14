@@ -147,7 +147,6 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
       ?disabled="${disabled}"
       ?outlined="${outlined}"
       ?compatibility="${compatibility}">
-      <slot name="custom-base-uri" slot="custom-base-uri"></slot>
     </api-request-editor>
     ${_hasResponse ? html`<response-view
       .request="${this.request}"
@@ -172,6 +171,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
       selectedValue="${selectedServerValue}"
       selectedType="${selectedServerType}"
     >
+      <slot name="custom-base-uri" slot="custom-base-uri"></slot>
     </api-server-selector>`;
   }
 
