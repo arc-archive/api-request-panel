@@ -164,14 +164,14 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
   }
 
   _renderServerSelector() {
-    const { amf, hideServerSelector, selectedServerType, selectedServerValue, serversCount, hideCustomServer } = this;
-    const hidden = (serversCount && serversCount < 1) || !!hideServerSelector;
+    const { amf, selectedServerType, selectedServerValue, noCustomServer } = this;
     return html`<api-server-selector
-      .hidden=${hidden}
-      .hideCustom=${hideCustomServer}
+      ?hidden="${this._shouldHideServerSelector()}"
+      ?noCustom="${noCustomServer}"
       .amf=${amf}
       selectedValue="${selectedServerValue}"
       selectedType="${selectedServerType}"
+      @servers-count-changed="${this._handleServersCountChange}"
     >
       <slot name="custom-base-uri" slot="custom-base-uri"></slot>
     </api-server-selector>`;
@@ -388,12 +388,12 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
        * Optional property to set
        * If true, the server selector is not rendered
        */
-      hideServerSelector: { type: Boolean },
+      noServerSelector: { type: Boolean },
       /**
        * Optional property to set
        * If true, the server selector custom option is not rendered
        */
-      hideCustomServer: { type: Boolean },
+      noCustomServer: { type: Boolean },
     };
   }
 
@@ -495,14 +495,12 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     this.addEventListener('api-request', this._apiRequestHandler);
     this.addEventListener('api-server-changed', this._serverChangeHandler);
     this.addEventListener('api-navigation-selection-changed', this._handleNavigationChange);
-    this.addEventListener('api-servers-count-changed', this._handleServersCountChange);
   }
 
   _detachListeners() {
     window.removeEventListener('api-response', this._apiResponseHandler);
     this.removeEventListener('api-request', this._apiRequestHandler);
     this.removeEventListener('api-server-changed', this._serverChangeHandler);
-    this.removeEventListener('api-navigation-selection-changed', this._handleNavigationChange);
     if (this.__navEventsRegistered) {
       this._unregisterNavigationEvents();
     }
@@ -713,6 +711,11 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
   _getServerUri(server) {
     const key = this._getAmfKey(this.ns.aml.vocabularies.core.urlTemplate);
     return this._getValue(server, key);
+  }
+
+  _shouldHideServerSelector() {
+    const { serversCount, noServerSelector } = this
+    return (serversCount && serversCount < 2) || !!noServerSelector;
   }
 
   updateServers({ id, type, endpointId } = {}) {

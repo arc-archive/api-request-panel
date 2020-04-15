@@ -41,6 +41,10 @@ describe('<api-request-panel>', function () {
     return (await fixture(`<api-request-panel><anypoint-item slot="custom-base-uri"
                         value="http://customServer.com">http://customServer.com</anypoint-item></api-request-panel>`));
   }
+  async function noSelectorFixture() {
+    return (await fixture(`<api-request-panel noServerSelector><anypoint-item slot="custom-base-uri"
+                        value="http://customServer.com">http://customServer.com</anypoint-item></api-request-panel>`));
+  }
 
   function appendRequestData(element, request) {
     request = request || {};
@@ -77,12 +81,20 @@ describe('<api-request-panel>', function () {
       assert.isTrue(spy.called);
     });
 
-    it('should render server selector', async () => {
+    it('should hide server selector', async () => {
       const element = await basicFixture();
-      assert.exists(element.shadowRoot.querySelector('api-server-selector'));
+      await nextFrame()
+      assert.isTrue(element._shouldHideServerSelector())
+    })
+
+    it('should set hidden attribute to server selector', async () => {
+      const element = await basicFixture();
+      await nextFrame()
+      let serverSelector = element.shadowRoot.querySelector('api-server-selector')
+      assert.exists(serverSelector);
+      assert.isTrue(serverSelector.hidden)
     });
   });
-
   [
     ['Compact model', true],
     ['Regular model', false]
@@ -432,13 +444,37 @@ describe('<api-request-panel>', function () {
         element = await customBaseUriSlotFixture();
       });
 
-      it('should render extra servers slot', () => {
-        assert.exists(element.shadowRoot.querySelector('slot[name="custom-base-uri"]'));
+      it('should have 2 servers', () => {
+        assert.equal(element.serversCount, 2);
       });
 
-      it('should have assigned node to slot', () => {
-        assert.lengthOf(element.shadowRoot.querySelector('slot[name="custom-base-uri"]').assignedNodes(), 1);
+      it('should not hide server selector', async () => {
+        assert.isFalse(element._shouldHideServerSelector())
+      })
+
+      it('should not set hidden attribute to server selector', async () => {
+        let serverSelector = element.shadowRoot.querySelector('api-server-selector')
+        assert.exists(serverSelector);
+        assert.isUndefined(serverSelector.hidden)
       });
     });
   });
+
+  describe('noServerSelector attribute', () => {
+    let element;
+
+    beforeEach(async () => {
+      element = await noSelectorFixture();
+    });
+
+    it('should hide server selector', async () => {
+      assert.isTrue(element._shouldHideServerSelector())
+    })
+
+    it('should set hidden attribute to server selector', async () => {
+      let serverSelector = element.shadowRoot.querySelector('api-server-selector')
+      assert.exists(serverSelector);
+      assert.isTrue(serverSelector.hidden)
+    });
+  })
 });

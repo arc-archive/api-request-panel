@@ -22,12 +22,18 @@ class ComponentDemo extends ApiDemoPage {
       'allowHideOptional',
       'allowDisableParams',
       'noDocs',
-      'noUrlEditor'
+      'noUrlEditor',
+      'renderCustomServer',
+      'noCustomServer',
+      'noServerSelector',
     ]);
     this.componentName = 'api-request-panel';
     this.allowCustom = false;
     this.allowHideOptional = true;
     this.allowDisableParams = true;
+    this.renderCustomServer = false;
+    this.noServerSelector = false;
+    this.noCustomServer = false;
 
     this.demoStates = ['Filled', 'Outlined', 'Anypoint'];
     this.redirectUri = location.origin +
@@ -74,6 +80,16 @@ class ComponentDemo extends ApiDemoPage {
       `);
   }
 
+  _addCustomServers() {
+    if (!this.renderCustomServer) {
+      return;
+    }
+    return html`<anypoint-item slot="custom-base-uri"
+                        value="http://customServer.com">http://customServer.com</anypoint-item>
+        <anypoint-item slot="custom-base-uri"
+                        value="http://customServer.com2">http://customServer.com2</anypoint-item>`;
+  }
+
   _demoTemplate() {
     const {
       demoStates,
@@ -90,6 +106,8 @@ class ComponentDemo extends ApiDemoPage {
       allowDisableParams,
       selectedAmfId,
       noDocs,
+      noServerSelector,
+      noCustomServer,
       noUrlEditor
     } = this;
     return html `
@@ -118,7 +136,11 @@ class ComponentDemo extends ApiDemoPage {
             ?disabled="${disabled}"
             ?noDocs="${noDocs}"
             ?noUrlEditor="${noUrlEditor}"
-            .redirectUri="${redirectUri}"></api-request-panel>
+            ?noServerSelector="${noServerSelector}"
+            ?noCustomServer="${noCustomServer}"
+            .redirectUri="${redirectUri}">
+          ${this._addCustomServers()}    
+        </api-request-panel>
         </div>
         <label slot="options" id="mainOptionsLabel">Options</label>
         <anypoint-checkbox
@@ -179,6 +201,27 @@ class ComponentDemo extends ApiDemoPage {
           name="noUrlEditor"
           @change="${this._toggleMainOption}"
           >No url editor</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="renderCustomServer"
+          @change="${this._toggleMainOption}"
+          >Slot custom servers</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="noCustomServer"
+          @change="${this._toggleMainOption}"
+          >No Custom URI</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="noServerSelector"
+          @change="${this._toggleMainOption}"
+          >No Server Selector</anypoint-checkbox
         >
       </arc-interactive-demo>
       </section>`;
