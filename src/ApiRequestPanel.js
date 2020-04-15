@@ -164,9 +164,11 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
   }
 
   _renderServerSelector() {
-    const { amf, hideServerSelector, selectedServerType, selectedServerValue } = this;
+    const { amf, hideServerSelector, selectedServerType, selectedServerValue, serversCount, hideCustomServer } = this;
+    const hidden = (serversCount && serversCount < 1) || !!hideServerSelector;
     return html`<api-server-selector
-      .hidden=${hideServerSelector}
+      .hidden=${hidden}
+      .hideCustom=${hideCustomServer}
       .amf=${amf}
       selectedValue="${selectedServerValue}"
       selectedType="${selectedServerType}"
@@ -387,6 +389,11 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
        * If true, the server selector is not rendered
        */
       hideServerSelector: { type: Boolean },
+      /**
+       * Optional property to set
+       * If true, the server selector custom option is not rendered
+       */
+      hideCustomServer: { type: Boolean },
     };
   }
 
@@ -433,6 +440,20 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     this._updateRedirectUri(value);
   }
 
+  get serversCount() {
+    return this._serversCount;
+  }
+
+  set serversCount(value) {
+    const old = this._serversCount;
+    if (old === value) {
+      return;
+    }
+    this._serversCount = value;
+    this._updateServer();
+    this.requestUpdate('serversCount', old);
+  }
+
   get selectedServerValue() {
     return this._selectedServerValue;
   }
@@ -474,6 +495,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     this.addEventListener('api-request', this._apiRequestHandler);
     this.addEventListener('api-server-changed', this._serverChangeHandler);
     this.addEventListener('api-navigation-selection-changed', this._handleNavigationChange);
+    this.addEventListener('api-servers-count-changed', this._handleServersCountChange);
   }
 
   _detachListeners() {
@@ -681,6 +703,11 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
       return;
     }
     this.updateServers({ id: selected, type, endpointId });
+  }
+
+  _handleServersCountChange(e) {
+    const { serversCount } = e.detail;
+    this.serversCount = serversCount;
   }
 
   _getServerUri(server) {
