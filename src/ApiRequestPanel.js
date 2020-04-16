@@ -486,6 +486,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     }
 
     this._noServerSelector = value;
+    this.requestUpdate('noServerSelector', old);
     this._computeServerSelectorHidden();
   }
 
