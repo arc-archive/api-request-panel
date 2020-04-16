@@ -147,7 +147,6 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
       ?disabled="${disabled}"
       ?outlined="${outlined}"
       ?compatibility="${compatibility}">
-      <slot name="custom-base-uri" slot="custom-base-uri"></slot>
     </api-request-editor>
     ${_hasResponse ? html`<response-view
       .request="${this.request}"
@@ -165,13 +164,16 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
   }
 
   _renderServerSelector() {
-    const { amf, hideServerSelector, selectedServerType, selectedServerValue } = this;
+    const { amf, selectedServerType, selectedServerValue, noCustomServer, serverSelectorHidden } = this;
     return html`<api-server-selector
-      .hidden=${hideServerSelector}
+      ?hidden="${serverSelectorHidden}"
+      ?noCustom="${noCustomServer}"
       .amf=${amf}
       selectedValue="${selectedServerValue}"
       selectedType="${selectedServerType}"
+      @servers-count-changed="${this._handleServersCountChange}"
     >
+      <slot name="custom-base-uri" slot="custom-base-uri"></slot>
     </api-server-selector>`;
   }
 
@@ -386,7 +388,18 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
        * Optional property to set
        * If true, the server selector is not rendered
        */
-      hideServerSelector: { type: Boolean },
+      noServerSelector: { type: Boolean },
+      /**
+       * Optional property to set
+       * If true, the server selector custom option is not rendered
+       */
+      noCustomServer: { type: Boolean },
+      /**
+       * Holds the value for whether there are enough servers
+       * to show the server selector.
+       * If there are not enough servers, then this value is set to true and server selector is hidden
+       */
+      serverSelectorHidden: { type: Boolean },
     };
   }
 
@@ -433,6 +446,21 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     this._updateRedirectUri(value);
   }
 
+  get serversCount() {
+    return this._serversCount;
+  }
+
+  set serversCount(value) {
+    const old = this._serversCount;
+    if (old === value) {
+      return;
+    }
+    this._serversCount = value;
+    this._updateServer();
+    this._computeServerSelectorHidden();
+    this.requestUpdate('serversCount', old);
+  }
+
   get selectedServerValue() {
     return this._selectedServerValue;
   }
@@ -445,6 +473,21 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     this._selectedServerValue = value;
     this._updateServer();
     this.requestUpdate('selectedServerValue', old);
+  }
+
+  get noServerSelector() {
+    return this._noServerSelector;
+  }
+
+  set noServerSelector(value) {
+    const old = this.noServerSelector;
+    if (old === value) {
+      return;
+    }
+
+    this._noServerSelector = value;
+    this.requestUpdate('noServerSelector', old);
+    this._computeServerSelectorHidden();
   }
 
   /**
@@ -683,9 +726,21 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     this.updateServers({ id: selected, type, endpointId });
   }
 
+  _handleServersCountChange(e) {
+    const { serversCount } = e.detail;
+    this.serversCount = serversCount;
+  }
+
   _getServerUri(server) {
     const key = this._getAmfKey(this.ns.aml.vocabularies.core.urlTemplate);
     return this._getValue(server, key);
+  }
+
+  _computeServerSelectorHidden() {
+    const { serversCount = 0, noServerSelector } = this
+    const old = this.serverSelectorHidden;
+    this.serverSelectorHidden = serversCount < 2 || noServerSelector;
+    this.requestUpdate('serverSelectorHidden', old);
   }
 
   updateServers({ id, type, endpointId } = {}) {
