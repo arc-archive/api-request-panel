@@ -14,9 +14,10 @@ the License.
 import { html, css, LitElement } from 'lit-element';
 import { HeadersParserMixin } from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
 import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
+import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
 import '@api-components/api-request-editor/api-request-editor.js';
+import '@api-components/api-server-selector/api-server-selector.js';
 import '@advanced-rest-client/response-view/response-view.js';
-import '@api-components/raml-aware/raml-aware.js';
 /* eslint-disable max-len */
 /**
  * Request editor and response view panels in a single element.
@@ -85,7 +86,7 @@ import '@api-components/raml-aware/raml-aware.js';
  * @appliesMixin EventsTargetMixin
  * @memberof ApiElements
  */
-export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitElement)) {
+export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersParserMixin(LitElement))) {
   get styles() {
     return css`
     :host { display: block; }
@@ -101,7 +102,6 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
 
   render() {
     const {
-      aware,
       narrow,
       redirectUri,
       selected,
@@ -126,10 +126,8 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
 
 
     return html`<style>${this.styles}</style>
-    ${aware ? html`<raml-aware
-      .scope="${aware}"
-      @api-changed="${this._apiChanged}"></raml-aware>` : ''}
 
+    ${this._renderServerSelector()}
     <api-request-editor
       ?narrow="${narrow}"
       .redirectUri="${redirectUri}"
@@ -149,7 +147,6 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
       ?disabled="${disabled}"
       ?outlined="${outlined}"
       ?compatibility="${compatibility}">
-      <slot name="custom-base-uri" slot="custom-base-uri"></slot>
     </api-request-editor>
     ${_hasResponse ? html`<response-view
       .request="${this.request}"
@@ -166,12 +163,22 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     `;
   }
 
+  _renderServerSelector() {
+    const { amf, selectedServerType, selectedServerValue, noCustomServer, serverSelectorHidden } = this;
+    return html`<api-server-selector
+      ?hidden="${serverSelectorHidden}"
+      ?noCustom="${noCustomServer}"
+      .amf=${amf}
+      selectedValue="${selectedServerValue}"
+      selectedType="${selectedServerType}"
+      @servers-count-changed="${this._handleServersCountChange}"
+    >
+      <slot name="custom-base-uri" slot="custom-base-uri"></slot>
+    </api-server-selector>`;
+  }
+
   static get properties() {
     return {
-      /**
-       * `raml-aware` scope property to use.
-       */
-      aware: { type: String },
       /**
        * AMF HTTP method (operation in AMF vocabulary) ID.
        */
@@ -183,13 +190,6 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
        * and updates the state
        */
       handleNavigationEvents: { type: Boolean },
-      /**
-       * A model's `@id` of selected documentation part.
-       * Special case is for `summary` view. It's not part of an API
-       * but most applications has some kind of summary view for the
-       * API.
-       */
-      amf: { type: Object },
       /**
        * Hides the URL editor from the view.
        * The editor is still in the DOM and the `urlInvalid` property still will be set.
@@ -373,7 +373,33 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
        *
        * Do not set with full AMF web API model.
        */
-      version: { type: String }
+      version: { type: String },
+      /**
+       * Holds the value of the currently selected server 
+       * Data type: URI
+       */
+      selectedServerValue: { type: String },
+      /**
+       * Holds the type of the currently selected server
+       * Values: `server` | `slot` | `custom`
+       */
+      selectedServerType: { type: String },
+      /**
+       * Optional property to set
+       * If true, the server selector is not rendered
+       */
+      noServerSelector: { type: Boolean },
+      /**
+       * Optional property to set
+       * If true, the server selector custom option is not rendered
+       */
+      noCustomServer: { type: Boolean },
+      /**
+       * Holds the value for whether there are enough servers
+       * to show the server selector.
+       * If there are not enough servers, then this value is set to true and server selector is hidden
+       */
+      serverSelectorHidden: { type: Boolean },
     };
   }
 
@@ -419,6 +445,51 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     this._authPopupLocation = value;
     this._updateRedirectUri(value);
   }
+
+  get serversCount() {
+    return this._serversCount;
+  }
+
+  set serversCount(value) {
+    const old = this._serversCount;
+    if (old === value) {
+      return;
+    }
+    this._serversCount = value;
+    this._updateServer();
+    this._computeServerSelectorHidden();
+    this.requestUpdate('serversCount', old);
+  }
+
+  get selectedServerValue() {
+    return this._selectedServerValue;
+  }
+
+  set selectedServerValue(value) {
+    const old = this._selectedServerValue;
+    if (old === value) {
+      return;
+    }
+    this._selectedServerValue = value;
+    this._updateServer();
+    this.requestUpdate('selectedServerValue', old);
+  }
+
+  get noServerSelector() {
+    return this._noServerSelector;
+  }
+
+  set noServerSelector(value) {
+    const old = this.noServerSelector;
+    if (old === value) {
+      return;
+    }
+
+    this._noServerSelector = value;
+    this.requestUpdate('noServerSelector', old);
+    this._computeServerSelectorHidden();
+  }
+
   /**
    * @constructor
    */
@@ -427,6 +498,7 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     this._apiResponseHandler = this._apiResponseHandler.bind(this);
     this._apiRequestHandler = this._apiRequestHandler.bind(this);
     this._navigationHandler = this._navigationHandler.bind(this);
+    this._handleNavigationChange = this._handleNavigationChange.bind(this);
 
     this.responseIsXhr = true;
   }
@@ -443,11 +515,15 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
   _attachListeners() {
     window.addEventListener('api-response', this._apiResponseHandler);
     this.addEventListener('api-request', this._apiRequestHandler);
+    this.addEventListener('api-server-changed', this._serverChangeHandler);
+    this.addEventListener('api-navigation-selection-changed', this._handleNavigationChange);
   }
 
   _detachListeners() {
     window.removeEventListener('api-response', this._apiResponseHandler);
     this.removeEventListener('api-request', this._apiRequestHandler);
+    this.removeEventListener('api-server-changed', this._serverChangeHandler);
+    this.removeEventListener('api-navigation-selection-changed', this._handleNavigationChange);
     if (this.__navEventsRegistered) {
       this._unregisterNavigationEvents();
     }
@@ -516,6 +592,11 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     this.lastRequestId = e.detail.id;
     this._appendConsoleHeaders(e);
     this._appendProxy(e);
+  }
+  _serverChangeHandler(e) {
+    const { selectedValue, selectedType } = e.detail;
+    this.selectedServerType = selectedType;
+    this.selectedServerValue = selectedValue;
   }
   /**
    * Appends headers defined in the `appendHeaders` array.
@@ -618,7 +699,64 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     }
   }
 
-  _apiChanged(e) {
-    this.amf = e.detail.value;
+  _updateServer() {
+    const { selectedServerValue, selectedServerType } = this;
+    if (selectedServerType !== 'server') {
+      this.server = undefined;
+    } else {
+      this.server = this._computeServerFromValue(selectedServerValue);
+    }
+  }
+
+  _computeServerFromValue(value) {
+    return this._findServerByValue(value);
+  }
+
+  _findServerByValue(value) {
+    const { servers = [] } = this;
+    return servers.find(server => this._getServerUri(server) === value);
+  }
+
+  _handleNavigationChange(e) {
+    const { selected, type, endpointId } = e.detail;
+    const serverDefinitionAllowedTypes = ['endpoint', 'method'];
+    if (serverDefinitionAllowedTypes.indexOf(type) === -1) {
+      return;
+    }
+    this.updateServers({ id: selected, type, endpointId });
+  }
+
+  _handleServersCountChange(e) {
+    const { serversCount } = e.detail;
+    this.serversCount = serversCount;
+  }
+
+  _getServerUri(server) {
+    const key = this._getAmfKey(this.ns.aml.vocabularies.core.urlTemplate);
+    return this._getValue(server, key);
+  }
+
+  _computeServerSelectorHidden() {
+    const { serversCount = 0, noServerSelector } = this
+    const old = this.serverSelectorHidden;
+    this.serverSelectorHidden = serversCount < 2 || noServerSelector;
+    this.requestUpdate('serverSelectorHidden', old);
+  }
+
+  updateServers({ id, type, endpointId } = {}) {
+    let methodId;
+    if (type === 'method') {
+      methodId = id;
+    }
+    if (type === 'endpoint') {
+      endpointId = id;
+    }
+    this.methodId = methodId;
+    this.endpointId = endpointId;
+    this.servers = this._getServers({ endpointId, methodId });
+  }
+
+  __amfChanged() {
+    this.updateServers();
   }
 }
