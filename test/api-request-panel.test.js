@@ -84,7 +84,7 @@ describe('<api-request-panel>', function () {
     it('should hide server selector', async () => {
       const element = await basicFixture();
       await nextFrame()
-      assert.isTrue(element._shouldHideServerSelector())
+      assert.isFalse(element.showServerSelector)
     })
 
     it('should set hidden attribute to server selector', async () => {
@@ -449,32 +449,54 @@ describe('<api-request-panel>', function () {
       });
 
       it('should not hide server selector', async () => {
-        assert.isFalse(element._shouldHideServerSelector())
+        assert.isTrue(element.showServerSelector)
       })
 
       it('should not set hidden attribute to server selector', async () => {
         let serverSelector = element.shadowRoot.querySelector('api-server-selector')
         assert.exists(serverSelector);
-        assert.isUndefined(serverSelector.hidden)
+        assert.isFalse(serverSelector.hidden)
       });
     });
   });
 
   describe('noServerSelector attribute', () => {
-    let element;
+    describe('when panel has noServerSelector set to true', () => {
+      let element;
 
-    beforeEach(async () => {
-      element = await noSelectorFixture();
-    });
+      beforeEach(async () => {
+        element = await noSelectorFixture();
+      });
 
-    it('should hide server selector', async () => {
-      assert.isTrue(element._shouldHideServerSelector())
+      it('should hide server selector', async () => {
+        assert.isFalse(element.showServerSelector)
+      })
+
+      it('should set hidden attribute to server selector', async () => {
+        let serverSelector = element.shadowRoot.querySelector('api-server-selector')
+        assert.exists(serverSelector);
+        assert.isTrue(serverSelector.hidden)
+      });
     })
 
-    it('should set hidden attribute to server selector', async () => {
-      let serverSelector = element.shadowRoot.querySelector('api-server-selector')
-      assert.exists(serverSelector);
-      assert.isTrue(serverSelector.hidden)
-    });
+    describe('when setting noServerSelector to true', () => {
+      let element;
+      beforeEach(async () => {
+        element = await customBaseUriSlotFixture();
+      });
+
+      it('should show server selector at first', () => {
+        assert.isTrue(element.showServerSelector)
+      })
+
+      it('should hide server selector when setting noServerSelector to true', async () => {
+        element.noServerSelector = true
+        await nextFrame()
+        assert.isFalse(element.showServerSelector)
+        let serverSelector = element.shadowRoot.querySelector('api-server-selector')
+        assert.exists(serverSelector);
+        assert.isTrue(serverSelector.hidden)
+      })
+    })
   })
 });
