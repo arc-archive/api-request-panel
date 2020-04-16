@@ -164,9 +164,9 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
   }
 
   _renderServerSelector() {
-    const { amf, selectedServerType, selectedServerValue, noCustomServer, showServerSelector } = this;
+    const { amf, selectedServerType, selectedServerValue, noCustomServer, serverSelectorHidden } = this;
     return html`<api-server-selector
-      ?hidden="${!showServerSelector}"
+      ?hidden="${serverSelectorHidden}"
       ?noCustom="${noCustomServer}"
       .amf=${amf}
       selectedValue="${selectedServerValue}"
@@ -396,9 +396,10 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
       noCustomServer: { type: Boolean },
       /**
        * Holds the value for whether there are enough servers
-       * to show the server selector
+       * to show the server selector.
+       * If there are not enough servers, then this value is set to true and server selector is hidden
        */
-      showServerSelector: { type: Boolean },
+      serverSelectorHidden: { type: Boolean },
     };
   }
 
@@ -456,7 +457,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     }
     this._serversCount = value;
     this._updateServer();
-    this._evaluateShowServerSelector();
+    this._computeServerSelectorHidden();
     this.requestUpdate('serversCount', old);
   }
 
@@ -474,20 +475,6 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     this.requestUpdate('selectedServerValue', old);
   }
 
-  get showServerSelector() {
-    return this._showServerSelector;
-  }
-
-  set showServerSelector(value) {
-    const old = this.showServerSelector;
-    if (old === value) {
-      return;
-    }
-
-    this._showServerSelector = value;
-    this.requestUpdate('showServerSelector', old);
-  }
-
   get noServerSelector() {
     return this._noServerSelector;
   }
@@ -499,7 +486,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     }
 
     this._noServerSelector = value;
-    this._evaluateShowServerSelector();
+    this._computeServerSelectorHidden();
   }
 
   /**
@@ -535,6 +522,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     window.removeEventListener('api-response', this._apiResponseHandler);
     this.removeEventListener('api-request', this._apiRequestHandler);
     this.removeEventListener('api-server-changed', this._serverChangeHandler);
+    this.removeEventListener('api-navigation-selection-changed', this._handleNavigationChange);
     if (this.__navEventsRegistered) {
       this._unregisterNavigationEvents();
     }
@@ -747,9 +735,11 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     return this._getValue(server, key);
   }
 
-  _evaluateShowServerSelector() {
-    const { serversCount, noServerSelector } = this
-    this.showServerSelector = serversCount > 1 && !noServerSelector;
+  _computeServerSelectorHidden() {
+    const { serversCount = 0, noServerSelector } = this
+    const old = this.serverSelectorHidden;
+    this.serverSelectorHidden = serversCount < 2 || noServerSelector;
+    this.requestUpdate('serverSelectorHidden', old);
   }
 
   updateServers({ id, type, endpointId } = {}) {
