@@ -490,6 +490,19 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     this._computeServerSelectorHidden();
   }
 
+  get baseUri() {
+      return this._baseUri || this.selectedServerValue;
+  }
+
+  set baseUri(value) {
+    const old = this._baseUri;
+    if (old === value) {
+      return;
+    }
+    this._baseUri = value;
+    this.requestUpdate('baseUri', old);
+  }
+
   /**
    * @constructor
    */
