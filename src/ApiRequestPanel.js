@@ -107,7 +107,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
       selected,
       amf,
       noUrlEditor,
-      baseUri,
+      effectiveBaseUri,
       noDocs,
       eventsTarget,
       allowHideOptional,
@@ -134,7 +134,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
       .selected="${selected}"
       .amf="${amf}"
       ?noUrlEditor="${noUrlEditor}"
-      .baseUri="${baseUri}"
+      .baseUri="${effectiveBaseUri}"
       ?noDocs="${noDocs}"
       .eventsTarget="${eventsTarget}"
       ?allowHideOptional="${allowHideOptional}"
@@ -488,6 +488,21 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     this._noServerSelector = value;
     this.requestUpdate('noServerSelector', old);
     this._computeServerSelectorHidden();
+  }
+
+  /**
+   * This is the final computed value for the baseUri to propagate downwards
+   * If baseUri is defined, return baseUri
+   * Else, return the selectedServerValue if selectedServerType is not `server`
+   */
+  get effectiveBaseUri() {
+    if (this.baseUri) {
+      return this.baseUri;
+    }
+    if (this.selectedServerType !== 'server') {
+      return this.selectedServerValue;
+    }
+    return '';
   }
 
   /**
