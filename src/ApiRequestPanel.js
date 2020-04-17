@@ -495,7 +495,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
         return this._baseUri;
       }
       if (this.selectedServerType !== 'server') {
-        this.selectedServerValue;
+        return this.selectedServerValue;
       }
       return this._baseUri;
   }
