@@ -107,7 +107,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
       selected,
       amf,
       noUrlEditor,
-      baseUri,
+      effectiveBaseUri,
       noDocs,
       eventsTarget,
       allowHideOptional,
@@ -134,7 +134,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
       .selected="${selected}"
       .amf="${amf}"
       ?noUrlEditor="${noUrlEditor}"
-      .baseUri="${baseUri}"
+      .baseUri="${effectiveBaseUri}"
       ?noDocs="${noDocs}"
       .eventsTarget="${eventsTarget}"
       ?allowHideOptional="${allowHideOptional}"
@@ -490,23 +490,19 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     this._computeServerSelectorHidden();
   }
 
-  get baseUri() {
-      if (this._baseUri) {
-        return this._baseUri;
-      }
-      if (this.selectedServerType !== 'server') {
-        return this.selectedServerValue;
-      }
-      return this._baseUri;
-  }
-
-  set baseUri(value) {
-    const old = this._baseUri;
-    if (old === value) {
-      return;
+  /**
+   * This is the final computed value for the baseUri to propagate downwards
+   * If baseUri is defined, return baseUri
+   * Else, return the selectedServerValue if selectedServerType is not `server`
+   */
+  get effectiveBaseUri() {
+    if (this.baseUri) {
+      return this.baseUri;
     }
-    this._baseUri = value;
-    this.requestUpdate('baseUri', old);
+    if (this.selectedServerType !== 'server') {
+      return this.selectedServerValue;
+    }
+    return '';
   }
 
   /**

@@ -130,13 +130,15 @@ describe('<api-request-panel>', function () {
           assert.exists(element.shadowRoot.querySelector('api-server-selector'));
         });
 
-        it('should not change the baseUri property if it is defined', () => {
+        it('effectiveBaseUri should be equal to baseUri', () => {
           element.baseUri = 'https://example.org';
-          assert.equal(element.baseUri, 'https://example.org');
+          assert.equal(element.effectiveBaseUri, element.baseUri);
+          assert.equal(element.effectiveBaseUri, 'https://example.org');
         });
 
-        it('should change baseUri property if it was not defined', () => {
-          assert.equal(element.baseUri, 'https://www.google.com');
+        it('effectiveBaseUri should be equal to selectedServerValue', () => {
+          assert.equal(element.effectiveBaseUri, element.selectedServerValue);
+          assert.equal(element.effectiveBaseUri, 'https://www.google.com');
         });
 
         it('should update computed server', async () => {
