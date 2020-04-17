@@ -90,7 +90,7 @@ describe('<api-request-panel>', function () {
     it('should set hidden attribute to server selector', async () => {
       const element = await basicFixture();
       await nextFrame()
-      let serverSelector = element.shadowRoot.querySelector('api-server-selector')
+      const serverSelector = element.shadowRoot.querySelector('api-server-selector')
       assert.exists(serverSelector);
       assert.isTrue(serverSelector.hidden)
     });
@@ -130,8 +130,13 @@ describe('<api-request-panel>', function () {
           assert.exists(element.shadowRoot.querySelector('api-server-selector'));
         });
 
-        it('should not change the baseUri property', () => {
-          assert.isUndefined(element.baseUri);
+        it('should not change the baseUri property if it is defined', () => {
+          element.baseUri = 'https://example.org';
+          assert.equal(element.baseUri, 'https://example.org');
+        });
+
+        it('should change baseUri property if it was not defined', () => {
+          assert.equal(element.baseUri, 'https://www.google.com');
         });
 
         it('should update computed server', async () => {
@@ -453,7 +458,7 @@ describe('<api-request-panel>', function () {
       })
 
       it('should not set hidden attribute to server selector', async () => {
-        let serverSelector = element.shadowRoot.querySelector('api-server-selector')
+        const serverSelector = element.shadowRoot.querySelector('api-server-selector')
         assert.exists(serverSelector);
         assert.isUndefined(serverSelector.hidden)
       });
@@ -473,7 +478,7 @@ describe('<api-request-panel>', function () {
       })
 
       it('should set hidden attribute to server selector', async () => {
-        let serverSelector = element.shadowRoot.querySelector('api-server-selector')
+        const serverSelector = element.shadowRoot.querySelector('api-server-selector')
         assert.exists(serverSelector);
         assert.isTrue(serverSelector.hidden)
       });
@@ -493,7 +498,7 @@ describe('<api-request-panel>', function () {
         element.noServerSelector = true
         await nextFrame()
         assert.isTrue(element.serverSelectorHidden)
-        let serverSelector = element.shadowRoot.querySelector('api-server-selector')
+        const serverSelector = element.shadowRoot.querySelector('api-server-selector')
         assert.exists(serverSelector);
         assert.isTrue(serverSelector.hidden)
       })
