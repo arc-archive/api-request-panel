@@ -24,7 +24,7 @@ class ComponentDemo extends ApiDemoPage {
       'noDocs',
       'noUrlEditor',
       'renderCustomServer',
-      'noCustomServer',
+      'allowCustomBaseUri',
       'noServerSelector',
     ]);
     this.componentName = 'api-request-panel';
@@ -33,7 +33,7 @@ class ComponentDemo extends ApiDemoPage {
     this.allowDisableParams = true;
     this.renderCustomServer = false;
     this.noServerSelector = false;
-    this.noCustomServer = false;
+    this.allowCustomBaseUri = false;
 
     this.demoStates = ['Filled', 'Outlined', 'Anypoint'];
     this.redirectUri = location.origin +
@@ -107,7 +107,7 @@ class ComponentDemo extends ApiDemoPage {
       selectedAmfId,
       noDocs,
       noServerSelector,
-      noCustomServer,
+      allowCustomBaseUri,
       noUrlEditor
     } = this;
     return html `
@@ -137,7 +137,7 @@ class ComponentDemo extends ApiDemoPage {
             ?noDocs="${noDocs}"
             ?noUrlEditor="${noUrlEditor}"
             ?noServerSelector="${noServerSelector}"
-            ?noCustomServer="${noCustomServer}"
+            ?allowCustomBaseUri="${allowCustomBaseUri}"
             .redirectUri="${redirectUri}">
           ${this._addCustomServers()}    
         </api-request-panel>
@@ -212,9 +212,9 @@ class ComponentDemo extends ApiDemoPage {
         <anypoint-checkbox
           aria-describedby="mainOptionsLabel"
           slot="options"
-          name="noCustomServer"
+          name="allowCustomBaseUri"
           @change="${this._toggleMainOption}"
-          >No Custom URI</anypoint-checkbox
+          >Allow Custom Base Uri</anypoint-checkbox
         >
         <anypoint-checkbox
           aria-describedby="mainOptionsLabel"

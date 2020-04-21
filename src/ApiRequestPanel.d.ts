@@ -18,6 +18,8 @@ import {HeadersParserMixin} from '@advanced-rest-client/headers-parser-mixin/hea
 
 import {EventsTargetMixin} from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
 
+import {AmfHelperMixin} from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
+
 export {ApiRequestPanel};
 
 declare namespace ApiElements {
@@ -86,6 +88,7 @@ declare namespace ApiElements {
     HeadersParserMixin(
     EventsTargetMixin(
     Object)) {
+    readonly styles: any;
     readonly _hasResponse: any;
 
     /**
@@ -106,19 +109,27 @@ declare namespace ApiElements {
      * It should be a path from server's root path including node_modules.
      */
     authPopupLocation: string|null|undefined;
+    serversCount: any;
 
     /**
-     * `raml-aware` scope property to use.
+     * Holds the value of the currently selected server
+     * Data type: URI
      */
-    aware: string|null|undefined;
+    selectedServerValue: string|null|undefined;
 
     /**
-     * A model's `@id` of selected documentation part.
-     * Special case is for `summary` view. It's not part of an API
-     * but most applications has some kind of summary view for the
-     * API.
+     * Optional property to set
+     * If true, the server selector is not rendered
      */
-    amf: object|null|undefined;
+    noServerSelector: boolean|null|undefined;
+
+    /**
+     * This is the final computed value for the baseUri to propagate downwards
+     * If baseUri is defined, return baseUri
+     * Else, return the selectedServerValue if selectedServerType is not `server`
+     *    
+     */
+    readonly effectiveBaseUri: any;
 
     /**
      * Hides the URL editor from the view.
@@ -324,7 +335,27 @@ declare namespace ApiElements {
      * Do not set with full AMF web API model.
      */
     version: string|null|undefined;
+
+    /**
+     * Holds the type of the currently selected server
+     * Values: `server` | `slot` | `custom`
+     */
+    selectedServerType: string|null|undefined;
+
+    /**
+     * Optional property to set
+     * If true, the server selector custom base URI option is rendered
+     */
+    allowCustomBaseUri: boolean|null|undefined;
+
+    /**
+     * Holds the value for whether there are enough servers
+     * to show the server selector.
+     * If there are not enough servers, then this value is set to true and server selector is hidden
+     */
+    serverSelectorHidden: boolean|null|undefined;
     render(): any;
+    _renderServerSelector(): any;
     connectedCallback(): void;
     _attachListeners(): void;
     _detachListeners(): void;
@@ -366,6 +397,7 @@ declare namespace ApiElements {
      * @param e `api-request` event
      */
     _apiRequestHandler(e: CustomEvent|null): void;
+    _serverChangeHandler(e: any): void;
 
     /**
      * Appends headers defined in the `appendHeaders` array.
@@ -403,6 +435,17 @@ declare namespace ApiElements {
      * Clears response panel.
      */
     clearResponse(): void;
-    _apiChanged(e: any): void;
+    _updateServer(): void;
+    _computeServerFromValue(value: any): any;
+    _findServerByValue(value: any): any;
+    _handleNavigationChange(e: any): void;
+    _handleServersCountChange(e: any): void;
+    _getServerUri(server: any): any;
+    _computeServerSelectorHidden(): void;
+    updateServers({
+  id,
+  type,
+  endpointId
+} = {}: any): void;
   }
 }
