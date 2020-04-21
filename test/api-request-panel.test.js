@@ -446,24 +446,49 @@ describe('<api-request-panel>', function () {
     });
 
     describe('with customBaseUriSlot fixture', () => {
-      let element;
-      beforeEach(async () => {
-        element = await customBaseUriSlotFixture();
-      });
+      describe('when allowCustomBaseUri is true', () => {
+        let element;
+        beforeEach(async () => {
+          element = await customBaseUriSlotFixture();
+          element.allowCustomBaseUri = true;
+          await nextFrame()
+        });
 
-      it('should have 2 servers', () => {
-        assert.equal(element.serversCount, 2);
-      });
+        it('should have 2 servers', () => {
+          assert.equal(element.serversCount, 2);
+        });
 
-      it('should not hide server selector', async () => {
-        assert.isUndefined(element.serverSelectorHidden)
+        it('should not hide server selector', async () => {
+          assert.isUndefined(element.serverSelectorHidden)
+        })
+
+        it('should set hidden attribute to false in server selector', async () => {
+          const serverSelector = element.shadowRoot.querySelector('api-server-selector')
+          assert.exists(serverSelector);
+          assert.isFalse(serverSelector.hidden)
+        });
       })
 
-      it('should not set hidden attribute to server selector', async () => {
-        const serverSelector = element.shadowRoot.querySelector('api-server-selector')
-        assert.exists(serverSelector);
-        assert.isUndefined(serverSelector.hidden)
-      });
+      describe('when allowCustomBaseUri is false', () => {
+        let element;
+        beforeEach(async () => {
+          element = await customBaseUriSlotFixture();
+        });
+
+        it('should have 1 server', () => {
+          assert.equal(element.serversCount, 1);
+        });
+
+        it('should hide server selector', async () => {
+          assert.isTrue(element.serverSelectorHidden)
+        })
+
+        it('should set hidden attribute to server selector', async () => {
+          const serverSelector = element.shadowRoot.querySelector('api-server-selector')
+          assert.exists(serverSelector);
+          assert.isTrue(serverSelector.hidden)
+        });
+      })
     });
   });
 
@@ -490,6 +515,8 @@ describe('<api-request-panel>', function () {
       let element;
       beforeEach(async () => {
         element = await customBaseUriSlotFixture();
+        element.allowCustomBaseUri = true;
+        await nextFrame()
       });
 
       it('should show server selector at first', () => {

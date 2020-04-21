@@ -164,10 +164,10 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
   }
 
   _renderServerSelector() {
-    const { amf, selectedServerType, selectedServerValue, noCustomServer, serverSelectorHidden } = this;
+    const { amf, selectedServerType, selectedServerValue, allowCustomBaseUri, serverSelectorHidden } = this;
     return html`<api-server-selector
       ?hidden="${serverSelectorHidden}"
-      ?noCustom="${noCustomServer}"
+      ?allowCustom="${allowCustomBaseUri}"
       .amf=${amf}
       selectedValue="${selectedServerValue}"
       selectedType="${selectedServerType}"
@@ -391,9 +391,9 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
       noServerSelector: { type: Boolean },
       /**
        * Optional property to set
-       * If true, the server selector custom option is not rendered
+       * If true, the server selector custom base URI option is rendered
        */
-      noCustomServer: { type: Boolean },
+      allowCustomBaseUri: { type: Boolean },
       /**
        * Holds the value for whether there are enough servers
        * to show the server selector.
