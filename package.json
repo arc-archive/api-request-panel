@@ -73,7 +73,8 @@
     "test:watch": "karma start --auto-watch=true --single-run=false",
     "test:update-snapshots": "karma start --update-snapshots",
     "test:prune-snapshots": "karma start --prune-snapshots",
-    "test:sl": "karma start karma.sl.config.js --compatibility auto --coverage"
+    "test:sl": "karma start karma.sl.config.js --compatibility auto --coverage",
+    "prepare": "node demo/model.js"
   },
   "lint-staged": {
     "*.js": [
