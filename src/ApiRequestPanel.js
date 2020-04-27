@@ -539,6 +539,7 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
       ?noServerSelector="${noServerSelector}"
       ?allowCustomBaseUri="${allowCustomBaseUri}"
     >
+      <slot name="custom-base-uri" slot="custom-base-uri"></slot>
     </api-request-editor>`;
   }
 
