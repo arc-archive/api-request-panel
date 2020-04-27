@@ -4,10 +4,11 @@
   "array-body/array-body.raml": "RAML 1.0",
   "appian-api/appian-api.raml": "RAML 1.0",
   "nexmo-sms-api/nexmo-sms-api.raml": "RAML 1.0",
-  "loan-ms/loan-microservice.json": ["OAS 2.0", "application/json"],
+  "loan-ms/loan-microservice.json": { "type": "OAS 2.0", "mime": "application/json" },
   "google-drive-api/google-drive-api.raml": "RAML 1.0",
-  "httpbin/httpbin.json": ["OAS 2.0", "application/json"],
+  "httpbin/httpbin.json": { "type": "OAS 2.0", "mime": "application/json" },
   "SE-12042/SE-12042.raml": "RAML 1.0",
   "SE-12224/SE-12224.raml": "RAML 1.0",
-  "APIC-168/APIC-168.raml": "RAML 1.0"
+  "APIC-168/APIC-168.raml": "RAML 1.0",
+  "multi-server/multi-server.yaml": { "type": "OAS 3.0", "mime": "application/yaml" }
 }

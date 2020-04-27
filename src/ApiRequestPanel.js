@@ -14,79 +14,20 @@ the License.
 import { html, css, LitElement } from 'lit-element';
 import { HeadersParserMixin } from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
 import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
-import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin.js';
 import '@api-components/api-request-editor/api-request-editor.js';
-import '@api-components/api-server-selector/api-server-selector.js';
 import '@advanced-rest-client/response-view/response-view.js';
-/* eslint-disable max-len */
+
+/** @typedef {import('lit-html').TemplateResult} TemplateResult */
+
 /**
- * Request editor and response view panels in a single element.
- *
- * This element is to replace `api-console-request` element from `mulesoft/api-console`
- * project repository.
- *
- * This is also a base case for any application that renders request and
- * response views.
- *
- * The element uses AMF model to render view based on API mnodel and current user
- * selection.
- *
- * It uses both `api-request-editor` and `response-view` elements and
- * listens to `api-request` and `api-response` events.
- * It also adds additional configuration options that exists in API console
- * (proxy, additional headers).
- *
- * ## `api-request` and `api-response` events
- *
- * See full documentation here:
- * https://github.com/advanced-rest-client/api-components-api/blob/master/docs/api-request-and-response.md
- *
- * ## Dependencies and changelog from included elements
- *
- * - XHR element is not included in the element. Use
- * `advanced-rest-client/xhr-simple-request` in your application or handle
- * `api-request` custom event to make a request.
- * - The element does not include any polyfills
- * - `redirectUrl` is now `redirectUri`
- * - `api-console-request` event is now `api-request` event
- * - `api-console-response` event is now `api-response` event
- * - Added more details to `api-request` custom event (comparing to
- * `api-console-request`)
- * - The user is able to enable/disable query parameters and headers. Set
- * `allow-disable-params` attribute to enable this behavior.
- * - The user is able to add custom query parameters or headers.
- * Set `allow-custom` attribute to enable this behavior.
- * - From authorization panel changes:
- *  - `auth-settings-changed` custom event is stopped from bubbling.
- *  Listen for `authorization-settings-changed` event instead.
- * - From auth-method-oauth2 changes:
- *  - Added `deliveryMethod` and `deliveryName` properties to the
- *  `detail.setting` object.
- * - Crypto library is no longer included into the element. Use
- *  `advanced-rest-client/cryptojs-lib` component to include the library
- *  if your project doesn't use crypto libraries already.
- *
- * ## Narrow view
- *
- * Generally the API components are flexible and mobile friendly. However,
- * it is possible to set `narrow` property to render form elements in
- * a mobile fieldly view. In most cases it means that forms controls are
- * rendered in different layout.
- *
- * ## api-navigation integration
- *
- * The element works with `api-navigation` element. Set `handle-navigation-events`
- * attribute when using `api-navigation` so the component will automatically
- * update selection when internal API navigation occurres.
- *
  * @customElement
  * @demo demo/index.html
  * @demo demo/navigation.html Automated navigation
- * @appliesMixin HeadersParserMixin
- * @appliesMixin EventsTargetMixin
- * @memberof ApiElements
+ * @mixes EventsTargetMixin
+ * @mixes HeadersParserMixin
+ * @extends LitElement
  */
-export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersParserMixin(LitElement))) {
+export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitElement)) {
   get styles() {
     return css`
     :host { display: block; }
@@ -98,83 +39,6 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
 
   get _hasResponse() {
     return !!this.response || !!this.responseError;
-  }
-
-  render() {
-    const {
-      narrow,
-      redirectUri,
-      selected,
-      amf,
-      noUrlEditor,
-      effectiveBaseUri,
-      noDocs,
-      eventsTarget,
-      allowHideOptional,
-      allowDisableParams,
-      allowCustom,
-      server,
-      protocols,
-      version,
-      readOnly,
-      disabled,
-      compatibility,
-      outlined,
-
-      _hasResponse
-    } = this;
-
-
-    return html`<style>${this.styles}</style>
-
-    ${this._renderServerSelector()}
-    <api-request-editor
-      ?narrow="${narrow}"
-      .redirectUri="${redirectUri}"
-      .selected="${selected}"
-      .amf="${amf}"
-      ?noUrlEditor="${noUrlEditor}"
-      .baseUri="${effectiveBaseUri}"
-      ?noDocs="${noDocs}"
-      .eventsTarget="${eventsTarget}"
-      ?allowHideOptional="${allowHideOptional}"
-      ?allowDisableParams="${allowDisableParams}"
-      ?allowCustom="${allowCustom}"
-      .server="${server}"
-      .protocols="${protocols}"
-      .version="${version}"
-      ?readOnly="${readOnly}"
-      ?disabled="${disabled}"
-      ?outlined="${outlined}"
-      ?compatibility="${compatibility}">
-    </api-request-editor>
-    ${_hasResponse ? html`<response-view
-      .request="${this.request}"
-      .response="${this.response}"
-      .responseError="${this.responseError}"
-      .isError="${this.isErrorResponse}"
-      .isXhr="${this.responseIsXhr}"
-      .loadingTime="${this.loadingTime}"
-      .redirects="${this.redirects}"
-      .redirectTimings="${this.redirectsTiming}"
-      .responseTimings="${this.timing}"
-      .sentHttpMessage="${this.sourceMessage}"
-      .compatibility="${compatibility}"></response-view>` : ''}
-    `;
-  }
-
-  _renderServerSelector() {
-    const { amf, selectedServerType, selectedServerValue, allowCustomBaseUri, serverSelectorHidden } = this;
-    return html`<api-server-selector
-      ?hidden="${serverSelectorHidden}"
-      ?allowCustom="${allowCustomBaseUri}"
-      .amf=${amf}
-      selectedValue="${selectedServerValue}"
-      selectedType="${selectedServerType}"
-      @servers-count-changed="${this._handleServersCountChange}"
-    >
-      <slot name="custom-base-uri" slot="custom-base-uri"></slot>
-    </api-server-selector>`;
   }
 
   static get properties() {
@@ -195,6 +59,12 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
        * The editor is still in the DOM and the `urlInvalid` property still will be set.
        */
       noUrlEditor: { type: Boolean },
+      /**
+       * When set it renders a label with the computed URL.
+       * This intended to be used with `noUrlEditor` set to true.
+       * This way it replaces the editor with a simple label.
+       */
+      urlLabel: { type: Boolean },
       /**
        * A base URI for the API. To be set if RAML spec is missing `baseUri`
        * declaration and this produces invalid URL input. This information
@@ -316,8 +186,6 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
        *
        * This system allows to use different request panels on single app
        * and don't mix the results.
-       *
-       * @type {String|Number}
        */
       lastRequestId: { type: String },
       /**
@@ -375,15 +243,15 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
        */
       version: { type: String },
       /**
-       * Holds the value of the currently selected server 
+       * Holds the value of the currently selected server
        * Data type: URI
        */
-      selectedServerValue: { type: String },
+      serverValue: { type: String },
       /**
        * Holds the type of the currently selected server
        * Values: `server` | `slot` | `custom`
        */
-      selectedServerType: { type: String },
+      serverType: { type: String },
       /**
        * Optional property to set
        * If true, the server selector is not rendered
@@ -394,12 +262,6 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
        * If true, the server selector custom base URI option is rendered
        */
       allowCustomBaseUri: { type: Boolean },
-      /**
-       * Holds the value for whether there are enough servers
-       * to show the server selector.
-       * If there are not enough servers, then this value is set to true and server selector is hidden
-       */
-      serverSelectorHidden: { type: Boolean },
     };
   }
 
@@ -418,20 +280,6 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     this._selectedChanged(value);
   }
 
-  get handleNavigationEvents() {
-    return this._handleNavigationEvents;
-  }
-
-  set handleNavigationEvents(value) {
-    const old = this._handleNavigationEvents;
-    /* istanbul ignore if */
-    if (old === value) {
-      return;
-    }
-    this._handleNavigationEvents = value;
-    this._handleNavChanged(value);
-  }
-
   get authPopupLocation() {
     return this._authPopupLocation;
   }
@@ -446,65 +294,6 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     this._updateRedirectUri(value);
   }
 
-  get serversCount() {
-    return this._serversCount;
-  }
-
-  set serversCount(value) {
-    const old = this._serversCount;
-    if (old === value) {
-      return;
-    }
-    this._serversCount = value;
-    this._updateServer();
-    this._computeServerSelectorHidden();
-    this.requestUpdate('serversCount', old);
-  }
-
-  get selectedServerValue() {
-    return this._selectedServerValue;
-  }
-
-  set selectedServerValue(value) {
-    const old = this._selectedServerValue;
-    if (old === value) {
-      return;
-    }
-    this._selectedServerValue = value;
-    this._updateServer();
-    this.requestUpdate('selectedServerValue', old);
-  }
-
-  get noServerSelector() {
-    return this._noServerSelector;
-  }
-
-  set noServerSelector(value) {
-    const old = this.noServerSelector;
-    if (old === value) {
-      return;
-    }
-
-    this._noServerSelector = value;
-    this.requestUpdate('noServerSelector', old);
-    this._computeServerSelectorHidden();
-  }
-
-  /**
-   * This is the final computed value for the baseUri to propagate downwards
-   * If baseUri is defined, return baseUri
-   * Else, return the selectedServerValue if selectedServerType is not `server`
-   */
-  get effectiveBaseUri() {
-    if (this.baseUri) {
-      return this.baseUri;
-    }
-    if (this.selectedServerType !== 'server') {
-      return this.selectedServerValue;
-    }
-    return '';
-  }
-
   /**
    * @constructor
    */
@@ -512,7 +301,6 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     super();
     this._apiResponseHandler = this._apiResponseHandler.bind(this);
     this._apiRequestHandler = this._apiRequestHandler.bind(this);
-    this._navigationHandler = this._navigationHandler.bind(this);
     this._handleNavigationChange = this._handleNavigationChange.bind(this);
 
     this.responseIsXhr = true;
@@ -527,59 +315,18 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     }
   }
 
-  _attachListeners() {
-    window.addEventListener('api-response', this._apiResponseHandler);
-    this.addEventListener('api-request', this._apiRequestHandler);
-    this.addEventListener('api-server-changed', this._serverChangeHandler);
-    this.addEventListener('api-navigation-selection-changed', this._handleNavigationChange);
+  _attachListeners(node) {
+    node.addEventListener('api-response', this._apiResponseHandler);
+    node.addEventListener('api-request', this._apiRequestHandler);
+    node.addEventListener('api-navigation-selection-changed', this._handleNavigationChange);
   }
 
-  _detachListeners() {
-    window.removeEventListener('api-response', this._apiResponseHandler);
-    this.removeEventListener('api-request', this._apiRequestHandler);
-    this.removeEventListener('api-server-changed', this._serverChangeHandler);
-    this.removeEventListener('api-navigation-selection-changed', this._handleNavigationChange);
-    if (this.__navEventsRegistered) {
-      this._unregisterNavigationEvents();
-    }
+  _detachListeners(node) {
+    node.removeEventListener('api-response', this._apiResponseHandler);
+    node.removeEventListener('api-request', this._apiRequestHandler);
+    node.removeEventListener('api-navigation-selection-changed', this._handleNavigationChange);
   }
-  /**
-   * Registers `api-navigation-selection-changed` event listener handler
-   * on window object.
-   */
-  _registerNavigationEvents() {
-    this.__navEventsRegistered = true;
-    window.addEventListener('api-navigation-selection-changed', this._navigationHandler);
-  }
-  /**
-   * Removes event listener from window object for
-   * `api-navigation-selection-changed` event.
-   */
-  _unregisterNavigationEvents() {
-    this.__navEventsRegistered = false;
-    window.removeEventListener('api-navigation-selection-changed', this._navigationHandler);
-  }
-  /**
-   * Registers / unregisters event listeners depending on `state`
-   *
-   * @param {Boolean} state
-   */
-  _handleNavChanged(state) {
-    if (state) {
-      this._registerNavigationEvents();
-    } else {
-      this._unregisterNavigationEvents();
-    }
-  }
-  /**
-   * Handler for `api-navigation-selection-changed` event.
-   *
-   * @param {CustomEvent} e
-   */
-  _navigationHandler(e) {
-    const { type, selected } = e.detail;
-    this.selected = type === 'method' ? selected : undefined;
-  }
+
   /**
    * Sets OAuth 2 redirect URL for the authorization panel
    *
@@ -596,6 +343,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     a.href = location + '@advanced-rest-client/oauth-authorization/oauth-popup.html';
     this.redirectUri = a.href;
   }
+
   /**
    * A handler for the API call.
    * This handler will only check if there is authorization required
@@ -608,11 +356,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     this._appendConsoleHeaders(e);
     this._appendProxy(e);
   }
-  _serverChangeHandler(e) {
-    const { selectedValue, selectedType } = e.detail;
-    this.selectedServerType = selectedType;
-    this.selectedServerValue = selectedValue;
-  }
+
   /**
    * Appends headers defined in the `appendHeaders` array.
    * @param {CustomEvent} e The `api-request` event.
@@ -629,6 +373,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     }
     e.detail.headers = eventHeaders;
   }
+
   /**
    * Sets the proxy URL if the `proxy` property is set.
    * @param {CustomEvent} e The `api-request` event.
@@ -642,6 +387,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     url = proxy + url;
     e.detail.url = url;
   }
+
   /**
    * Handler for the `api-response` custom event. Sets values on the response
    * panel when response is ready.
@@ -654,6 +400,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     }
     this._propagateResponse(e.detail);
   }
+
   /**
    * Propagate `api-response` detail object.
    *
@@ -672,6 +419,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     this.timing = isXhr ? undefined : data.timing;
     this.sourceMessage = data.sentHttpMessage;
   }
+
   /**
    * Clears response panel when selected id changed.
    * @param {String} id
@@ -682,6 +430,7 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     }
     this.clearResponse();
   }
+
   /**
    * Clears response panel.
    */
@@ -714,64 +463,104 @@ export class ApiRequestPanel extends AmfHelperMixin(EventsTargetMixin(HeadersPar
     }
   }
 
-  _updateServer() {
-    const { selectedServerValue, selectedServerType } = this;
-    if (selectedServerType !== 'server') {
-      this.server = undefined;
-    } else {
-      this.server = this._computeServerFromValue(selectedServerValue);
-    }
-  }
-
-  _computeServerFromValue(value) {
-    return this._findServerByValue(value);
-  }
-
-  _findServerByValue(value) {
-    const { servers = [] } = this;
-    return servers.find(server => this._getServerUri(server) === value);
-  }
-
+  /**
+   * Handles navigation events and computes available servers.
+   *
+   * When `handleNavigationEvents` is set then it also manages the selection.
+   *
+   * @param {CustomEvent} e
+   */
   _handleNavigationChange(e) {
-    const { selected, type, endpointId } = e.detail;
-    const serverDefinitionAllowedTypes = ['endpoint', 'method'];
-    if (serverDefinitionAllowedTypes.indexOf(type) === -1) {
-      return;
+    if (this.handleNavigationEvents) {
+      const { selected: id, type } = e.detail;
+      this.selected = type === 'method' ? id : undefined;
     }
-    this.updateServers({ id: selected, type, endpointId });
   }
 
-  _handleServersCountChange(e) {
-    const { serversCount } = e.detail;
-    this.serversCount = serversCount;
+  render() {
+    return html`<style>${this.styles}</style>
+    ${this._requestTemplate()}
+    ${this._responseTemplate()}
+    `;
   }
 
-  _getServerUri(server) {
-    const key = this._getAmfKey(this.ns.aml.vocabularies.core.urlTemplate);
-    return this._getValue(server, key);
+  /**
+   * @return {TemplateResult} A template for the request panel
+   */
+  _requestTemplate() {
+    const {
+      narrow,
+      redirectUri,
+      selected,
+      amf,
+      noUrlEditor,
+      urlLabel,
+      baseUri,
+      noDocs,
+      eventsTarget,
+      allowHideOptional,
+      allowDisableParams,
+      allowCustom,
+      server,
+      protocols,
+      version,
+      readOnly,
+      disabled,
+      compatibility,
+      outlined,
+      serverValue,
+      serverType,
+      noServerSelector,
+      allowCustomBaseUri,
+    } = this;
+
+    return html`<api-request-editor
+      ?narrow="${narrow}"
+      .redirectUri="${redirectUri}"
+      .selected="${selected}"
+      .amf="${amf}"
+      ?noUrlEditor="${noUrlEditor}"
+      ?urlLabel="${urlLabel}"
+      .baseUri="${baseUri}"
+      ?noDocs="${noDocs}"
+      .eventsTarget="${eventsTarget}"
+      ?allowHideOptional="${allowHideOptional}"
+      ?allowDisableParams="${allowDisableParams}"
+      ?allowCustom="${allowCustom}"
+      .server="${server}"
+      .protocols="${protocols}"
+      .version="${version}"
+      ?readOnly="${readOnly}"
+      ?disabled="${disabled}"
+      ?outlined="${outlined}"
+      ?compatibility="${compatibility}"
+      .serverValue="${serverValue}"
+      .serverType="${serverType}"
+      ?noServerSelector="${noServerSelector}"
+      ?allowCustomBaseUri="${allowCustomBaseUri}"
+    >
+    </api-request-editor>`;
   }
 
-  _computeServerSelectorHidden() {
-    const { serversCount = 0, noServerSelector } = this
-    const old = this.serverSelectorHidden;
-    this.serverSelectorHidden = serversCount < 2 || noServerSelector;
-    this.requestUpdate('serverSelectorHidden', old);
-  }
-
-  updateServers({ id, type, endpointId } = {}) {
-    let methodId;
-    if (type === 'method') {
-      methodId = id;
+  /**
+   * @return {TemplateResult|string} A template for the response view
+   */
+  _responseTemplate() {
+    const { _hasResponse } = this;
+    if (!_hasResponse) {
+      return '';
     }
-    if (type === 'endpoint') {
-      endpointId = id;
-    }
-    this.methodId = methodId;
-    this.endpointId = endpointId;
-    this.servers = this._getServers({ endpointId, methodId });
-  }
-
-  __amfChanged() {
-    this.updateServers();
+    return html`<response-view
+      .request="${this.request}"
+      .response="${this.response}"
+      .responseError="${this.responseError}"
+      .isError="${this.isErrorResponse}"
+      .isXhr="${this.responseIsXhr}"
+      .loadingTime="${this.loadingTime}"
+      .redirects="${this.redirects}"
+      .redirectTimings="${this.redirectsTiming}"
+      .responseTimings="${this.timing}"
+      .sentHttpMessage="${this.sourceMessage}"
+      .compatibility="${this.compatibility}"></response-view>`;
   }
 }

@@ -26,6 +26,8 @@ class ComponentDemo extends ApiDemoPage {
       'renderCustomServer',
       'allowCustomBaseUri',
       'noServerSelector',
+      'urlLabel',
+      'selectedServerValue',
     ]);
     this.componentName = 'api-request-panel';
     this.allowCustom = false;
@@ -34,10 +36,12 @@ class ComponentDemo extends ApiDemoPage {
     this.renderCustomServer = false;
     this.noServerSelector = false;
     this.allowCustomBaseUri = false;
+    this.urlLabel = false;
 
     this.demoStates = ['Filled', 'Outlined', 'Anypoint'];
     this.redirectUri = location.origin +
       '/node_modules/@advanced-rest-client/oauth-authorization/oauth-popup.html';
+    this._serverChangeHandler = this._serverChangeHandler.bind(this);
   }
 
   _demoStateHandler(e) {
@@ -69,6 +73,7 @@ class ComponentDemo extends ApiDemoPage {
       ['google-drive-api', 'Google Drive'],
       ['httpbin', 'httpbin.org'],
       ['demo-api', 'Demo API'],
+      ['multi-server', 'Multiple servers'],
       ['appian-api', 'Applian API'],
       ['loan-microservice', 'Loan microservice (OAS)'],
       ['array-body', 'Request body with an array (reported issue)'],
@@ -90,6 +95,18 @@ class ComponentDemo extends ApiDemoPage {
                         value="http://customServer.com2">http://customServer.com2</anypoint-item>`;
   }
 
+  _serverChangeHandler(e) {
+    const { value } = e.detail;
+    // The parent keeps current selection which is then passed back to the
+    // server selector. In API Console, the console holds the selected value
+    // so it can be distributed between api-documentation and api-request-panel,
+    // even when panels are re-rendered. This way the application don't loose
+    // track of that was selected.
+    // The selector take cares of a situation when current selection is no
+    // longer available and clears the state.
+    this.selectedServerValue = value;
+  }
+
   _demoTemplate() {
     const {
       demoStates,
@@ -108,7 +125,9 @@ class ComponentDemo extends ApiDemoPage {
       noDocs,
       noServerSelector,
       allowCustomBaseUri,
-      noUrlEditor
+      noUrlEditor,
+      urlLabel,
+      selectedServerValue,
     } = this;
     return html `
     <section class="documentation-section">
@@ -136,10 +155,14 @@ class ComponentDemo extends ApiDemoPage {
             ?disabled="${disabled}"
             ?noDocs="${noDocs}"
             ?noUrlEditor="${noUrlEditor}"
+            ?urlLabel="${urlLabel}"
             ?noServerSelector="${noServerSelector}"
             ?allowCustomBaseUri="${allowCustomBaseUri}"
-            .redirectUri="${redirectUri}">
-          ${this._addCustomServers()}    
+            .redirectUri="${redirectUri}"
+            .selectedServerValue="${selectedServerValue}"
+            @apiserverchanged="${this._serverChangeHandler}"
+          >
+          ${this._addCustomServers()}
         </api-request-panel>
         </div>
         <label slot="options" id="mainOptionsLabel">Options</label>
@@ -200,7 +223,14 @@ class ComponentDemo extends ApiDemoPage {
           slot="options"
           name="noUrlEditor"
           @change="${this._toggleMainOption}"
-          >No url editor</anypoint-checkbox
+          >No URL editor</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="urlLabel"
+          @change="${this._toggleMainOption}"
+          >URL label</anypoint-checkbox
         >
         <anypoint-checkbox
           aria-describedby="mainOptionsLabel"
