@@ -73,6 +73,7 @@ class ComponentDemo extends ApiDemoPage {
       ['google-drive-api', 'Google Drive'],
       ['httpbin', 'httpbin.org'],
       ['demo-api', 'Demo API'],
+      ['multi-server', 'Multiple servers'],
       ['appian-api', 'Applian API'],
       ['loan-microservice', 'Loan microservice (OAS)'],
       ['array-body', 'Request body with an array (reported issue)'],

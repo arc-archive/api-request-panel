@@ -1,7 +1,7 @@
 {
   "name": "@api-components/api-request-panel",
   "description": "An element that renders request editor and response view based on AMF model.",
-  "version": "4.1.3",
+  "version": "5.0.0",
   "license": "Apache-2.0",
   "main": "api-request-panel.js",
   "keywords": [
@@ -27,9 +27,9 @@
     "@advanced-rest-client/events-target-mixin": "^3.1.1",
     "@advanced-rest-client/headers-parser-mixin": "^3.1.0",
     "@advanced-rest-client/response-view": "^3.0.4",
-    "@api-components/amf-helper-mixin": "^4.0.26",
-    "@api-components/api-request-editor": "^5.0.0-preview.2",
-    "@api-components/api-server-selector": "^0.3.2",
+    "@api-components/amf-helper-mixin": "^4.1.1",
+    "@api-components/api-request-editor": "^5.0.2",
+    "@api-components/api-server-selector": "^0.4.0",
     "@api-components/raml-aware": "^3.0.0",
     "lit-element": "^2.3.1",
     "lit-html": "^1.2.1"
@@ -48,16 +48,18 @@
     "@api-components/api-navigation": "^4.1.0",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
-    "@open-wc/testing": "^2.5.13",
-    "@open-wc/testing-karma": "^3.3.15",
+    "@open-wc/testing": "^2.5.15",
+    "@open-wc/testing-karma": "^3.3.17",
     "@polymer/gen-typescript-declarations": "^1.6.2",
     "@polymer/iron-test-helpers": "^3.0.1",
     "@polymer/paper-toast": "^3.0.0",
     "deepmerge": "^4.2.2",
-    "es-dev-server": "^1.46.5",
+    "es-dev-server": "^1.47.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.1.7",
-    "sinon": "^9.0.1"
+    "sinon": "^9.0.1",
+    "typescript": "^3.8.3",
+    "typescript-lit-html-plugin": "^0.9.0"
   },
   "scripts": {
     "update-types": "gen-typescript-declarations --deleteExisting --outDir .",
@@ -68,6 +70,7 @@
     "lint:prettier": "prettier \"**/*.js\" --check --ignore-path .gitignore",
     "format:prettier": "prettier \"**/*.js\" --write --ignore-path .gitignore",
     "lint": "npm run lint:eslint && npm run lint:prettier",
+    "lint:types": "tsc",
     "format": "npm run format:eslint && npm run format:prettier",
     "test": "karma start --coverage",
     "test:watch": "karma start --auto-watch=true --single-run=false",

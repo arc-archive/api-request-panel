@@ -1,6 +1,5 @@
-import { fixture, assert, nextFrame } from '@open-wc/testing';
-import * as sinon from 'sinon/pkg/sinon-esm.js';
-import { AmfLoader } from './amf-loader.js';
+import { fixture, assert } from '@open-wc/testing';
+import * as sinon from 'sinon';
 import '../api-request-panel.js';
 
 describe('<api-request-panel>', function () {
@@ -37,15 +36,6 @@ describe('<api-request-panel>', function () {
     return (await fixture(`<api-request-panel handlenavigationevents></api-request-panel>`));
   }
 
-  async function customBaseUriSlotFixture() {
-    return (await fixture(`<api-request-panel><anypoint-item slot="custom-base-uri"
-                        value="http://customServer.com">http://customServer.com</anypoint-item></api-request-panel>`));
-  }
-  async function noSelectorFixture() {
-    return (await fixture(`<api-request-panel noServerSelector><anypoint-item slot="custom-base-uri"
-                        value="http://customServer.com">http://customServer.com</anypoint-item></api-request-panel>`));
-  }
-
   function appendRequestData(element, request) {
     request = request || {};
     const editor = element.shadowRoot.querySelector('api-request-editor');
@@ -79,80 +69,6 @@ describe('<api-request-panel>', function () {
       const editor = element.shadowRoot.querySelector('api-request-editor');
       editor.execute();
       assert.isTrue(spy.called);
-    });
-
-    it('should hide server selector', async () => {
-      const element = await basicFixture();
-      await nextFrame()
-      assert.isTrue(element.serverSelectorHidden)
-    })
-
-    it('should set hidden attribute to server selector', async () => {
-      const element = await basicFixture();
-      await nextFrame()
-      const serverSelector = element.shadowRoot.querySelector('api-server-selector')
-      assert.exists(serverSelector);
-      assert.isTrue(serverSelector.hidden)
-    });
-  });
-  [
-    ['Compact model', true],
-    ['Regular model', false]
-  ].forEach(item => {
-    describe('Server selection', () => {
-      let element;
-      let amf;
-
-      describe('Custom URI selection', () => {
-        beforeEach(async () => {
-          element = await basicFixture();
-          amf = await AmfLoader.load(item[1]);
-          element.amf = amf;
-          // This is equivilent to Custom URI being selected, and 'https://www.google.com' being input
-          const event = {
-            detail: {
-              selectedValue: 'https://www.google.com',
-              selectedType: 'custom',
-            },
-          };
-          element.dispatchEvent(new CustomEvent('api-server-changed', event));
-        });
-
-        it('should load servers', () => {
-          assert.lengthOf(element.servers, 1);
-        });
-
-        it('should update selectedServerValue on api-server-changed event', () => {
-          assert.equal(element.selectedServerValue, 'https://www.google.com');
-        });
-
-        it('should still show selector when a custom URI is input', () => {
-          assert.exists(element.shadowRoot.querySelector('api-server-selector'));
-        });
-
-        it('effectiveBaseUri should be equal to baseUri', () => {
-          element.baseUri = 'https://example.org';
-          assert.equal(element.effectiveBaseUri, element.baseUri);
-          assert.equal(element.effectiveBaseUri, 'https://example.org');
-        });
-
-        it('effectiveBaseUri should be equal to selectedServerValue', () => {
-          assert.equal(element.effectiveBaseUri, element.selectedServerValue);
-          assert.equal(element.effectiveBaseUri, 'https://www.google.com');
-        });
-
-        it('should update computed server', async () => {
-          const event = {
-            detail: {
-              selectedValue: 'http://{instance}.domain.com/',
-              selectedType: 'server',
-            },
-          };
-          element.dispatchEvent(new CustomEvent('api-server-changed', event));
-          await nextFrame();
-          assert.isDefined(element.server);
-        });
-      });
     });
   });
 
@@ -431,106 +347,4 @@ describe('<api-request-panel>', function () {
       assert.deepEqual(spy.args[0][0], detail);
     });
   });
-
-  describe('Custom baseUri slot', () => {
-    describe('with basicFixture', () => {
-      let element;
-      beforeEach(async () => {
-        element = await basicFixture();
-      });
-
-      it('should render empty extra servers slot', () => {
-        assert.exists(element.shadowRoot.querySelector('slot[name="custom-base-uri"]'));
-        assert.lengthOf(element.shadowRoot.querySelector('slot[name="custom-base-uri"]').assignedNodes(), 0)
-      });
-    });
-
-    describe('with customBaseUriSlot fixture', () => {
-      describe('when allowCustomBaseUri is true', () => {
-        let element;
-        beforeEach(async () => {
-          element = await customBaseUriSlotFixture();
-          element.allowCustomBaseUri = true;
-          await nextFrame()
-        });
-
-        it('should have 2 servers', () => {
-          assert.equal(element.serversCount, 2);
-        });
-
-        it('should not hide server selector', async () => {
-          assert.isUndefined(element.serverSelectorHidden)
-        })
-
-        it('should set hidden attribute to false in server selector', async () => {
-          const serverSelector = element.shadowRoot.querySelector('api-server-selector')
-          assert.exists(serverSelector);
-          assert.isFalse(serverSelector.hidden)
-        });
-      })
-
-      describe('when allowCustomBaseUri is false', () => {
-        let element;
-        beforeEach(async () => {
-          element = await customBaseUriSlotFixture();
-        });
-
-        it('should have 1 server', () => {
-          assert.equal(element.serversCount, 1);
-        });
-
-        it('should hide server selector', async () => {
-          assert.isTrue(element.serverSelectorHidden)
-        })
-
-        it('should set hidden attribute to server selector', async () => {
-          const serverSelector = element.shadowRoot.querySelector('api-server-selector')
-          assert.exists(serverSelector);
-          assert.isTrue(serverSelector.hidden)
-        });
-      })
-    });
-  });
-
-  describe('noServerSelector attribute', () => {
-    describe('when panel has noServerSelector set to true', () => {
-      let element;
-
-      beforeEach(async () => {
-        element = await noSelectorFixture();
-      });
-
-      it('should hide server selector', async () => {
-        assert.isTrue(element.serverSelectorHidden)
-      })
-
-      it('should set hidden attribute to server selector', async () => {
-        const serverSelector = element.shadowRoot.querySelector('api-server-selector')
-        assert.exists(serverSelector);
-        assert.isTrue(serverSelector.hidden)
-      });
-    })
-
-    describe('when setting noServerSelector to true', () => {
-      let element;
-      beforeEach(async () => {
-        element = await customBaseUriSlotFixture();
-        element.allowCustomBaseUri = true;
-        await nextFrame()
-      });
-
-      it('should show server selector at first', () => {
-        assert.isUndefined(element.serverSelectorHidden)
-      })
-
-      it('should hide server selector when setting noServerSelector to true', async () => {
-        element.noServerSelector = true
-        await nextFrame()
-        assert.isTrue(element.serverSelectorHidden)
-        const serverSelector = element.shadowRoot.querySelector('api-server-selector')
-        assert.exists(serverSelector);
-        assert.isTrue(serverSelector.hidden)
-      })
-    })
-  })
 });
