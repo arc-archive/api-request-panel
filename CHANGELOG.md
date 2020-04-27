@@ -385,3 +385,62 @@
  [aabf0bb](https://github.com/advanced-rest-client/api-request-panel/commit/aabf0bb90865de73efb3ee748e08d90c0c35a666) by Pawel Psztyc
 
 
+<a name="5.0.0"></a>
+# [5.0.0](https://github.com/advanced-rest-client/api-request-panel/compare/4.0.1...5.0.0) (2020-04-27)
+
+## Build
+
+* bump version [53ccedd](https://github.com/advanced-rest-client/api-request-panel/commit/53cceddc0956706a7447c850c38989867078d1d8) by Francisco Di Giandomenico
+* bump version [2296e62](https://github.com/advanced-rest-client/api-request-panel/commit/2296e621c65ff31385a508c239cea54d78ea2926) by Francisco Di Giandomenico
+* bumping version [96ba5d0](https://github.com/advanced-rest-client/api-request-panel/commit/96ba5d0d679f47a6f8d2d42b7ad6a4fd483ade6c) by Pawel Psztyc
+
+
+## Continuous integration
+
+* removing deprecated sudo flag [8fba25e](https://github.com/advanced-rest-client/api-request-panel/commit/8fba25e290e62c056537f26cceb03abf35dfc87c) by Pawel
+
+
+## Update
+
+* syncing package-lock file [c62718b](https://github.com/advanced-rest-client/api-request-panel/commit/c62718b70154b45c3412a3d2616fde5a0164ddce) by Pawel
+* upgrading request editor with server selector [964bb17](https://github.com/advanced-rest-client/api-request-panel/commit/964bb179889d212ad930e38be2f7310b88ad66d6) by Pawel
+* removing generated models from the repository [35349a2](https://github.com/advanced-rest-client/api-request-panel/commit/35349a24f7b071359109c42fb3cbb975cd405cc4) by Pawel
+* creating template for the new selector [0217705](https://github.com/advanced-rest-client/api-request-panel/commit/0217705f9bae19df2abd51bd0078b53d55591863) by Pawel
+* add requestUpdate in noServerSelector setter [1e210da](https://github.com/advanced-rest-client/api-request-panel/commit/1e210da5cc8f69d1acaba802a6e1eb2e6c4bf5f3) by Leandro Bauret
+* modify property name and remove unnecessary getter [628d61a](https://github.com/advanced-rest-client/api-request-panel/commit/628d61a90cf490ef340db4305c087eaf84972a5c) by Leandro Bauret
+* remove function call from render and add state for showServerSelector [1cfa618](https://github.com/advanced-rest-client/api-request-panel/commit/1cfa61898c21dac6de9d60fff4bb5feb0499f02a) by Leandro Bauret
+* add server count listener and add hideCustomServer property [fed6bfa](https://github.com/advanced-rest-client/api-request-panel/commit/fed6bfa7d8f8c52bd76c43cdab72a552b176328a) by Leandro Bauret
+* move custom base uri slot to api-server-selector [5e3fb00](https://github.com/advanced-rest-client/api-request-panel/commit/5e3fb009576202ed9737391dd6c5cbd5745ad55e) by Leandro Bauret
+* update package-lock [45b7f6b](https://github.com/advanced-rest-client/api-request-panel/commit/45b7f6b3cd6430bdb41a0e0f6ddb55a5fedb92c8) by Francisco Di Giandomenico
+* [ci skip] automated merge master->stage. syncing main branches [1ca6c58](https://github.com/advanced-rest-client/api-request-panel/commit/1ca6c58b9086bcc5bf799ffd321fc1475bc68052) by Ci agent
+* upgrading components [d1c4a02](https://github.com/advanced-rest-client/api-request-panel/commit/d1c4a02ee1edd82c4baf376012068c1f84b49ce7) by Pawel Psztyc
+* update travis configuration [d8c919b](https://github.com/advanced-rest-client/api-request-panel/commit/d8c919b9c1ff6e210ad50baccf95babfccdc5551) by Leandro Bauret
+* add custom base uri slot to api-request-editor [35bbb74](https://github.com/advanced-rest-client/api-request-panel/commit/35bbb74cef3a446c4244c708c3ddbdc663c8de6b) by Leandro Bauret
+
+
+## Documentation
+
+* upgrading demo page [f5ab051](https://github.com/advanced-rest-client/api-request-panel/commit/f5ab051bd839bb2ca3461fd6491fa01006f9484b) by Pawel Psztyc
+
+
+## Features
+
+* add AmfHelperMixin and compute servers [a01147f](https://github.com/advanced-rest-client/api-request-panel/commit/a01147f0ee1af346003e8e7b86df8b096acbbde1) by Francisco Di Giandomenico
+* add selectedServer and selectedServerType [b0ef098](https://github.com/advanced-rest-client/api-request-panel/commit/b0ef098649dcff4ce508768bca4439863db53bfb) by Francisco Di Giandomenico
+* add server selector and listen for change event [4847e6b](https://github.com/advanced-rest-client/api-request-panel/commit/4847e6bb00b8b0af7a75ecc301d2bd935cbfb16b) by Francisco Di Giandomenico
+
+
+## Bug Fixes
+
+* fix servers-count-changed event demo and property names [d8e947c](https://github.com/advanced-rest-client/api-request-panel/commit/d8e947cb98344e2c7d3a60cad0a692ea2728050d) by Leandro Bauret
+* remove amf from properties, remvoe apiChanged method [d90c1f3](https://github.com/advanced-rest-client/api-request-panel/commit/d90c1f3416566a0f70c3c5aa4d8d501848a24f18) by Francisco Di Giandomenico
+* multiple fixes [b9f32cf](https://github.com/advanced-rest-client/api-request-panel/commit/b9f32cf589a35850a9fded8f930e99d5ea858cfa) by Francisco Di Giandomenico
+
+
+## Testing
+
+* fix tests based on new allowCustomBaseUri property [14fa02e](https://github.com/advanced-rest-client/api-request-panel/commit/14fa02e514bfc3ec5bdab553f784af6699be83b0) by Leandro Bauret
+* add amf-helper and amf-loader [99bea23](https://github.com/advanced-rest-client/api-request-panel/commit/99bea2374bbec69ac79aa974692b55e5dcaeca6f) by Francisco Di Giandomenico
+* add tests [1d93de3](https://github.com/advanced-rest-client/api-request-panel/commit/1d93de3e7d6497cfe4213a8bc7dd72dc11f31960) by Francisco Di Giandomenico
+
+
