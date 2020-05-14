@@ -342,8 +342,8 @@ export class ApiRequestPanel extends EventsTargetMixin(LitElement) {
   }
 
   _attachListeners(node) {
+    this.addEventListener('api-request', this._apiRequestHandler);
     node.addEventListener('api-response', this._apiResponseHandler);
-    node.addEventListener('api-request', this._apiRequestHandler);
     node.addEventListener(
       'api-navigation-selection-changed',
       this._handleNavigationChange
@@ -351,8 +351,8 @@ export class ApiRequestPanel extends EventsTargetMixin(LitElement) {
   }
 
   _detachListeners(node) {
+    this.removeEventListener('api-request', this._apiRequestHandler);
     node.removeEventListener('api-response', this._apiResponseHandler);
-    node.removeEventListener('api-request', this._apiRequestHandler);
     node.removeEventListener(
       'api-navigation-selection-changed',
       this._handleNavigationChange
