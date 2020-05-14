@@ -496,3 +496,34 @@
 * add tests [1d93de3](https://github.com/advanced-rest-client/api-request-panel/commit/1d93de3e7d6497cfe4213a8bc7dd72dc11f31960) by Francisco Di Giandomenico
 
 
+<a name="5.0.2"></a>
+## [5.0.2](https://github.com/advanced-rest-client/api-request-panel/compare/5.0.0...5.0.2) (2020-05-14)
+
+### Build
+
+* bumping version [e828c90](https://github.com/advanced-rest-client/api-request-panel/commit/e828c903584a3ea7ddac4b9a671a75927fc80097) by Pawel
+* bumping version [be833dd](https://github.com/advanced-rest-client/api-request-panel/commit/be833dd040c263cce1761ccb86d82525b37e337f) by Pawel
+
+
+### Update
+
+* [ci skip] automated merge master->stage. syncing main branches [e10649a](https://github.com/advanced-rest-client/api-request-panel/commit/e10649ad2ffceed72781da27cf2ccf3422d7160a) by Ci agent
+* adding missing slot to the request editor [65739e2](https://github.com/advanced-rest-client/api-request-panel/commit/65739e260ebc0dc4d58fb3f1e9dccdaedee5c8cb) by Pawel
+* [ci skip] automated merge master->stage. syncing main branches [546331b](https://github.com/advanced-rest-client/api-request-panel/commit/546331b69c4cd6265a8af8a57d7862fbb1592aec) by Ci agent
+
+
+### Documentation
+
+* updating readme file [20235a2](https://github.com/advanced-rest-client/api-request-panel/commit/20235a2dcfdbea8433aa651b9ec7901f56fbeabd) by Pawel
+
+
+### Bug Fixes
+
+* the element listens on `this` for `api-request` event [c5ce937](https://github.com/advanced-rest-client/api-request-panel/commit/c5ce9376a116ddbc08a53e624e0bed8ff89505be) by Pawel
+
+
+### Refactor
+
+* updating to open-wc standards [6a9b575](https://github.com/advanced-rest-client/api-request-panel/commit/6a9b5753167e8f3a0e8f53c880c872c73ed8e4b5) by Pawel
+
+
