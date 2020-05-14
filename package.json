@@ -1,7 +1,7 @@
 {
   "name": "@api-components/api-request-panel",
   "description": "An element that renders request editor and response view based on AMF model.",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "license": "Apache-2.0",
   "main": "index.js",
   "module": "index.js",
