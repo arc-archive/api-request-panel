@@ -12,28 +12,29 @@ License for the specific language governing permissions and limitations under
 the License.
 */
 import { html, css, LitElement } from 'lit-element';
-import { HeadersParserMixin } from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
+import { replace } from '@advanced-rest-client/headers-parser-mixin';
 import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
 import '@api-components/api-request-editor/api-request-editor.js';
 import '@advanced-rest-client/response-view/response-view.js';
 
+/* eslint-disable no-plusplus */
+/* eslint-disable class-methods-use-this */
+
 /** @typedef {import('lit-html').TemplateResult} TemplateResult */
 
 /**
- * @customElement
  * @demo demo/index.html
  * @demo demo/navigation.html Automated navigation
- * @mixes EventsTargetMixin
- * @mixes HeadersParserMixin
- * @extends LitElement
  */
-export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitElement)) {
+export class ApiRequestPanel extends EventsTargetMixin(LitElement) {
   get styles() {
     return css`
-    :host { display: block; }
-    response-view {
-      margin-top: var(--api-request-panel-response-margin-top, 48px);
-    }
+      :host {
+        display: block;
+      }
+      response-view {
+        margin-top: var(--api-request-panel-response-margin-top, 48px);
+      }
     `;
   }
 
@@ -304,6 +305,31 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     this._handleNavigationChange = this._handleNavigationChange.bind(this);
 
     this.responseIsXhr = true;
+    this.appendHeaders = null;
+    this.proxy = undefined;
+    this.proxyEncodeUrl = false;
+    this.handleNavigationEvents = false;
+    this.amf = undefined;
+    this.noUrlEditor = false;
+    this.urlLabel = undefined;
+    this.baseUri = undefined;
+    this.noDocs = false;
+    this.eventsTarget = undefined;
+    this.allowHideOptional = false;
+    this.allowDisableParams = false;
+    this.allowCustom = false;
+    this.server = undefined;
+    this.protocols = undefined;
+    this.version = undefined;
+    this.readOnly = false;
+    this.disabled = false;
+    this.compatibility = false;
+    this.outlined = false;
+    this.serverValue = undefined;
+    this.serverType = undefined;
+    this.noServerSelector = false;
+    this.allowCustomBaseUri = false;
+    this.narrow = false;
   }
 
   connectedCallback() {
@@ -318,29 +344,33 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
   _attachListeners(node) {
     node.addEventListener('api-response', this._apiResponseHandler);
     node.addEventListener('api-request', this._apiRequestHandler);
-    node.addEventListener('api-navigation-selection-changed', this._handleNavigationChange);
+    node.addEventListener(
+      'api-navigation-selection-changed',
+      this._handleNavigationChange
+    );
   }
 
   _detachListeners(node) {
     node.removeEventListener('api-response', this._apiResponseHandler);
     node.removeEventListener('api-request', this._apiRequestHandler);
-    node.removeEventListener('api-navigation-selection-changed', this._handleNavigationChange);
+    node.removeEventListener(
+      'api-navigation-selection-changed',
+      this._handleNavigationChange
+    );
   }
 
   /**
    * Sets OAuth 2 redirect URL for the authorization panel
    *
-   * @param {?String} location Bower components location
+   * @param {String=} [location='node_modules/'] Bower components location
    */
-  _updateRedirectUri(location) {
+  _updateRedirectUri(location = 'node_modules/') {
     const a = document.createElement('a');
-    if (!location) {
-      location = 'node_modules/';
+    let l = String(location);
+    if (l && l[l.length - 1] !== '/') {
+      l += '/';
     }
-    if (location && location[location.length - 1] !== '/') {
-      location += '/';
-    }
-    a.href = location + '@advanced-rest-client/oauth-authorization/oauth-popup.html';
+    a.href = `${l}@advanced-rest-client/oauth-authorization/oauth-popup.html`;
     this.redirectUri = a.href;
   }
 
@@ -369,7 +399,7 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     let eventHeaders = e.detail.headers || '';
     for (let i = 0, len = headersToAdd.length; i < len; i++) {
       const header = headersToAdd[i];
-      eventHeaders = this.replaceHeaderValue(eventHeaders, header.name, header.value);
+      eventHeaders = replace(eventHeaders, header.name, header.value);
     }
     e.detail.headers = eventHeaders;
   }
@@ -379,13 +409,15 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
    * @param {CustomEvent} e The `api-request` event.
    */
   _appendProxy(e) {
-    const proxy = this.proxy;
+    const { proxy } = this;
     if (!proxy) {
       return;
     }
-    let url = this.proxyEncodeUrl ? encodeURIComponent(e.detail.url) : e.detail.url;
-    url = proxy + url;
-    e.detail.url = url;
+    let { url } = e.detail;
+    if (this.proxyEncodeUrl) {
+      url = encodeURIComponent(url);
+    }
+    e.detail.url = `${proxy}${url}`;
   }
 
   /**
@@ -412,7 +444,7 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
     this.loadingTime = data.loadingTime;
     this.request = data.request;
     this.response = data.response;
-    const isXhr = data.isXhr === false ? false : true;
+    const isXhr = data.isXhr === undefined || data.isXhr === true;
     this.responseIsXhr = isXhr;
     this.redirects = isXhr ? undefined : data.redirects;
     this.redirectsTiming = isXhr ? undefined : data.redirectsTiming;
@@ -478,10 +510,10 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
   }
 
   render() {
-    return html`<style>${this.styles}</style>
-    ${this._requestTemplate()}
-    ${this._responseTemplate()}
-    `;
+    return html`<style>
+        ${this.styles}
+      </style>
+      ${this._requestTemplate()} ${this._responseTemplate()} `;
   }
 
   /**
@@ -562,6 +594,7 @@ export class ApiRequestPanel extends EventsTargetMixin(HeadersParserMixin(LitEle
       .redirectTimings="${this.redirectsTiming}"
       .responseTimings="${this.timing}"
       .sentHttpMessage="${this.sourceMessage}"
-      .compatibility="${this.compatibility}"></response-view>`;
+      .compatibility="${this.compatibility}"
+    ></response-view>`;
   }
 }

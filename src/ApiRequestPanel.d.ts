@@ -12,31 +12,24 @@
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-import {html, css, LitElement} from 'lit-element';
-
-import {HeadersParserMixin} from '@advanced-rest-client/headers-parser-mixin/headers-parser-mixin.js';
+import {LitElement, TemplateResult} from 'lit-element';
 
 import {EventsTargetMixin} from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
 
-export {ApiRequestPanel};
-
-declare class ApiRequestPanel extends
-  EventsTargetMixin(
-  HeadersParserMixin(
-  LitElement)) {
+export declare class ApiRequestPanel {
   readonly styles: any;
   readonly _hasResponse: any;
 
   /**
    * AMF HTTP method (operation in AMF vocabulary) ID.
    */
-  selected: string|null|undefined;
+  selected: string|undefined;
 
   /**
    * Location of the `node_modules` folder.
    * It should be a path from server's root path including node_modules.
    */
-  authPopupLocation: string|null|undefined;
+  authPopupLocation: string|undefined;
 
   /**
    * By default application hosting the element must set `selected`
@@ -44,20 +37,20 @@ declare class ApiRequestPanel extends
    * by setting this property the element listens for navigation events
    * and updates the state
    */
-  handleNavigationEvents: boolean|null|undefined;
+  handleNavigationEvents: boolean|undefined;
 
   /**
    * Hides the URL editor from the view.
    * The editor is still in the DOM and the `urlInvalid` property still will be set.
    */
-  noUrlEditor: boolean|null|undefined;
+  noUrlEditor: boolean|undefined;
 
   /**
    * When set it renders a label with the computed URL.
    * This intended to be used with `noUrlEditor` set to true.
    * This way it replaces the editor with a simple label.
    */
-  urlLabel: boolean|null|undefined;
+  urlLabel: boolean|undefined;
 
   /**
    * A base URI for the API. To be set if RAML spec is missing `baseUri`
@@ -65,93 +58,93 @@ declare class ApiRequestPanel extends
    * is passed to the URL editor that prefixes the URL with `baseUri` value
    * if passed URL is a relative URL.
    */
-  baseUri: string|null|undefined;
+  baseUri: string|undefined;
 
   /**
    * OAuth2 redirect URI.
    * This value **must** be set in order for OAuth 1/2 to work properly.
    */
-  redirectUri: string|null|undefined;
+  redirectUri: string|undefined;
 
   /**
    * If set it will renders the view in the narrow layout.
    */
-  narrow: boolean|null|undefined;
+  narrow: boolean|undefined;
 
   /**
    * Enables compatibility with Anypoint styling
    */
-  compatibility: boolean|null|undefined;
+  compatibility: boolean|undefined;
 
   /**
    * Enables Material Design outlined style
    */
-  outlined: boolean|null|undefined;
+  outlined: boolean|undefined;
 
   /**
    * When set the editor is in read only mode.
    */
-  readOnly: boolean|null|undefined;
+  readOnly: boolean|undefined;
 
   /**
    * When set all controls are disabled in the form
    */
-  disabled: boolean|null|undefined;
+  disabled: boolean|undefined;
 
   /**
    * Created by the transport ARFC `request` object
    */
-  request: object|null|undefined;
+  request: object|undefined;
 
   /**
    * Created by the transport ARC `response` object.
    */
-  response: object|null|undefined;
+  response: object|undefined;
 
   /**
    * A flag indincating request error.
    */
-  isErrorResponse: boolean|null|undefined;
+  isErrorResponse: boolean|undefined;
 
   /**
    * True if the response is made by the Fetch / XHR api.
    */
-  responseIsXhr: boolean|null|undefined;
+  responseIsXhr: boolean|undefined;
 
   /**
    * An error object associated with the response when error.
    */
-  responseError: object|null|undefined;
+  responseError: object|undefined;
 
   /**
    * Response full loading time. This information is received from the
    * transport library.
    */
-  loadingTime: number|null|undefined;
+  loadingTime: number|undefined;
 
   /**
    * If the transport method is able to collect detailed information about request timings
    * then this value will be set. It's the `timings` property from the HAR 1.2 spec.
    */
-  timing: object|null|undefined;
+  timing: object|undefined;
 
   /**
    * If the transport method is able to collect detailed information about redirects timings
    * then this value will be set. It's a list of `timings` property from the HAR 1.2 spec.
    */
-  redirectsTiming: any[]|null|undefined;
+  redirectsTiming: object[]|undefined;
 
   /**
    * It will be set if the transport method can generate information about redirections.
    */
-  redirects: any[]|null|undefined;
+  redirects: object[]|undefined;
 
   /**
    * Http message sent to the server.
    *
    * This information should be available only in case of advanced HTTP transport.
    */
-  sourceMessage: string|null|undefined;
+  sourceMessage: string|undefined;
 
   /**
    * Forces the console to send headers defined in this string overriding any used defined
@@ -164,7 +157,7 @@ declare class ApiRequestPanel extends
    * }]
    * ```
    */
-  appendHeaders: any[]|null|undefined;
+  appendHeaders: object[]|undefined;
 
   /**
    * If set every request made from the console will be proxied by the service provided in this
@@ -177,14 +170,14 @@ declare class ApiRequestPanel extends
    * `https://proxy.com/path/?url=`. In this case be sure to set `proxy-encode-url`
    * attribute.
    */
-  proxy: string|null|undefined;
+  proxy: string|undefined;
 
   /**
    * If `proxy` is set, it will URL encode the request URL before appending it to the proxy URL.
    * `http://domain.com/path/?query=some+value` will become
    * `https://proxy.com/?url=http%3A%2F%2Fdomain.com%2Fpath%2F%3Fquery%3Dsome%2Bvalue`
    */
-  proxyEncodeUrl: boolean|null|undefined;
+  proxyEncodeUrl: boolean;
 
   /**
    * ID of latest request.
@@ -195,32 +188,32 @@ declare class ApiRequestPanel extends
    * This system allows to use different request panels on single app
    * and don't mix the results.
    */
-  lastRequestId: string|null|undefined;
+  lastRequestId: string|undefined;
 
   /**
    * Prohibits rendering of the documentation (the icon and the
    * description).
    */
-  noDocs: boolean|null|undefined;
+  noDocs: boolean;
 
   /**
    * If set it computes `hasOptional` property and shows checkbox in the
    * form to show / hide optional properties.
    */
-  allowHideOptional: boolean|null|undefined;
+  allowHideOptional: boolean;
 
   /**
    * If set, enable / disable param checkbox is rendered next to each
    * form item.
    */
-  allowDisableParams: boolean|null|undefined;
+  allowDisableParams: boolean;
 
   /**
    * When set, renders "add custom" item button.
    * If the element is to be used withouth AMF model this should always
    * be enabled. Otherwise users won't be able to add a parameter.
    */
-  allowCustom: boolean|null|undefined;
+  allowCustom: boolean;
 
   /**
    * API server definition from the AMF model.
@@ -230,7 +223,7 @@ declare class ApiRequestPanel extends
    *
    * Do not set with full AMF web API model.
    */
-  server: object|null|undefined;
+  server: object|undefined;
 
   /**
    * Supported protocl versions.
@@ -246,7 +239,7 @@ declare class ApiRequestPanel extends
    *
    * Do not set with full AMF web API model.
    */
-  protocols: any[]|null|undefined;
+  protocols: string[]|undefined;
 
   /**
    * API version name.
@@ -256,43 +249,43 @@ declare class ApiRequestPanel extends
    *
    * Do not set with full AMF web API model.
    */
-  version: string|null|undefined;
+  version: string|undefined;
 
   /**
    * Holds the value of the currently selected server
    * Data type: URI
    */
-  serverValue: string|null|undefined;
+  serverValue: string|undefined;
 
   /**
    * Holds the type of the currently selected server
    * Values: `server` | `slot` | `custom`
    */
-  serverType: string|null|undefined;
+  serverType: string|undefined;
 
   /**
    * Optional property to set
    * If true, the server selector is not rendered
    */
-  noServerSelector: boolean|null|undefined;
+  noServerSelector: boolean;
 
   /**
    * Optional property to set
    * If true, the server selector custom base URI option is rendered
    */
-  allowCustomBaseUri: boolean|null|undefined;
+  allowCustomBaseUri: boolean;
   constructor();
   connectedCallback(): void;
-  render(): any;
-  _attachListeners(node: any): void;
-  _detachListeners(node: any): void;
+  render(): TemplateResult;
+  _attachListeners(node: HTMLElement): void;
+  _detachListeners(node: HTMLElement): void;
 
   /**
    * Sets OAuth 2 redirect URL for the authorization panel
    *
    * @param location Bower components location
    */
-  _updateRedirectUri(location: String|null): void;
+  _updateRedirectUri(location: String): void;
 
   /**
    * A handler for the API call.
@@ -301,39 +294,39 @@ declare class ApiRequestPanel extends
    *
    * @param e `api-request` event
    */
-  _apiRequestHandler(e: CustomEvent|null): void;
+  _apiRequestHandler(e: CustomEvent): void;
 
   /**
    * Appends headers defined in the `appendHeaders` array.
    *
    * @param e The `api-request` event.
    */
-  _appendConsoleHeaders(e: CustomEvent|null): void;
+  _appendConsoleHeaders(e: CustomEvent): void;
 
   /**
    * Sets the proxy URL if the `proxy` property is set.
    *
    * @param e The `api-request` event.
    */
-  _appendProxy(e: CustomEvent|null): void;
+  _appendProxy(e: CustomEvent): void;
 
   /**
    * Handler for the `api-response` custom event. Sets values on the response
    * panel when response is ready.
    */
-  _apiResponseHandler(e: CustomEvent|null): void;
+  _apiResponseHandler(e: CustomEvent): void;
 
   /**
    * Propagate `api-response` detail object.
    *
    * @param data Event's detail object
    */
-  _propagateResponse(data: object|null): void;
+  _propagateResponse(data: object): void;
 
   /**
    * Clears response panel when selected id changed.
    */
-  _selectedChanged(id: String|null): void;
+  _selectedChanged(id: String): void;
 
   /**
    * Clears response panel.
@@ -345,15 +338,18 @@ declare class ApiRequestPanel extends
    *
    * When `handleNavigationEvents` is set then it also manages the selection.
    */
-  _handleNavigationChange(e: CustomEvent|null): void;
+  _handleNavigationChange(e: CustomEvent): void;
 
   /**
    * @returns A template for the request panel
    */
-  _requestTemplate(): TemplateResult|null;
+  _requestTemplate(): TemplateResult;
 
   /**
    * @returns A template for the response view
    */
-  _responseTemplate(): TemplateResult|string|null;
+  _responseTemplate(): TemplateResult|string;
+}
+
+export declare interface ApiRequestPanel extends EventsTargetMixin, LitElement {
 }
