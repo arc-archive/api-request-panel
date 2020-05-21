@@ -281,6 +281,20 @@ export class ApiRequestPanel extends EventsTargetMixin(LitElement) {
     this._selectedChanged(value);
   }
 
+  get baseUri() {
+    return this._baseUri;
+  }
+
+  set baseUri(value) {
+    const old = this._baseUri;
+    /* istanbul ignore if */
+    if (old === value) {
+      return;
+    }
+    this._baseUri = value;
+    this.requestUpdate('baseUri', old);
+  }
+
   get authPopupLocation() {
     return this._authPopupLocation;
   }

@@ -347,4 +347,14 @@ describe('<api-request-panel>', function () {
       assert.deepEqual(spy.args[0][0], detail);
     });
   });
+
+  describe('base uri setter', () => {
+    it('calls requestUpdate()', async () => {
+      const element = await basicFixture();
+      element.baseUri = 'oldBaseUri';
+      const spy = sinon.spy(element, 'requestUpdate');
+      element.baseUri = 'newBaseUri';
+      assert(spy.calledWith('baseUri', 'oldBaseUri'), 'hasOldValue')
+    });
+  });
 });
