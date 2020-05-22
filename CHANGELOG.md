@@ -527,3 +527,35 @@
 * updating to open-wc standards [6a9b575](https://github.com/advanced-rest-client/api-request-panel/commit/6a9b5753167e8f3a0e8f53c880c872c73ed8e4b5) by Pawel
 
 
+<a name="5.0.3"></a>
+## [5.0.3](https://github.com/advanced-rest-client/api-request-panel/compare/5.0.1...5.0.3) (2020-05-22)
+
+### Build
+
+* bumping version [e726806](https://github.com/advanced-rest-client/api-request-panel/commit/e726806e2f83d5960be0ea0a97bcc691809b859f) by Pawel
+* bumping version [e828c90](https://github.com/advanced-rest-client/api-request-panel/commit/e828c903584a3ea7ddac4b9a671a75927fc80097) by Pawel
+
+
+### Update
+
+* updating dependencies [2921650](https://github.com/advanced-rest-client/api-request-panel/commit/2921650f6013f160c1629b7ff85738ff19517b35) by Pawel
+* [ci skip] automated merge master->stage. syncing main branches [af01e85](https://github.com/advanced-rest-client/api-request-panel/commit/af01e85c6b4b2018205b103c44f358ec442240a9) by Ci agent
+* [ci skip] automated merge master->stage. syncing main branches [e10649a](https://github.com/advanced-rest-client/api-request-panel/commit/e10649ad2ffceed72781da27cf2ccf3422d7160a) by Ci agent
+
+
+### Documentation
+
+* updating readme file [20235a2](https://github.com/advanced-rest-client/api-request-panel/commit/20235a2dcfdbea8433aa651b9ec7901f56fbeabd) by Pawel
+
+
+### Bug Fixes
+
+* restoring `amf` property to pass down the model [11bea68](https://github.com/advanced-rest-client/api-request-panel/commit/11bea680b0cf8362645ee0da575712c6a89b6365) by Pawel
+* the element listens on `this` for `api-request` event [c5ce937](https://github.com/advanced-rest-client/api-request-panel/commit/c5ce9376a116ddbc08a53e624e0bed8ff89505be) by Pawel
+
+
+### Refactor
+
+* updating to open-wc standards [6a9b575](https://github.com/advanced-rest-client/api-request-panel/commit/6a9b5753167e8f3a0e8f53c880c872c73ed8e4b5) by Pawel
+
+
