@@ -45,6 +45,10 @@ export class ApiRequestPanel extends EventsTargetMixin(LitElement) {
   static get properties() {
     return {
       /**
+       * The `amf` property that passes amf model to the request editor.
+       */
+      amf: { type: Object },
+      /**
        * AMF HTTP method (operation in AMF vocabulary) ID.
        */
       selected: { type: String },
