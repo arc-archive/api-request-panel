@@ -1,42 +1,48 @@
-import { fixture, assert } from '@open-wc/testing';
+import { fixture, assert, nextFrame } from '@open-wc/testing';
 import * as sinon from 'sinon';
 import '../api-request-panel.js';
+import { AmfLoader } from './amf-loader.js';
 
 describe('<api-request-panel>', function () {
   async function basicFixture() {
-    return (await fixture(`<api-request-panel></api-request-panel>`));
+    return fixture(`<api-request-panel></api-request-panel>`);
   }
 
   async function authPopupFixture() {
-    return (await fixture(`<api-request-panel
-      authpopuplocation="test/"></api-request-panel>`));
+    return fixture(`<api-request-panel
+      authpopuplocation="test/"></api-request-panel>`);
   }
 
   async function proxyFixture() {
-    return (await fixture(`<api-request-panel proxy="https://proxy.domain.com/"></api-request-panel>`));
+    return fixture(
+      `<api-request-panel proxy="https://proxy.domain.com/"></api-request-panel>`
+    );
   }
 
   async function proxyEncFixture() {
-    return (await fixture(`<api-request-panel
+    return fixture(`<api-request-panel
       proxy="https://proxy.domain.com/"
-      proxyencodeurl></api-request-panel>`));
+      proxyencodeurl></api-request-panel>`);
   }
 
   async function redirectUriFixture() {
-    return (await fixture(`<api-request-panel
-      redirecturi="https://auth.domain.com/token"></api-request-panel>`));
+    return fixture(`<api-request-panel
+      redirecturi="https://auth.domain.com/token"></api-request-panel>`);
   }
 
   async function addHeadersFixture() {
-    return (await fixture(`<api-request-panel
-      appendheaders='[{"name": "x-test", "value": "header-value"}]'></api-request-panel>`));
+    return fixture(`<api-request-panel
+      appendheaders='[{"name": "x-test", "value": "header-value"}]'></api-request-panel>`);
   }
 
   async function navigationFixture() {
-    return (await fixture(`<api-request-panel handlenavigationevents></api-request-panel>`));
+    return fixture(
+      `<api-request-panel handlenavigationevents></api-request-panel>`
+    );
   }
 
   function appendRequestData(element, request) {
+    // eslint-disable-next-line no-param-reassign
     request = request || {};
     const editor = element.shadowRoot.querySelector('api-request-editor');
     editor._httpMethod = request.method || 'get';
@@ -75,19 +81,27 @@ describe('<api-request-panel>', function () {
   describe('Redirect URI computation', () => {
     it('redirectUri has default value', async () => {
       const element = await basicFixture();
-      assert.isTrue(element.redirectUri
-        .indexOf('@advanced-rest-client/oauth-authorization/oauth-popup.html') !== -1);
+      assert.isTrue(
+        element.redirectUri.indexOf(
+          '@advanced-rest-client/oauth-authorization/oauth-popup.html'
+        ) !== -1
+      );
     });
 
     it('redirectUri is computed for auth-popup location', async () => {
       const element = await authPopupFixture();
-      assert.isTrue(element.redirectUri
-        .indexOf('test/@advanced-rest-client/oauth-authorization/oauth-popup.html') !== -1);
+      assert.isTrue(
+        element.redirectUri.indexOf(
+          'test/@advanced-rest-client/oauth-authorization/oauth-popup.html'
+        ) !== -1
+      );
     });
 
     it('redirectUri is not computed when redirectUri is set', async () => {
       const element = await redirectUriFixture();
-      assert.isTrue(element.redirectUri.indexOf('https://auth.domain.com/token') !== -1);
+      assert.isTrue(
+        element.redirectUri.indexOf('https://auth.domain.com/token') !== -1
+      );
     });
   });
 
@@ -100,7 +114,10 @@ describe('<api-request-panel>', function () {
       const spy = sinon.spy();
       element.addEventListener('api-request', spy);
       editor.execute();
-      assert.equal(spy.args[0][0].detail.url, 'https://proxy.domain.com/https://domain.com');
+      assert.equal(
+        spy.args[0][0].detail.url,
+        'https://proxy.domain.com/https://domain.com'
+      );
     });
 
     it('Encodes original URL', async () => {
@@ -110,7 +127,10 @@ describe('<api-request-panel>', function () {
       element.addEventListener('api-request', spy);
       const editor = element.shadowRoot.querySelector('api-request-editor');
       editor.execute();
-      assert.equal(spy.args[0][0].detail.url, 'https://proxy.domain.com/https%3A%2F%2Fdomain.com');
+      assert.equal(
+        spy.args[0][0].detail.url,
+        'https://proxy.domain.com/https%3A%2F%2Fdomain.com'
+      );
     });
   });
 
@@ -128,7 +148,7 @@ describe('<api-request-panel>', function () {
     it('Replaces headers in the request', async () => {
       const element = await addHeadersFixture();
       appendRequestData(element, {
-        headers: 'x-test: other-value'
+        headers: 'x-test: other-value',
       });
       const spy = sinon.spy();
       element.addEventListener('api-request', spy);
@@ -146,24 +166,27 @@ describe('<api-request-panel>', function () {
         request: {
           url: 'https://domain.com/',
           method: 'GET',
-          headers: 'accept: text/plain'
+          headers: 'accept: text/plain',
         },
         response: {
           status: 200,
           statusText: 'OK',
           payload: 'Hello world',
-          headers: 'content-type: text/plain'
+          headers: 'content-type: text/plain',
         },
         loadingTime: 124.12345678,
         isError: false,
         isXhr: false,
-        sentHttpMessage: 'GET / HTTP/1.1\nHost: domain.com\naccept: text/plain\n\n\n',
-        redirects: [{
-          status: 301,
-          statusText: 'Not here',
-          payload: 'Go to https://other.domain.com',
-          headers: headers
-        }],
+        sentHttpMessage:
+          'GET / HTTP/1.1\nHost: domain.com\naccept: text/plain\n\n\n',
+        redirects: [
+          {
+            status: 301,
+            statusText: 'Not here',
+            payload: 'Go to https://other.domain.com',
+            headers,
+          },
+        ],
         timing: {
           blocked: 12.0547856,
           dns: 0.12,
@@ -171,17 +194,19 @@ describe('<api-request-panel>', function () {
           send: 4.4748989,
           wait: 15.8436988,
           receive: 65.125412256,
-          ssl: 10
+          ssl: 10,
         },
-        redirectsTiming: [{
-          blocked: 12.0547856,
-          dns: 0.12,
-          connect: 112.21458762,
-          send: 4.4748989,
-          wait: 15.8436988,
-          receive: 65.125412256,
-          ssl: 10
-        }]
+        redirectsTiming: [
+          {
+            blocked: 12.0547856,
+            dns: 0.12,
+            connect: 112.21458762,
+            send: 4.4748989,
+            wait: 15.8436988,
+            receive: 65.125412256,
+            ssl: 10,
+          },
+        ],
       };
       element._propagateResponse(detail);
     }
@@ -279,14 +304,17 @@ describe('<api-request-panel>', function () {
     });
 
     function dispatch(selected, type) {
+      // eslint-disable-next-line no-param-reassign
       type = type || 'method';
-      document.body.dispatchEvent(new CustomEvent('api-navigation-selection-changed', {
-        detail: {
-          selected,
-          type
-        },
-        bubbles: true
-      }));
+      document.body.dispatchEvent(
+        new CustomEvent('api-navigation-selection-changed', {
+          detail: {
+            selected,
+            type,
+          },
+          bubbles: true,
+        })
+      );
     }
 
     it('Sets "selected" when type is "method"', () => {
@@ -314,37 +342,64 @@ describe('<api-request-panel>', function () {
       request: {
         url: 'https://domain.com/',
         method: 'GET',
-        headers: 'accept: text/plain'
+        headers: 'accept: text/plain',
       },
       response: {
         status: 200,
         statusText: 'OK',
         payload: 'Hello world',
-        headers: 'content-type: text/plain'
+        headers: 'content-type: text/plain',
       },
       loadingTime: 124.12345678,
       isError: false,
-      isXhr: true
+      isXhr: true,
     };
 
     it('Does nothing when ID is different', () => {
       const spy = sinon.spy(element, '_propagateResponse');
       element._apiResponseHandler({
         detail: {
-          id: 'otherId'
-        }
+          id: 'otherId',
+        },
       });
       assert.isFalse(spy.called);
     });
 
     it('Calls _propagateResponse()', () => {
-      const detail = Object.assign({}, { id: requestId }, xhrResponse);
+      const detail = { id: requestId, ...xhrResponse };
       const spy = sinon.spy(element, '_propagateResponse');
       element._apiResponseHandler({
-        detail
+        detail,
       });
       assert.isTrue(spy.called);
       assert.deepEqual(spy.args[0][0], detail);
+    });
+  });
+  [
+    ['Full AMF model', false],
+    ['Compact AMF model', true],
+  ].forEach(([label, compact]) => {
+    describe(label, () => {
+      let element;
+      let asyncAmf;
+
+      before(async () => {
+        asyncAmf = AmfLoader.load(compact, 'async-api');
+      });
+
+      it('_isNonWebApi() should be true for AsyncAPI', async () => {
+        element = await basicFixture();
+        element.amf = asyncAmf;
+        await nextFrame();
+        assert.isTrue(element._isNonWebApi());
+      });
+
+      it('should not render anything for AsyncAPI', async () => {
+        element = await basicFixture();
+        element.amf = asyncAmf;
+        await nextFrame();
+        assert.equal(element.shadowRoot.innerHTML, '<!----><!---->');
+      });
     });
   });
 });
