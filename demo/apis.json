@@ -10,5 +10,6 @@
   "SE-12042/SE-12042.raml": "RAML 1.0",
   "SE-12224/SE-12224.raml": "RAML 1.0",
   "APIC-168/APIC-168.raml": "RAML 1.0",
-  "multi-server/multi-server.yaml": { "type": "OAS 3.0", "mime": "application/yaml" }
+  "multi-server/multi-server.yaml": { "type": "OAS 3.0", "mime": "application/yaml" },
+  "async-api/async-api.yaml": "ASYNC 2.0"
 }
