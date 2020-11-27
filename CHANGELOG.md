@@ -581,3 +581,18 @@
 * restoring `amf` property to pass down the model [11bea68](https://github.com/advanced-rest-client/api-request-panel/commit/11bea680b0cf8362645ee0da575712c6a89b6365) by Pawel
 
 
+<a name="5.1.0"></a>
+## [5.1.0](https://github.com/advanced-rest-client/api-request-panel/compare/5.0.3...5.1.0) (2020-11-27)
+
+### Build
+
+* bumping version [44c7979](https://github.com/advanced-rest-client/api-request-panel/commit/44c7979fbe6b690876cab4c0b3538bcdaccea080) by Pawel
+
+
+### Update
+
+* [ci skip] automated merge master->stage. syncing main branches [83439f5](https://github.com/advanced-rest-client/api-request-panel/commit/83439f594ab12b54a123ce612e3589f604f16c6f) by Ci agent
+* updating deps and removing server selector [aa169df](https://github.com/advanced-rest-client/api-request-panel/commit/aa169df148017aa76be35b23a01950e0567302cd) by Pawel
+* [ci skip] automated merge master->stage. syncing main branches [444beb6](https://github.com/advanced-rest-client/api-request-panel/commit/444beb6427e2df12390184c07afe304e2f1a0a3b) by Ci agent
+
+
