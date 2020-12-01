@@ -41,6 +41,10 @@ describe('<api-request-panel>', function () {
     );
   }
 
+  async function forceRenderFixture() {
+    return fixture(`<api-request-panel forcerender></api-request-panel>`);
+  }
+
   function appendRequestData(element, request) {
     // eslint-disable-next-line no-param-reassign
     request = request || {};
@@ -399,6 +403,16 @@ describe('<api-request-panel>', function () {
         element.amf = asyncAmf;
         await nextFrame();
         assert.equal(element.shadowRoot.innerHTML, '<!----><!---->');
+        assert.notExists(
+          element.shadowRoot.querySelector('api-request-editor')
+        );
+      });
+
+      it('should render if forceRender is set', async () => {
+        element = await forceRenderFixture();
+        element.amf = asyncAmf;
+        await nextFrame();
+        assert.exists(element.shadowRoot.querySelector('api-request-editor'));
       });
     });
   });

@@ -270,6 +270,11 @@ export class ApiRequestPanel extends AmfHelperMixin(
        * If true, the server selector custom base URI option is rendered
        */
       allowCustomBaseUri: { type: Boolean },
+      /**
+       * If true, will render the component even if the model does not contain
+       * WebAPI type
+       */
+      forceRender: { type: Boolean },
     };
   }
 
@@ -528,7 +533,7 @@ export class ApiRequestPanel extends AmfHelperMixin(
   }
 
   render() {
-    if (this._isNonWebApi()) {
+    if (this._isNonWebApi() && !this.forceRender) {
       return html``;
     }
     return html`<style>
