@@ -1,7 +1,6 @@
-import { fixture, assert, nextFrame } from '@open-wc/testing';
+import { fixture, assert } from '@open-wc/testing';
 import * as sinon from 'sinon';
 import '../api-request-panel.js';
-import { AmfLoader } from './amf-loader.js';
 
 describe('<api-request-panel>', function () {
   async function basicFixture() {
@@ -373,33 +372,6 @@ describe('<api-request-panel>', function () {
       });
       assert.isTrue(spy.called);
       assert.deepEqual(spy.args[0][0], detail);
-    });
-  });
-  [
-    ['Full AMF model', false],
-    ['Compact AMF model', true],
-  ].forEach(([label, compact]) => {
-    describe(label, () => {
-      let element;
-      let asyncAmf;
-
-      before(async () => {
-        asyncAmf = AmfLoader.load(compact, 'async-api');
-      });
-
-      it('_isNonWebApi() should be true for AsyncAPI', async () => {
-        element = await basicFixture();
-        element.amf = asyncAmf;
-        await nextFrame();
-        assert.isTrue(element._isNonWebApi());
-      });
-
-      it('should not render anything for AsyncAPI', async () => {
-        element = await basicFixture();
-        element.amf = asyncAmf;
-        await nextFrame();
-        assert.equal(element.shadowRoot.innerHTML, '<!----><!---->');
-      });
     });
   });
 });
