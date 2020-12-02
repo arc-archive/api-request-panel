@@ -16,7 +16,6 @@ import { replace } from '@advanced-rest-client/headers-parser-mixin';
 import { EventsTargetMixin } from '@advanced-rest-client/events-target-mixin/events-target-mixin.js';
 import '@api-components/api-request-editor/api-request-editor.js';
 import '@advanced-rest-client/response-view/response-view.js';
-import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixin';
 
 /* eslint-disable no-plusplus */
 /* eslint-disable class-methods-use-this */
@@ -27,9 +26,7 @@ import { AmfHelperMixin } from '@api-components/amf-helper-mixin/amf-helper-mixi
  * @demo demo/index.html
  * @demo demo/navigation.html Automated navigation
  */
-export class ApiRequestPanel extends AmfHelperMixin(
-  EventsTargetMixin(LitElement)
-) {
+export class ApiRequestPanel extends EventsTargetMixin(LitElement) {
   get styles() {
     return css`
       :host {
@@ -516,21 +513,7 @@ export class ApiRequestPanel extends AmfHelperMixin(
     }
   }
 
-  /**
-   * Determines whether the provided model is a non WebAPI AMF model
-   */
-  _isNonWebApi() {
-    const { amf } = this;
-    if (!amf) {
-      return false;
-    }
-    return !this._isWebAPI(amf);
-  }
-
   render() {
-    if (this._isNonWebApi()) {
-      return html``;
-    }
     return html`<style>
         ${this.styles}
       </style>
