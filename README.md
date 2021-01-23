@@ -1,18 +1,10 @@
-[![Published on NPM](https://img.shields.io/npm/v/@api-components/api-request-panel.svg)](https://www.npmjs.com/package/@api-components/api-request-panel)
-
-[![Build Status](https://travis-ci.com/advanced-rest-client/api-request-panel.svg)](https://travis-ci.com/advanced-rest-client/api-request-panel)
-
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/advanced-rest-client/api-request-panel)
-
-## &lt;api-request-panel&gt;
+# &lt;api-request-panel&gt;
 
 An complete request editor and response view panels in a single element.
 
-**See breaking changes and list of required dependencies at the bottom of this document**
-
 ## Deprecation notice
 
-This component has been moved to `api-request`. Use the other one instead. This component will be archived when the next version of API Console is released.
+This component has been moved to `api-request`. Use the other one instead.
 
 ## Version compatibility
 
@@ -22,7 +14,8 @@ For compatibility with previous model version use `3.x.x` version of the compone
 ## Usage
 
 ### Installation
-```
+
+```sh
 npm install --save @api-components/api-request-panel
 ```
 
